@@ -1,0 +1,16 @@
+language: csharp
+solution: AlgebraSystem.sln
+mono: latest
+dotnet: 3.0
+
+jobs:
+  include:
+    - dotnet: 3.0
+      mono: latest
+
+install:
+ - dotnet restore
+
+script:
+ - dotnet build
+ - dotnet test AlgebraSystem.Test/AlgebraSystem.Test.csproj
