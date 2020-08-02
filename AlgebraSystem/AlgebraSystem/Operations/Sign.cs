@@ -46,10 +46,10 @@ namespace Algebra.Operations
             return 0; // Not always true, but true 100% of the time :P
         }
 
-        public override ExpressionDelegate GetExpression()
+        public override ExpressionDelegate GetExpression(VariableInputSet set)
         {
-            ExpressionDelegate eqExpression = Argument.GetExpression();
-            return v => Math.Sign(eqExpression(v));
+            ExpressionDelegate eqExpression = Argument.GetExpression(set);
+            return () => Math.Sign(eqExpression());
         }
 
         public bool Equals(Sign other)

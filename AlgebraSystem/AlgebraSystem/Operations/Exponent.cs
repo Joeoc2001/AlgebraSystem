@@ -48,19 +48,19 @@ namespace Algebra.Operations
             this.Power = power;
         }
 
-        public override ExpressionDelegate GetExpression()
+        public override ExpressionDelegate GetExpression(VariableInputSet set)
         {
-            ExpressionDelegate termExp = Base.GetExpression();
+            ExpressionDelegate termExp = Base.GetExpression(set);
 
             if (Power.Equals(-1))
             {
-                return v => 1 / termExp(v);
+                return () => 1 / termExp();
             }
 
-            ExpressionDelegate exponentExp = Power.GetExpression();
+            ExpressionDelegate exponentExp = Power.GetExpression(set);
 
             // TODO: This can be better
-            return v => (float)Math.Pow(termExp(v), exponentExp(v));
+            return () => (float)Math.Pow(termExp(), exponentExp());
         }
 
         public override Equation GetDerivative(Variable wrt)

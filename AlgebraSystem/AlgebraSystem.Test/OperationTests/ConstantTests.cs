@@ -70,7 +70,7 @@ namespace OperationsTests
             Constant equation = Constant.From(54321);
 
             // ACT
-            float value = equation.GetExpression()(new VariableSet());
+            float value = equation.GetExpression(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(54321, value);

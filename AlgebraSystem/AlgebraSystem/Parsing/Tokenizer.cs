@@ -10,17 +10,20 @@ namespace Algebra.Parsing
     public class Tokenizer
     {
         private readonly TextReader reader;
+        private readonly ICollection<string> variables;
+        private readonly ICollection<string> functions;
 
         public Token Token { get; private set; }
         public Rational Number { get; private set; }
-        public Variable VariableValue { get; private set; }
-        public string FunctionName { get; private set; }
+        public string TokenSignature { get; private set; }
 
         private char currentChar;
 
-        public Tokenizer(TextReader reader)
+        public Tokenizer(TextReader reader, ICollection<string> variables, ICollection<string> functions)
         {
             this.reader = reader;
+            this.variables = variables;
+            this.functions = functions;
             NextChar();
             NextToken();
         }
@@ -124,16 +127,22 @@ namespace Algebra.Parsing
                 }
 
                 string identifier = stringBuilder.ToString();
-                if (Variable.VariableDict.TryGetValue(identifier, out Variable v))
+                if (variables.Contains(identifier))
                 {
-                    VariableValue = v;
+                    TokenSignature = identifier;
                     Token = Token.Variable;
                     return;
                 }
-
-                Token = Token.Function;
-                FunctionName = identifier;
-                return;
+                else if (functions.Contains(identifier))
+                {
+                    TokenSignature = identifier;
+                    Token = Token.Function;
+                    return;
+                }
+                else
+                {
+                    throw new InvalidDataException($"Unknown identifier: '{identifier}'");
+                }
             }
 
             throw new InvalidDataException($"Unexpected token '{currentChar + reader.ReadToEnd()}'");

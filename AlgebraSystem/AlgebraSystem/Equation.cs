@@ -15,12 +15,12 @@ namespace Algebra
         public static implicit operator Equation(decimal r) => (Constant)r;
         public static implicit operator Equation(Rational r) => (Constant)r;
 
-        public delegate float ExpressionDelegate(VariableSet set);
-        public delegate Vector2 Vector2ExpressionDelegate(VariableSet set);
-        public delegate Vector3 Vector3ExpressionDelegate(VariableSet set);
-        public delegate Vector4 Vector4ExpressionDelegate(VariableSet set);
+        public delegate float ExpressionDelegate();
+        public delegate Vector2 Vector2ExpressionDelegate();
+        public delegate Vector3 Vector3ExpressionDelegate();
+        public delegate Vector4 Vector4ExpressionDelegate();
 
-        public abstract ExpressionDelegate GetExpression();
+        public abstract ExpressionDelegate GetExpression(VariableInputSet set);
         public abstract Equation GetDerivative(Variable wrt);
         public Equation Map(EquationMapping.EquationMap map) => Map((EquationMapping)map);
         public abstract Equation Map(EquationMapping map);
@@ -56,33 +56,33 @@ namespace Algebra
             return Equals(obj as Equation);
         }
 
-        public ExpressionDelegate GetDerivitiveExpression(Variable wrt)
+        public ExpressionDelegate GetDerivitiveExpression(VariableInputSet set, Variable wrt)
         {
-            return GetDerivative(wrt).GetExpression();
+            return GetDerivative(wrt).GetExpression(set);
         }
 
-        public Vector2ExpressionDelegate GetDerivitiveExpressionWrtXY()
+        public Vector2ExpressionDelegate GetDerivitiveExpressionWrtXY(VariableInputSet set)
         {
-            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetExpression();
-            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetExpression();
-            return (VariableSet v) => new Vector2(dxFunc(v), dyFunc(v));
+            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetExpression(set);
+            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetExpression(set);
+            return () => new Vector2(dxFunc(), dyFunc());
         }
 
-        public Vector3ExpressionDelegate GetDerivitiveExpressionWrtXYZ()
+        public Vector3ExpressionDelegate GetDerivitiveExpressionWrtXYZ(VariableInputSet set)
         {
-            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetExpression();
-            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetExpression();
-            ExpressionDelegate dzFunc = GetDerivative(Variable.Z).GetExpression();
-            return (VariableSet v) => new Vector3(dxFunc(v), dyFunc(v), dzFunc(v));
+            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetExpression(set);
+            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetExpression(set);
+            ExpressionDelegate dzFunc = GetDerivative(Variable.Z).GetExpression(set);
+            return () => new Vector3(dxFunc(), dyFunc(), dzFunc());
         }
 
-        public Vector4ExpressionDelegate GetDerivitiveExpressionWrtXYZW()
+        public Vector4ExpressionDelegate GetDerivitiveExpressionWrtXYZW(VariableInputSet set)
         {
-            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetExpression();
-            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetExpression();
-            ExpressionDelegate dzFunc = GetDerivative(Variable.Z).GetExpression();
-            ExpressionDelegate dwFunc = GetDerivative(Variable.W).GetExpression();
-            return (VariableSet v) => new Vector4(dxFunc(v), dyFunc(v), dzFunc(v), dwFunc(v));
+            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetExpression(set);
+            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetExpression(set);
+            ExpressionDelegate dzFunc = GetDerivative(Variable.Z).GetExpression(set);
+            ExpressionDelegate dwFunc = GetDerivative(Variable.W).GetExpression(set);
+            return () => new Vector4(dxFunc(), dyFunc(), dzFunc(), dwFunc());
         }
 
         public static Equation operator +(Equation left, Equation right)

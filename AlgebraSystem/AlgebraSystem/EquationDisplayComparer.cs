@@ -81,7 +81,7 @@ namespace Algebra
 
         private int CompareVariables(Variable a, Variable b)
         {
-            return a.Index.CompareTo(b.Index);
+            return a.Name.CompareTo(b.Name);
         }
 
         private int CompareCommutative(CommutativeOperation a, CommutativeOperation b)

@@ -6,36 +6,34 @@ namespace Algebra.Operations
 {
     public class Variable : Equation, IEquatable<Variable>
     {
-        public const int VariablesCount = 4;
-        public enum Variables
+        public class NotPresentException : ArgumentException
         {
-            X, Y, Z, W
+            public NotPresentException(string message) : base(message)
+            {
+            }
         }
-        public static readonly Variable X = new Variable((int)Variables.X, "x");
-        public static readonly Variable Y = new Variable((int)Variables.Y, "y");
-        public static readonly Variable Z = new Variable((int)Variables.Z, "z");
-        public static readonly Variable W = new Variable((int)Variables.W, "w");
 
-        public static readonly Dictionary<string, Variable> VariableDict = new Dictionary<string, Variable>()
-    {
-        { X.Name, X },
-        { Y.Name, Y },
-        { Z.Name, Z },
-        { W.Name, W }
-    };
+        public static readonly Variable X = new Variable("X");
+        public static readonly Variable Y = new Variable("Y");
+        public static readonly Variable Z = new Variable("Z");
+        public static readonly Variable W = new Variable("W");
 
-        public readonly int Index;
         public readonly string Name;
 
-        private Variable(int index, string name)
+        public Variable(string name)
         {
-            this.Index = index;
-            this.Name = name;
+            this.Name = name.ToLower();
         }
 
-        public override ExpressionDelegate GetExpression()
+        public override ExpressionDelegate GetExpression(VariableInputSet set)
         {
-            return v => v[this];
+            if (!set.Contains(Name))
+            {
+                throw new NotPresentException($"The variable {Name} is not present in the variable set");
+            }
+
+            VariableInput input = set[Name];
+            return () => input.Value;
         }
 
         public override Equation GetDerivative(Variable wrt)
@@ -54,7 +52,7 @@ namespace Algebra.Operations
                 return false;
             }
 
-            return this.Index.Equals(obj.Index);
+            return this.Name.Equals(obj.Name);
         }
 
         public override bool Equals(Equation obj)
@@ -64,7 +62,7 @@ namespace Algebra.Operations
 
         public override int GenHashCode()
         {
-            return Index * 1513357220;
+            return Name.GetHashCode() * 1513357220;
         }
 
         public override string ToString()
@@ -74,7 +72,7 @@ namespace Algebra.Operations
 
         public override string ToRunnableString()
         {
-            return $"Variable.{Name.ToUpper()}";
+            return $"new Variable(\"{Name}\")";
         }
 
         public override int GetOrderIndex()

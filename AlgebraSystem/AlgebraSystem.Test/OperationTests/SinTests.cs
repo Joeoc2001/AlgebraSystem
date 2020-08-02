@@ -85,7 +85,7 @@ namespace OperationsTests
             Equation equation = Equation.SinOf(0);
 
             // ACT
-            float value = equation.GetExpression()(new VariableSet());
+            float value = equation.GetExpression(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(0, value);

@@ -20,12 +20,12 @@ namespace Algebra.Operations
 
         }
 
-        public override ExpressionDelegate GetExpression()
+        public override ExpressionDelegate GetExpression(VariableInputSet set)
         {
-            ExpressionDelegate expression = Argument.GetExpression();
+            ExpressionDelegate expression = Argument.GetExpression(set);
 
             // TODO: This can be better
-            return v => (float)Math.Sin(expression(v));
+            return () => (float)Math.Sin(expression());
         }
 
         public override Equation GetDerivative(Variable wrt)

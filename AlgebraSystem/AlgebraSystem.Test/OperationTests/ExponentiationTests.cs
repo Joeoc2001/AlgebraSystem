@@ -113,7 +113,7 @@ namespace OperationsTests
             Equation equation = Equation.Pow(2, Constant.From(7));
 
             // ACT
-            float value = equation.GetExpression()(new VariableSet());
+            float value = equation.GetExpression(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(128.0f, value);

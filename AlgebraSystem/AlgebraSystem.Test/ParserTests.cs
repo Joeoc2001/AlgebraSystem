@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Algebra;
 using Algebra.Operations;
 using Algebra.Parsing;
@@ -11,20 +12,17 @@ namespace AlgebraTests
     public class ParserTests
     {
         [Test]
-        public void Parser_ParsesVariables()
+        public void Parser_ParsesVariables([Values("X", "Y", "Z")] string name)
         {
-            foreach (string key1 in Variable.VariableDict.Keys)
-            {
-                // ARANGE
-                string equation = key1;
-                Variable expected = Variable.VariableDict[key1];
+            // ARANGE
+            string equation = name;
+            Variable expected = new Variable(name);
 
-                // ACT
-                Equation result = Parser.Parse(equation);
+            // ACT
+            Equation result = Parser.Parse(equation);
 
-                // ASSERT
-                Assert.AreEqual(expected, result);
-            }
+            // ASSERT
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
@@ -431,6 +429,20 @@ namespace AlgebraTests
 
             // ASSERT
             Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void Parser_ThrowsOnUnknownVariables([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
+        {
+            // ARANGE
+            string equation = name;
+            ISet<string> variables = new HashSet<string>();
+
+            // ACT
+
+            // ASSERT
+            Assert.That(() => Parser.Parse(equation, variables),
+                  Throws.TypeOf<InvalidDataException>());
         }
 
         [Test]

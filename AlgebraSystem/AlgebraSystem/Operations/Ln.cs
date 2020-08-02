@@ -20,17 +20,18 @@ namespace Algebra.Operations
 
         }
 
-        public override ExpressionDelegate GetExpression()
+        public override ExpressionDelegate GetExpression(VariableInputSet set)
         {
             if (Argument is Constant constant)
             {
-                return v => (float)Rational.Log(constant.GetValue());
+                float value = (float)Rational.Log(constant.GetValue());
+                return () => value;
             }
 
-            ExpressionDelegate expression = Argument.GetExpression();
+            ExpressionDelegate expression = Argument.GetExpression(set);
 
             // TODO: This can be better
-            return v => (float)Math.Log(expression(v));
+            return () => (float)Math.Log(expression());
         }
 
         public override Equation GetDerivative(Variable wrt)

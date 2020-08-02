@@ -9,9 +9,9 @@ namespace Algebra.Equivalence
     public class EquivalenceClass
     {
         public static readonly List<EquivalencePath> DEFAULT_PATHS = new List<EquivalencePath> {
-        EquivalencePaths.IDENTITY,
-        EquivalencePaths.EXPAND_BRACES
-    };
+            EquivalencePaths.IDENTITY,
+            EquivalencePaths.EXPAND_BRACES
+        };
 
         private readonly Equation anchorEquation; // The equation used to define the equivalence class
         private readonly List<EquivalencePath> paths;

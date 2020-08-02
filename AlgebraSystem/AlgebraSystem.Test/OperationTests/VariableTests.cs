@@ -10,121 +10,111 @@ namespace OperationsTests
     public class VariableTests
     {
         [Test]
-        public void Variable_IsSelfEqual()
+        public void Variable_IsSelfEqual([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
-            foreach (string key in Variable.VariableDict.Keys)
-            {
-                // ARANGE
-                Variable v1 = Variable.VariableDict[key];
-                Variable v2 = Variable.VariableDict[key];
+            // ARANGE
+            Variable v1 = new Variable(name);
+            Variable v2 = new Variable(name);
 
-                // ACT
+            // ACT
 
-                // ASSERT
-                Assert.IsTrue(v1.Equals(v2));
-                Assert.IsTrue(v2.Equals(v1));
-                Assert.IsTrue(v1.Equals((object)v2));
-                Assert.IsTrue(v2.Equals((object)v1));
-                Assert.IsTrue(v1 == v2);
-                Assert.IsTrue(v2 == v1);
-                Assert.IsFalse(v1 != v2);
-                Assert.IsFalse(v2 != v1);
-            }
+            // ASSERT
+            Assert.IsTrue(v1.Equals(v2));
+            Assert.IsTrue(v2.Equals(v1));
+            Assert.IsTrue(v1.Equals((object)v2));
+            Assert.IsTrue(v2.Equals((object)v1));
+            Assert.IsTrue(v1 == v2);
+            Assert.IsTrue(v2 == v1);
+            Assert.IsFalse(v1 != v2);
+            Assert.IsFalse(v2 != v1);
         }
 
         [Test]
-        public void Variable_IsOtherNotEqual()
+        public void Variable_IsOtherNotEqual([Values("X", "Y", "Z", "W", "V", "val", "t")] string name1, [Values("X", "Y", "Z", "W", "V", "val", "t")] string name2)
         {
-            foreach (string key1 in Variable.VariableDict.Keys)
+            if (name1.Equals(name2))
             {
-                // ARANGE
-                Variable v1 = Variable.VariableDict[key1];
-                foreach (string key2 in Variable.VariableDict.Keys)
-                {
-                    if (key2.Equals(key1))
-                    {
-                        continue;
-                    }
-                    Variable v2 = Variable.VariableDict[key2];
-
-                    // ACT
-
-                    // ASSERT
-                    Assert.IsFalse(v1.Equals(v2));
-                    Assert.IsFalse(v2.Equals(v1));
-                    Assert.IsFalse(v1.Equals((object)v2));
-                    Assert.IsFalse(v2.Equals((object)v1));
-                    Assert.IsFalse(v1 == v2);
-                    Assert.IsFalse(v2 == v1);
-                    Assert.IsTrue(v1 != v2);
-                    Assert.IsTrue(v2 != v1);
-                }
+                return;
             }
+
+            // ARANGE
+            Variable v1 = new Variable(name1);
+            Variable v2 = new Variable(name2);
+
+            // ACT
+
+            // ASSERT
+            Assert.IsFalse(v1.Equals(v2));
+            Assert.IsFalse(v2.Equals(v1));
+            Assert.IsFalse(v1.Equals((object)v2));
+            Assert.IsFalse(v2.Equals((object)v1));
+            Assert.IsFalse(v1 == v2);
+            Assert.IsFalse(v2 == v1);
+            Assert.IsTrue(v1 != v2);
+            Assert.IsTrue(v2 != v1);
         }
 
         [Test]
-        public void Variable_Derivative_IsOne_WRTSelf()
+        public void Variable_Derivative_IsOne_WRTSelf([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
-            foreach (string key in Variable.VariableDict.Keys)
-            {
-                // ARANGE
-                Variable v1 = Variable.VariableDict[key];
+            // ARANGE
+            Variable v1 = new Variable(name);
 
-                // ACT
-                Equation derivative = v1.GetDerivative(v1);
+            // ACT
+            Equation derivative = v1.GetDerivative(v1);
 
-                // ASSERT
-                Assert.AreEqual(Constant.From(1), derivative);
-            }
+            // ASSERT
+            Assert.AreEqual(Constant.From(1), derivative);
         }
 
         [Test]
-        public void Variable_Derivative_IsZero_WRTOthers()
+        public void Variable_Derivative_IsZero_WRTOthers([Values("X", "Y", "Z", "W", "V", "val", "t")] string name1, [Values("X", "Y", "Z", "W", "V", "val", "t")] string name2)
         {
-            foreach (string key1 in Variable.VariableDict.Keys)
+            if (name1.Equals(name2))
             {
-                // ARANGE
-                Variable v1 = Variable.VariableDict[key1];
-                foreach (string key2 in Variable.VariableDict.Keys)
-                {
-                    if (key2.Equals(key1))
-                    {
-                        continue;
-                    }
-                    Variable v2 = Variable.VariableDict[key2];
-
-                    // ACT
-                    Equation derivative = v1.GetDerivative(v2);
-
-                    // ASSERT
-                    Assert.AreEqual(Constant.From(0), derivative);
-                }
+                return;
             }
+
+            // ARANGE
+            Variable v1 = new Variable(name1);
+            Variable v2 = new Variable(name2);
+
+            // ACT
+            Equation derivative = v1.GetDerivative(v2);
+
+            // ASSERT
+            Assert.AreEqual(Constant.From(0), derivative);
         }
 
         [Test]
-        public void Variable_EvaluatesCorrectly()
+        public void Variable_EvaluatesCorrectly([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
-            List<string> keys = new List<string>(Variable.VariableDict.Keys);
+            // ARANGE
+            float expected = 167283;
+            Variable v = new Variable(name);
+            VariableInputSet inputSet = new VariableInputSet();
+            inputSet.Set(name, expected);
 
-            float[] values = new float[keys.Count];
-            for (int i = 0; i < keys.Count; i++)
-            {
-                values[i] = keys.Count * i;
-            }
+            // ACT
+            float value = v.GetExpression(inputSet)();
 
-            for (int i = 0; i < keys.Count; i++)
-            {
-                // ARANGE
-                string key = keys[i];
-                Variable v = Variable.VariableDict[key];
+            // ASSERT
+            Assert.AreEqual(expected, value);
+        }
 
-                // ACT
-                float value = v.GetExpression()(new VariableSet(values));
+        [Test]
+        public void Variable_ThrowsIfNotPresent([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
+        {
+            // ARANGE
+            float falseValue = -193742;
+            Variable v = new Variable(name);
+            VariableInputSet inputSet = new VariableInputSet();
+            inputSet.Set("q", falseValue);
 
-                // ASSERT
-                Assert.AreEqual(values[i], value);
-            }
+            // ACT
+
+            // ASSERT
+            Assert.That(() => v.GetExpression(inputSet), Throws.TypeOf<Variable.NotPresentException>());
         }
 
         [Test]

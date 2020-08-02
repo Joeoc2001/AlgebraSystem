@@ -23,22 +23,22 @@ namespace Algebra.Operations
         public abstract string OperationSymbol();
         public abstract Func<List<Equation>, Equation> GetSimplifyingConstructor();
 
-        public override sealed ExpressionDelegate GetExpression()
+        public override sealed ExpressionDelegate GetExpression(VariableInputSet set)
         {
             List<ExpressionDelegate> expressions = new List<ExpressionDelegate>(Arguments.Count());
             foreach (Equation e in Arguments)
             {
-                expressions.Add(e.GetExpression());
+                expressions.Add(e.GetExpression(set));
             }
 
             float identityValue = IdentityValue();
 
-            return v =>
+            return () =>
             {
                 float value = identityValue;
                 foreach (ExpressionDelegate f in expressions)
                 {
-                    value = Perform(value, f(v));
+                    value = Perform(value, f());
                 }
                 return value;
             };

@@ -1,25 +1,53 @@
-﻿using Algebra.Operations;
+﻿using Algebra.Functions;
+using Algebra.Operations;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-
 
 namespace Algebra.Parsing
 {
     public class Parser
     {
         private readonly Tokenizer tokenizer;
+        private readonly IDictionary<string, FunctionFactory> functions;
 
-        public Parser(Tokenizer tokenizer)
+        public Parser(Tokenizer tokenizer, IDictionary<string, FunctionFactory> functions)
         {
             this.tokenizer = tokenizer;
+            this.functions = functions;
         }
 
         public static Equation Parse(string s)
         {
-            Tokenizer t = new Tokenizer(new StringReader(s));
-            Parser p = new Parser(t);
+            HashSet<string> variables = new HashSet<string>() { "x", "y", "z" };
+            return Parse(s, variables);
+        }
+
+        public static Equation Parse(string s, ICollection<string> variables)
+        {
+            IDictionary<string, FunctionFactory> functions = FunctionFactory.DefaultFunctions;
+            return Parse(s, variables, functions);
+        }
+
+        public static Equation Parse(string s, ICollection<string> variables, IDictionary<string, FunctionFactory> functions)
+        {
+            // Ensure that all identifiers are in lower case
+            HashSet<string> variablesLower = new HashSet<string>();
+            foreach (string variable in variables)
+            {
+                variablesLower.Add(variable.ToLower());
+            }
+            Dictionary<string, FunctionFactory> functionsLower = new Dictionary<string, FunctionFactory>();
+            foreach (string function in functions.Keys)
+            {
+                functionsLower.Add(function.ToLower(), functions[function]);
+            }
+
+            // Create objects
+            Tokenizer t = new Tokenizer(new StringReader(s), variablesLower, functionsLower.Keys);
+            Parser p = new Parser(t, functionsLower);
+
+            // Parse
             return p.Parse();
         }
 
@@ -158,7 +186,8 @@ namespace Algebra.Parsing
 
             if (tokenizer.Token == Token.Variable)
             {
-                Equation node = tokenizer.VariableValue;
+                string name = tokenizer.TokenSignature;
+                Equation node = new Variable(name);
                 tokenizer.NextToken();
                 return node;
             }
@@ -181,7 +210,7 @@ namespace Algebra.Parsing
 
             if (tokenizer.Token == Token.Function)
             {
-                string functionName = tokenizer.FunctionName;
+                string functionName = tokenizer.TokenSignature;
 
                 tokenizer.NextToken();
 
@@ -190,9 +219,9 @@ namespace Algebra.Parsing
                 {
                     tokenizer.NextToken();
                     nodes = new List<Equation>()
-                {
-                    ParseAddSubtract()
-                };
+                    {
+                        ParseAddSubtract()
+                    };
 
                     while (tokenizer.Token == Token.Comma)
                     {
@@ -210,9 +239,9 @@ namespace Algebra.Parsing
                 else
                 {
                     nodes = new List<Equation>()
-                {
-                    ParseLeaf()
-                };
+                    {
+                        ParseLeaf()
+                    };
                 }
 
                 return MakeFunction(nodes, functionName);
@@ -221,55 +250,57 @@ namespace Algebra.Parsing
             throw new SyntaxException($"Unexpected leaf token: {tokenizer.Token}");
         }
 
-        Equation MakeFunction(IList<Equation> nodes, string functionName)
+        private Equation MakeFunction(IList<Equation> nodes, string functionName)
         {
-            int requiredParameters;
-            Func<IList<Equation>, Equation> constructor;
-            switch (functionName)
-            {
-                case "log":
-                case "ln":
-                    requiredParameters = 1;
-                    constructor = ns => Equation.LnOf(ns[0]);
-                    break;
-                case "sign":
-                    requiredParameters = 1;
-                    constructor = ns => Equation.SignOf(ns[0]);
-                    break;
-                case "abs":
-                    requiredParameters = 1;
-                    constructor = ns => Equation.Abs(ns[0]);
-                    break;
-                case "min":
-                    requiredParameters = 2;
-                    constructor = ns => Equation.Min(ns[0], ns[1]);
-                    break;
-                case "max":
-                    requiredParameters = 2;
-                    constructor = ns => Equation.Max(ns[0], ns[1]);
-                    break;
-                case "sin":
-                    requiredParameters = 1;
-                    constructor = ns => Equation.SinOf(ns[0]);
-                    break;
-                case "cos":
-                    requiredParameters = 1;
-                    constructor = ns => Equation.CosOf(ns[0]);
-                    break;
-                case "tan":
-                    requiredParameters = 1;
-                    constructor = ns => Equation.TanOf(ns[0]);
-                    break;
-                default:
-                    throw new SyntaxException($"Unknown function name: {tokenizer.FunctionName}");
-            }
+            FunctionFactory factory = functions[functionName];
+            return factory.CreateEquation(nodes);
+            //int requiredParameters;
+            //Func<IList<Equation>, Equation> constructor;
+            //switch (functionName)
+            //{
+            //    case "log":
+            //    case "ln":
+            //        requiredParameters = 1;
+            //        constructor = ns => Equation.LnOf(ns[0]);
+            //        break;
+            //    case "sign":
+            //        requiredParameters = 1;
+            //        constructor = ns => Equation.SignOf(ns[0]);
+            //        break;
+            //    case "abs":
+            //        requiredParameters = 1;
+            //        constructor = ns => Equation.Abs(ns[0]);
+            //        break;
+            //    case "min":
+            //        requiredParameters = 2;
+            //        constructor = ns => Equation.Min(ns[0], ns[1]);
+            //        break;
+            //    case "max":
+            //        requiredParameters = 2;
+            //        constructor = ns => Equation.Max(ns[0], ns[1]);
+            //        break;
+            //    case "sin":
+            //        requiredParameters = 1;
+            //        constructor = ns => Equation.SinOf(ns[0]);
+            //        break;
+            //    case "cos":
+            //        requiredParameters = 1;
+            //        constructor = ns => Equation.CosOf(ns[0]);
+            //        break;
+            //    case "tan":
+            //        requiredParameters = 1;
+            //        constructor = ns => Equation.TanOf(ns[0]);
+            //        break;
+            //    default:
+            //        throw new SyntaxException($"Unknown function name: {tokenizer.FunctionName}");
+            //}
 
-            if (nodes.Count != requiredParameters)
-            {
-                throw new SyntaxException($"Incorrect number of parameters for {tokenizer.FunctionName}: {nodes.Count}");
-            }
+            //if (nodes.Count != requiredParameters)
+            //{
+            //    throw new SyntaxException($"Incorrect number of parameters for {tokenizer.FunctionName}: {nodes.Count}");
+            //}
 
-            return constructor(nodes);
+            //return constructor(nodes);
         }
     }
 }

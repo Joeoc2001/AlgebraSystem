@@ -31,10 +31,10 @@ namespace Algebra.Operations
             this.value = value;
         }
 
-        public override ExpressionDelegate GetExpression()
+        public override ExpressionDelegate GetExpression(VariableInputSet set)
         {
             float approximation = (float)value;
-            return v => approximation;
+            return () => approximation;
         }
 
         public override Equation GetDerivative(Variable wrt)

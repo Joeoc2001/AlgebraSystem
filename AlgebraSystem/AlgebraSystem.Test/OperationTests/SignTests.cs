@@ -44,7 +44,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            float e = Equation.SignOf(Variable.X).GetExpression()(new VariableSet(0));
+            float e = Equation.SignOf(Variable.X).GetExpression(new VariableInputSet(0))();
 
             // ASSERT
             Assert.AreEqual(0, e);
@@ -56,7 +56,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            float e = Equation.SignOf(Variable.X).GetExpression()(new VariableSet(145));
+            float e = Equation.SignOf(Variable.X).GetExpression(new VariableInputSet(145))();
 
             // ASSERT
             Assert.AreEqual(1, e);
@@ -68,7 +68,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            float e = Equation.SignOf(Variable.X).GetExpression()(new VariableSet(-14335));
+            float e = Equation.SignOf(Variable.X).GetExpression(new VariableInputSet(-14335))();
 
             // ASSERT
             Assert.AreEqual(-1, e);

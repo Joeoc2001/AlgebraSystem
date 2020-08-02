@@ -93,14 +93,14 @@ namespace OperationsTests
         }
 
         [Test]
-        public void Variable_X_IsLessThanW()
+        public void Variable_X_IsGreaterThanThanW()
         {
             // ARANGE
 
             // ACT
             Equation a = Variable.X;
             Equation b = Variable.W;
-            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
+            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -121,28 +121,28 @@ namespace OperationsTests
         }
 
         [Test]
-        public void Variable_Y_IsLessThanW()
+        public void Variable_Y_IsGreaterThanW()
         {
             // ARANGE
 
             // ACT
             Equation a = Variable.Y;
             Equation b = Variable.W;
-            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
+            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
         }
 
         [Test]
-        public void Variable_Z_IsLessThanW()
+        public void Variable_Z_IsGreaterThanW()
         {
             // ARANGE
 
             // ACT
             Equation a = Variable.Z;
             Equation b = Variable.W;
-            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
+            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -205,14 +205,14 @@ namespace OperationsTests
         }
 
         [Test]
-        public void Variable_W_IsGreaterThanX()
+        public void Variable_W_IsLessThanX()
         {
             // ARANGE
 
             // ACT
             Equation a = Variable.W;
             Equation b = Variable.X;
-            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
+            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -233,28 +233,28 @@ namespace OperationsTests
         }
 
         [Test]
-        public void Variable_W_IsGreaterThanY()
+        public void Variable_W_IsLessThanY()
         {
             // ARANGE
 
             // ACT
             Equation a = Variable.W;
             Equation b = Variable.Y;
-            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
+            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
         }
 
         [Test]
-        public void Variable_W_IsGreaterThanZ()
+        public void Variable_W_IsLessThanZ()
         {
             // ARANGE
 
             // ACT
             Equation a = Variable.W;
             Equation b = Variable.Z;
-            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
+            bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
