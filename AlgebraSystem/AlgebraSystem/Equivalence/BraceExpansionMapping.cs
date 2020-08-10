@@ -20,7 +20,7 @@ namespace Algebra.Equivalence
             ShouldMapThis = shouldMapThis;
         }
 
-        private Equation map(Equation e)
+        private Expression map(Expression e)
         {
             if (!(e is Product p))
             {
@@ -29,8 +29,8 @@ namespace Algebra.Equivalence
 
             // Extract all sum terms from the product
             List<Sum> sums = new List<Sum>();
-            List<Equation> others = new List<Equation>();
-            foreach (Equation arg in p.Arguments)
+            List<Expression> others = new List<Expression>();
+            foreach (Expression arg in p.Arguments)
             {
                 if (arg is Sum s)
                 {
@@ -56,7 +56,7 @@ namespace Algebra.Equivalence
                         sums.RemoveAt(j);
 
                         // Multiply them
-                        Equation newTerm = ExpandSums(s1, s2);
+                        Expression newTerm = ExpandSums(s1, s2);
                         others.Add(newTerm);
 
                         // Create a new product
@@ -70,15 +70,15 @@ namespace Algebra.Equivalence
             return e;
         }
 
-        private bool shouldMapThis(Equation e) => e is Product && index >= 0;
-        private bool shouldMapChildren(Equation e) => index >= 0;
+        private bool shouldMapThis(Expression e) => e is Product && index >= 0;
+        private bool shouldMapChildren(Expression e) => index >= 0;
 
-        private static Equation ExpandSums(Sum s1, Sum s2)
+        private static Expression ExpandSums(Sum s1, Sum s2)
         {
-            List<Equation> terms = new List<Equation>();
-            foreach (Equation t1 in s1.Arguments)
+            List<Expression> terms = new List<Expression>();
+            foreach (Expression t1 in s1.Arguments)
             {
-                foreach (Equation t2 in s2.Arguments)
+                foreach (Expression t2 in s2.Arguments)
                 {
                     terms.Add(t1 * t2);
                 }

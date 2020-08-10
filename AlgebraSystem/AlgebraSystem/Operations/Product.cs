@@ -10,11 +10,11 @@ namespace Algebra.Operations
 {
     public class Product : CommutativeOperation, IEquatable<Product>
     {
-        public static Equation Multiply<T>(List<T> eqs) where T : Equation
+        public static Expression Multiply<T>(List<T> eqs) where T : Expression
         {
             // Collate multiplications into one big multiplication
-            List<Equation> collatedEqs = new List<Equation>();
-            foreach (Equation eq in eqs)
+            List<Expression> collatedEqs = new List<Expression>();
+            foreach (Expression eq in eqs)
             {
                 if (eq is Product multeq)
                 {
@@ -25,7 +25,7 @@ namespace Algebra.Operations
                 collatedEqs.Add(eq);
             }
 
-            List<Equation> newEqs = SimplifyArguments(collatedEqs, 1, (x, y) => x * y);
+            List<Expression> newEqs = SimplifyArguments(collatedEqs, 1, (x, y) => x * y);
 
             if (newEqs.Count == 0)
             {
@@ -36,7 +36,7 @@ namespace Algebra.Operations
                 return newEqs[0];
             }
 
-            foreach (Equation eq in newEqs)
+            foreach (Expression eq in newEqs)
             {
                 if (eq.Equals(Constant.ZERO))
                 {
@@ -45,11 +45,11 @@ namespace Algebra.Operations
             }
 
             // Collate exponents
-            Dictionary<Equation, List<Equation>> exponents = new Dictionary<Equation, List<Equation>>();
-            foreach (Equation eq in newEqs)
+            Dictionary<Expression, List<Expression>> exponents = new Dictionary<Expression, List<Expression>>();
+            foreach (Expression eq in newEqs)
             {
-                Equation baseEq;
-                Equation exponentEq;
+                Expression baseEq;
+                Expression exponentEq;
                 if (eq is Exponent expeq)
                 {
                     baseEq = expeq.Base;
@@ -61,22 +61,22 @@ namespace Algebra.Operations
                     exponentEq = 1;
                 }
 
-                if (exponents.TryGetValue(baseEq, out List<Equation> exponentList))
+                if (exponents.TryGetValue(baseEq, out List<Expression> exponentList))
                 {
                     exponentList.Add(exponentEq);
                 }
                 else
                 {
-                    exponents.Add(baseEq, new List<Equation>() { exponentEq });
+                    exponents.Add(baseEq, new List<Expression>() { exponentEq });
                 }
             }
             // Put back into exponent form
             newEqs.Clear();
-            foreach (Equation eq in exponents.Keys)
+            foreach (Expression eq in exponents.Keys)
             {
-                List<Equation> powers = exponents[eq];
+                List<Expression> powers = exponents[eq];
 
-                Equation newEq = Pow(eq, Add(powers));
+                Expression newEq = Pow(eq, Add(powers));
 
                 if (newEq.Equals(Constant.ONE))
                 {
@@ -98,26 +98,26 @@ namespace Algebra.Operations
             return new Product(newEqs);
         }
 
-        private Product(IList<Equation> eqs)
+        private Product(IList<Expression> eqs)
             : base(eqs)
         {
 
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
             // Get all derivatives
-            List<Equation> derivatives = new List<Equation>(Arguments.Count);
-            foreach (Equation eq in Arguments)
+            List<Expression> derivatives = new List<Expression>(Arguments.Count);
+            foreach (Expression eq in Arguments)
             {
                 derivatives.Add(eq.GetDerivative(wrt));
             }
 
             // Collate into multi term product rule
-            List<Equation> terms = new List<Equation>();
+            List<Expression> terms = new List<Expression>();
             for (int iDerivative = 0; iDerivative < Arguments.Count; iDerivative++)
             {
-                List<Equation> term = new List<Equation>()
+                List<Expression> term = new List<Expression>()
             {
                 derivatives[iDerivative]
             };
@@ -146,7 +146,7 @@ namespace Algebra.Operations
             return OperandsEquals(obj.Arguments);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Product);
         }
@@ -179,7 +179,7 @@ namespace Algebra.Operations
         // Finds the first constant in the multiplication, or returns 1 if there are none
         public Constant GetConstantCoefficient()
         {
-            foreach (Equation eq in Arguments)
+            foreach (Expression eq in Arguments)
             {
                 if (eq is Constant c)
                 {
@@ -190,13 +190,13 @@ namespace Algebra.Operations
         }
 
         // Gets a multiplication term of all of the terms minus the first constant, or this if there are no constants
-        public Equation GetVariable()
+        public Expression GetVariable()
         {
-            foreach (Equation eq in Arguments)
+            foreach (Expression eq in Arguments)
             {
                 if (eq is Constant)
                 {
-                    List<Equation> others = new List<Equation>(Arguments);
+                    List<Expression> others = new List<Expression>(Arguments);
                     others.Remove(eq);
                     if (others.Count == 1)
                     {
@@ -213,7 +213,7 @@ namespace Algebra.Operations
             return 20;
         }
 
-        public override Func<List<Equation>, Equation> GetSimplifyingConstructor()
+        public override Func<List<Expression>, Expression> GetSimplifyingConstructor()
         {
             return Multiply;
         }

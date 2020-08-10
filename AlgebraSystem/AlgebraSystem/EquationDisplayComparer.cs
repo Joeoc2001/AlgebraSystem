@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Algebra
 {
-    public class EquationDisplayComparer : IComparer<Equation>
+    public class EquationDisplayComparer : IComparer<Expression>
     {
         public static readonly EquationDisplayComparer COMPARER = new EquationDisplayComparer();
 
@@ -15,7 +15,7 @@ namespace Algebra
 
         }
 
-        public static int GetEquationOrdering(Equation e)
+        public static int GetEquationOrdering(Expression e)
         {
             switch (e)
             {
@@ -36,11 +36,11 @@ namespace Algebra
                 case Sin _:
                     return 0;
                 default:
-                    throw new NotImplementedException($"Unsuported Equation type {e.GetType()}");
+                    throw new NotImplementedException($"Unsuported Expression type {e.GetType()}");
             };
         }
 
-        public int Compare(Equation x, Equation y)
+        public int Compare(Expression x, Expression y)
         {
             int cmp = GetEquationOrdering(x).CompareTo(GetEquationOrdering(y));
 
@@ -68,7 +68,7 @@ namespace Algebra
                 case Sin c:
                     return CompareMonad(c, (Sin)y);
                 default:
-                    throw new NotImplementedException($"Unsuported Equation type {x.GetType()}");
+                    throw new NotImplementedException($"Unsuported Expression type {x.GetType()}");
             };
         }
 
@@ -87,8 +87,8 @@ namespace Algebra
         private int CompareCommutative(CommutativeOperation a, CommutativeOperation b)
         {
             // Compare based on lowest component of each, break ties on later terms
-            List<Equation> aSorted = a.GetDisplaySortedArguments();
-            List<Equation> bSorted = b.GetDisplaySortedArguments();
+            List<Expression> aSorted = a.GetDisplaySortedArguments();
+            List<Expression> bSorted = b.GetDisplaySortedArguments();
 
             int i = 0;
             while (i < aSorted.Count && i < bSorted.Count)

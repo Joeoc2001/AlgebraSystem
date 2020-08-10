@@ -57,7 +57,7 @@ namespace OperationsTests
             Constant value = Constant.From(54321);
 
             // ACT
-            Equation derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative(Variable.X);
 
             // ASSERT
             Assert.AreEqual(Constant.From(0), derivative);
@@ -70,7 +70,7 @@ namespace OperationsTests
             Constant equation = Constant.From(54321);
 
             // ACT
-            float value = equation.GetExpression(new VariableInputSet())();
+            float value = equation.GetDelegate(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(54321, value);
@@ -94,7 +94,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = 1;
+            Expression equation = 1;
 
             // ASSERT
             Assert.AreEqual(0, equation.GetOrderIndex());
@@ -104,8 +104,8 @@ namespace OperationsTests
         public void Constant_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Equation equation1 = 5;
-            Equation equation2 = 5;
+            Expression equation1 = 5;
+            Expression equation2 = 5;
 
             // ACT
             equation2.Map(a => 2);
@@ -118,13 +118,13 @@ namespace OperationsTests
         public void Constant_Map_ReturnsAlternative()
         {
             // ARANGE
-            Equation equation1 = 5;
+            Expression equation1 = 5;
 
             // ACT
-            Equation equation2 = equation1.Map(a => 2);
+            Expression equation2 = equation1.Map(a => 2);
 
             // ASSERT
-            Assert.AreEqual((Equation)2, equation2);
+            Assert.AreEqual((Expression)2, equation2);
         }
     }
 }

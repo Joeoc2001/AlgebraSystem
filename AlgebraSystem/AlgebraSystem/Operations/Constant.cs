@@ -4,7 +4,7 @@ using System;
 
 namespace Algebra.Operations
 {
-    public class Constant : Equation, IEquatable<Constant>
+    public class Constant : Expression, IEquatable<Constant>
     {
         public static readonly Constant ZERO = 0;
         public static readonly Constant ONE = 1;
@@ -31,13 +31,13 @@ namespace Algebra.Operations
             this.value = value;
         }
 
-        public override ExpressionDelegate GetExpression(VariableInputSet set)
+        public override ExpressionDelegate GetDelegate(VariableInputSet set)
         {
             float approximation = (float)value;
             return () => approximation;
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
             return 0;
         }
@@ -52,7 +52,7 @@ namespace Algebra.Operations
             return value.Equals(obj.value);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Constant);
         }
@@ -72,6 +72,7 @@ namespace Algebra.Operations
             return $"{value}";
         }
 
+        [Obsolete]
         public override string ToRunnableString()
         {
             return $"Constant.From((Rational)({value.Numerator})/({value.Denominator}))";
@@ -82,7 +83,7 @@ namespace Algebra.Operations
             return 0;
         }
 
-        public override Equation Map(EquationMapping map)
+        public override Expression Map(EquationMapping map)
         {
             if (!map.ShouldMapThis(this))
             {

@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Algebra.Operations
 {
-    public class Exponent : Equation, IEquatable<Exponent>
+    public class Exponent : Expression, IEquatable<Exponent>
     {
-        public readonly Equation Base;
-        public readonly Equation Power;
+        public readonly Expression Base;
+        public readonly Expression Power;
 
-        new public static Equation Pow(Equation term, Equation power)
+        new public static Expression Pow(Expression term, Expression power)
         {
             if (power.Equals(Constant.ZERO))
             {
@@ -42,46 +42,46 @@ namespace Algebra.Operations
             return new Exponent(term, power);
         }
 
-        public Exponent(Equation term, Equation power)
+        public Exponent(Expression term, Expression power)
         {
             this.Base = term;
             this.Power = power;
         }
 
-        public override ExpressionDelegate GetExpression(VariableInputSet set)
+        public override ExpressionDelegate GetDelegate(VariableInputSet set)
         {
-            ExpressionDelegate termExp = Base.GetExpression(set);
+            ExpressionDelegate termExp = Base.GetDelegate(set);
 
             if (Power.Equals(-1))
             {
                 return () => 1 / termExp();
             }
 
-            ExpressionDelegate exponentExp = Power.GetExpression(set);
+            ExpressionDelegate exponentExp = Power.GetDelegate(set);
 
             // TODO: This can be better
             return () => (float)Math.Pow(termExp(), exponentExp());
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
             // Check for common cases
             if (Power is Constant powerConst)
             {
-                Equation baseDerivative = Base.GetDerivative(wrt);
+                Expression baseDerivative = Base.GetDerivative(wrt);
                 return Power * baseDerivative * Pow(Base, powerConst.GetValue() - 1);
             }
 
             if (Base is Constant)
             {
-                Equation exponentDerivative = Power.GetDerivative(wrt);
+                Expression exponentDerivative = Power.GetDerivative(wrt);
                 return LnOf(Base) * exponentDerivative * this;
             }
 
             // Big derivative (u^v)'=(u^v)(vu'/u + v'ln(u))
             // Alternatively  (u^v)'=(u^(v-1))(vu' + uv'ln(u)) but I find the first form simplifies faster
-            Equation baseDeriv = Base.GetDerivative(wrt);
-            Equation expDeriv = Power.GetDerivative(wrt);
+            Expression baseDeriv = Base.GetDerivative(wrt);
+            Expression expDeriv = Power.GetDerivative(wrt);
             return this * ((Power * baseDeriv / Base) + (expDeriv * LnOf(Base)));
         }
 
@@ -95,7 +95,7 @@ namespace Algebra.Operations
             return Base.Equals(other.Base) && Power.Equals(other.Power);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Exponent);
         }
@@ -118,7 +118,7 @@ namespace Algebra.Operations
 
         public override string ToRunnableString()
         {
-            return $"Equation.Pow({Base.ToRunnableString()}, {Power.ToRunnableString()})";
+            return $"Expression.Pow({Base.ToRunnableString()}, {Power.ToRunnableString()})";
         }
 
         public override int GetOrderIndex()
@@ -126,14 +126,14 @@ namespace Algebra.Operations
             return 10;
         }
 
-        public override Equation Map(EquationMapping map)
+        public override Expression Map(EquationMapping map)
         {
-            Equation currentThis = this;
+            Expression currentThis = this;
 
             if (map.ShouldMapChildren(this))
             {
-                Equation mappedBase = Base.Map(map);
-                Equation mappedPower = Power.Map(map);
+                Expression mappedBase = Base.Map(map);
+                Expression mappedPower = Power.Map(map);
 
                 currentThis = Pow(mappedBase, mappedPower);
             }

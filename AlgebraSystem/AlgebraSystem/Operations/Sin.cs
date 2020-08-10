@@ -9,28 +9,28 @@ namespace Algebra.Operations
 {
     public class Sin : Monad
     {
-        new public static Equation SinOf(Equation argument)
+        new public static Expression SinOf(Expression argument)
         {
             return new Sin(argument);
         }
 
-        public Sin(Equation argument)
+        public Sin(Expression argument)
             : base(argument)
         {
 
         }
 
-        public override ExpressionDelegate GetExpression(VariableInputSet set)
+        public override ExpressionDelegate GetDelegate(VariableInputSet set)
         {
-            ExpressionDelegate expression = Argument.GetExpression(set);
+            ExpressionDelegate expression = Argument.GetDelegate(set);
 
             // TODO: This can be better
             return () => (float)Math.Sin(expression());
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
-            Equation derivative = Argument.GetDerivative(wrt);
+            Expression derivative = Argument.GetDerivative(wrt);
             return derivative * CosOf(Argument);
         }
 
@@ -44,7 +44,7 @@ namespace Algebra.Operations
             return Argument.Equals(other.Argument);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Sin);
         }
@@ -64,9 +64,10 @@ namespace Algebra.Operations
             return builder.ToString();
         }
 
+        [Obsolete]
         public override string ToRunnableString()
         {
-            return $"Equation.SinOf({Argument.ToRunnableString()})";
+            return $"Expression.SinOf({Argument.ToRunnableString()})";
         }
 
         public override int GetOrderIndex()
@@ -74,7 +75,7 @@ namespace Algebra.Operations
             return 0;
         }
 
-        public override Func<Equation, Equation> GetSimplifyingConstructor()
+        public override Func<Expression, Expression> GetSimplifyingConstructor()
         {
             return SinOf;
         }

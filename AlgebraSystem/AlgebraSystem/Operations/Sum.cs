@@ -8,11 +8,11 @@ namespace Algebra.Operations
 {
     public class Sum : CommutativeOperation, IEquatable<Sum>
     {
-        public static Equation Add<T>(List<T> eqs) where T : Equation
+        public static Expression Add<T>(List<T> eqs) where T : Expression
         {
             // Loop and find all other addition nodes and put them into this one
-            List<Equation> collatedEqs = new List<Equation>();
-            foreach (Equation eq in eqs)
+            List<Expression> collatedEqs = new List<Expression>();
+            foreach (Expression eq in eqs)
             {
                 if (eq is Sum addeq)
                 {
@@ -25,7 +25,7 @@ namespace Algebra.Operations
             }
 
             // Put all of the constants together, and other generic commutative operations
-            List<Equation> newEqs = SimplifyArguments(collatedEqs, 0, (x, y) => x + y);
+            List<Expression> newEqs = SimplifyArguments(collatedEqs, 0, (x, y) => x + y);
 
             if (newEqs.Count() == 0)
             {
@@ -37,10 +37,10 @@ namespace Algebra.Operations
             }
 
             // Collate Multiplication terms
-            Dictionary<Equation, Constant> terms = new Dictionary<Equation, Constant>();
-            foreach (Equation eq in newEqs)
+            Dictionary<Expression, Constant> terms = new Dictionary<Expression, Constant>();
+            foreach (Expression eq in newEqs)
             {
-                Equation baseEq;
+                Expression baseEq;
                 Constant newCoefficient;
                 if (eq is Product multeq)
                 {
@@ -61,9 +61,9 @@ namespace Algebra.Operations
             }
             // Put back into exponent form
             newEqs.Clear();
-            foreach (Equation eq in terms.Keys)
+            foreach (Expression eq in terms.Keys)
             {
-                Equation newEq = eq * terms[eq];
+                Expression newEq = eq * terms[eq];
 
                 if (newEq.Equals(Constant.ZERO))
                 {
@@ -85,16 +85,16 @@ namespace Algebra.Operations
             return new Sum(newEqs);
         }
 
-        private Sum(IList<Equation> eqs)
+        private Sum(IList<Expression> eqs)
             : base(eqs)
         {
 
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
-            List<Equation> derivatives = new List<Equation>();
-            foreach (Equation e in Arguments)
+            List<Expression> derivatives = new List<Expression>();
+            foreach (Expression e in Arguments)
             {
                 derivatives.Add(e.GetDerivative(wrt));
             }
@@ -112,7 +112,7 @@ namespace Algebra.Operations
             return OperandsEquals(obj.Arguments);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Sum);
         }
@@ -147,7 +147,7 @@ namespace Algebra.Operations
             return 30;
         }
 
-        public override Func<List<Equation>, Equation> GetSimplifyingConstructor()
+        public override Func<List<Expression>, Expression> GetSimplifyingConstructor()
         {
             return Add;
         }

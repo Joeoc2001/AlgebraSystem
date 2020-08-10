@@ -9,12 +9,12 @@ namespace Algebra
         //public float baseProb;
         //public int maxDepth;
 
-        //public Equation Next()
+        //public Expression Next()
         //{
         //    return Gen(baseProb, maxDepth);
         //}
 
-        //private static Equation Gen(float baseProb, int maxDepth)
+        //private static Expression Gen(float baseProb, int maxDepth)
         //{
         //    if (maxDepth <= 0 || Random.value < baseProb) // Return a terminating node
         //    {
@@ -38,56 +38,56 @@ namespace Algebra
         //        if (functionValue < 0.1)
         //        {
         //            // Return a log function
-        //            return Equation.LnOf(Gen(baseProb, maxDepth - 1));
+        //            return Expression.LnOf(Gen(baseProb, maxDepth - 1));
         //        }
         //        else if (functionValue < 0.2)
         //        {
         //            // Return a sign function
-        //            return Equation.SignOf(Gen(baseProb, maxDepth - 1));
+        //            return Expression.SignOf(Gen(baseProb, maxDepth - 1));
         //        }
         //        else if (functionValue < 0.3)
         //        {
         //            // Return a min function
-        //            return Equation.Min(Gen(baseProb, maxDepth - 1),
+        //            return Expression.Min(Gen(baseProb, maxDepth - 1),
         //                Gen(baseProb, maxDepth - 1));
         //        }
         //        else if (functionValue < 0.4)
         //        {
         //            // Return a max function
-        //            return Equation.Max(Gen(baseProb, maxDepth - 1),
+        //            return Expression.Max(Gen(baseProb, maxDepth - 1),
         //                Gen(baseProb, maxDepth - 1));
         //        }
         //        else if (functionValue < 0.5)
         //        {
         //            // Return an Abs function
-        //            return Equation.Abs(Gen(baseProb, maxDepth - 1));
+        //            return Expression.Abs(Gen(baseProb, maxDepth - 1));
         //        }
         //        else if (functionValue < 0.6)
         //        {
         //            // Return an Sin function
-        //            return Equation.SinOf(Gen(baseProb, maxDepth - 1));
+        //            return Expression.SinOf(Gen(baseProb, maxDepth - 1));
         //        }
         //        else if (functionValue < 0.7)
         //        {
         //            // Return an Sin function
-        //            return Equation.CosOf(Gen(baseProb, maxDepth - 1));
+        //            return Expression.CosOf(Gen(baseProb, maxDepth - 1));
         //        }
         //        else if (functionValue < 0.8)
         //        {
         //            // Return an Sin function
-        //            return Equation.TanOf(Gen(baseProb, maxDepth - 1));
+        //            return Expression.TanOf(Gen(baseProb, maxDepth - 1));
         //        }
         //        else
         //        {
         //            // Return exponentiation
-        //            return Equation.Pow(Gen(baseProb, maxDepth - 1),
+        //            return Expression.Pow(Gen(baseProb, maxDepth - 1),
         //                Gen(baseProb, maxDepth - 1));
         //        }
         //    }
         //    else // Addition or subtraction
         //    {
         //        int x = Random.Range(1, 5);
-        //        List<Equation> eqs = new List<Equation>(x);
+        //        List<Expression> eqs = new List<Expression>(x);
         //        for (int i = 0; i < x; i++)
         //        {
         //            eqs.Add(Gen(baseProb, maxDepth - 1));
@@ -97,12 +97,12 @@ namespace Algebra
         //        if (operationValue < 0.5)
         //        {
         //            // Return addition
-        //            return Equation.Add(eqs);
+        //            return Expression.Add(eqs);
         //        }
         //        else
         //        {
         //            // Return Multiplication
-        //            return Equation.Multiply(eqs);
+        //            return Expression.Multiply(eqs);
         //        }
         //    }
         //}

@@ -7,13 +7,13 @@ using System.Text;
 
 namespace Algebra.Operations
 {
-    public abstract class CommutativeOperation : Equation
+    public abstract class CommutativeOperation : Expression
     {
-        public readonly ReadOnlyCollection<Equation> Arguments;
+        public readonly ReadOnlyCollection<Expression> Arguments;
 
-        public CommutativeOperation(IList<Equation> eqs)
+        public CommutativeOperation(IList<Expression> eqs)
         {
-            this.Arguments = new ReadOnlyCollection<Equation>(eqs);
+            this.Arguments = new ReadOnlyCollection<Expression>(eqs);
         }
 
         public abstract int IdentityValue();
@@ -21,14 +21,14 @@ namespace Algebra.Operations
         public delegate Rational Operation(Rational a, Rational b);
         public abstract string EmptyName();
         public abstract string OperationSymbol();
-        public abstract Func<List<Equation>, Equation> GetSimplifyingConstructor();
+        public abstract Func<List<Expression>, Expression> GetSimplifyingConstructor();
 
-        public override sealed ExpressionDelegate GetExpression(VariableInputSet set)
+        public override sealed ExpressionDelegate GetDelegate(VariableInputSet set)
         {
             List<ExpressionDelegate> expressions = new List<ExpressionDelegate>(Arguments.Count());
-            foreach (Equation e in Arguments)
+            foreach (Expression e in Arguments)
             {
-                expressions.Add(e.GetExpression(set));
+                expressions.Add(e.GetDelegate(set));
             }
 
             float identityValue = IdentityValue();
@@ -44,14 +44,14 @@ namespace Algebra.Operations
             };
         }
 
-        public bool OperandsEquals(IList<Equation> operands)
+        public bool OperandsEquals(IList<Expression> operands)
         {
             // Check for commutativity
             var counts = Arguments
                 .GroupBy(v => v)
                 .ToDictionary(g => g.Key, g => g.Count());
             var ok = true;
-            foreach (Equation n in operands)
+            foreach (Expression n in operands)
             {
                 if (counts.TryGetValue(n, out int c))
                 {
@@ -66,21 +66,21 @@ namespace Algebra.Operations
             return ok && counts.Values.All(c => c == 0);
         }
 
-        public List<Equation> GetDisplaySortedArguments()
+        public List<Expression> GetDisplaySortedArguments()
         {
-            List<Equation> sortedEqs = new List<Equation>(Arguments);
+            List<Expression> sortedEqs = new List<Expression>(Arguments);
             sortedEqs.Sort(EquationDisplayComparer.COMPARER);
             return sortedEqs;
         }
 
-        protected static List<Equation> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : Equation
+        protected static List<Expression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : Expression
         {
-            List<Equation> newEqs = new List<Equation>(eqs.Count);
+            List<Expression> newEqs = new List<Expression>(eqs.Count);
 
             Rational collectedConstants = identity;
 
             // Loop & simplify
-            foreach (Equation eq in eqs)
+            foreach (Expression eq in eqs)
             {
                 if (eq is Constant constEq)
                 {
@@ -102,7 +102,7 @@ namespace Algebra.Operations
         public override int GenHashCode()
         {
             int value = -1906136416 ^ OperationSymbol().GetHashCode();
-            foreach (Equation eq in GetDisplaySortedArguments())
+            foreach (Expression eq in GetDisplaySortedArguments())
             {
                 value *= 33;
                 value ^= eq.GenHashCode();
@@ -131,6 +131,7 @@ namespace Algebra.Operations
             return builder.ToString();
         }
 
+        [Obsolete]
         public override string ToRunnableString()
         {
             if (Arguments.Count == 0)
@@ -154,15 +155,15 @@ namespace Algebra.Operations
             return builder.ToString();
         }
 
-        public override Equation Map(EquationMapping map)
+        public override Expression Map(EquationMapping map)
         {
-            Equation currentThis = this;
+            Expression currentThis = this;
 
             if (map.ShouldMapChildren(this))
             {
-                List<Equation> mappedEqs = new List<Equation>(Arguments.Count);
+                List<Expression> mappedEqs = new List<Expression>(Arguments.Count);
 
-                foreach (Equation eq in Arguments)
+                foreach (Expression eq in Arguments)
                 {
                     mappedEqs.Add(eq.Map(map));
                 }

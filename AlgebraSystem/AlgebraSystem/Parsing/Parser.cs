@@ -9,27 +9,27 @@ namespace Algebra.Parsing
     public class Parser
     {
         private readonly Tokenizer tokenizer;
-        private readonly IDictionary<string, FunctionFactory> functions;
+        private readonly IDictionary<string, FunctionIdentity> functions;
 
-        public Parser(Tokenizer tokenizer, IDictionary<string, FunctionFactory> functions)
+        public Parser(Tokenizer tokenizer, IDictionary<string, FunctionIdentity> functions)
         {
             this.tokenizer = tokenizer;
             this.functions = functions;
         }
 
-        public static Equation Parse(string s)
+        public static Expression Parse(string s)
         {
             HashSet<string> variables = new HashSet<string>() { "x", "y", "z" };
             return Parse(s, variables);
         }
 
-        public static Equation Parse(string s, ICollection<string> variables)
+        public static Expression Parse(string s, ICollection<string> variables)
         {
-            IDictionary<string, FunctionFactory> functions = FunctionFactory.DefaultFunctions;
+            IDictionary<string, FunctionIdentity> functions = FunctionIdentity.DefaultFunctions;
             return Parse(s, variables, functions);
         }
 
-        public static Equation Parse(string s, ICollection<string> variables, IDictionary<string, FunctionFactory> functions)
+        public static Expression Parse(string s, ICollection<string> variables, IDictionary<string, FunctionIdentity> functions)
         {
             // Ensure that all identifiers are in lower case
             HashSet<string> variablesLower = new HashSet<string>();
@@ -37,7 +37,7 @@ namespace Algebra.Parsing
             {
                 variablesLower.Add(variable.ToLower());
             }
-            Dictionary<string, FunctionFactory> functionsLower = new Dictionary<string, FunctionFactory>();
+            Dictionary<string, FunctionIdentity> functionsLower = new Dictionary<string, FunctionIdentity>();
             foreach (string function in functions.Keys)
             {
                 functionsLower.Add(function.ToLower(), functions[function]);
@@ -51,7 +51,7 @@ namespace Algebra.Parsing
             return p.Parse();
         }
 
-        public Equation Parse()
+        public Expression Parse()
         {
             var expr = ParseAddSubtract();
 
@@ -65,10 +65,10 @@ namespace Algebra.Parsing
         }
 
         // Parse an sequence of add/subtract operators
-        Equation ParseAddSubtract()
+        Expression ParseAddSubtract()
         {
             // Collate all terms into a list
-            List<Equation> terms = new List<Equation>
+            List<Expression> terms = new List<Expression>
         {
             ParseMultiplyDivide()
         };
@@ -93,7 +93,7 @@ namespace Algebra.Parsing
                 tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                Equation rhs = ParseMultiplyDivide();
+                Expression rhs = ParseMultiplyDivide();
                 if (subtractNext)
                 {
                     if (rhs is Constant constant)
@@ -110,10 +110,10 @@ namespace Algebra.Parsing
         }
 
         // Parse an sequence of multiply/divide operators
-        Equation ParseMultiplyDivide()
+        Expression ParseMultiplyDivide()
         {
             // Collate all terms into a list
-            List<Equation> terms = new List<Equation>
+            List<Expression> terms = new List<Expression>
         {
             ParseExponent()
         };
@@ -138,19 +138,19 @@ namespace Algebra.Parsing
                 tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                Equation rhs = ParseExponent();
+                Expression rhs = ParseExponent();
                 if (reciprocalNext)
                 {
-                    rhs = Equation.Pow(rhs, -1);
+                    rhs = Expression.Pow(rhs, -1);
                 }
                 terms.Add(rhs);
             }
         }
 
         // Parse an sequence of exponent operators
-        Equation ParseExponent()
+        Expression ParseExponent()
         {
-            Equation lhs = ParseLeaf();
+            Expression lhs = ParseLeaf();
 
             while (true)
             {
@@ -163,13 +163,13 @@ namespace Algebra.Parsing
                 tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                Equation rhs = ParseLeaf();
-                lhs = Equation.Pow(lhs, rhs);
+                Expression rhs = ParseLeaf();
+                lhs = Expression.Pow(lhs, rhs);
             }
         }
 
         // Parse a leaf node (Variable, Constant or Function)
-        Equation ParseLeaf()
+        Expression ParseLeaf()
         {
             if (tokenizer.Token == Token.Subtract)
             {
@@ -179,7 +179,7 @@ namespace Algebra.Parsing
 
             if (tokenizer.Token == Token.Decimal)
             {
-                Equation node = Constant.From(tokenizer.Number);
+                Expression node = Constant.From(tokenizer.Number);
                 tokenizer.NextToken();
                 return node;
             }
@@ -187,7 +187,7 @@ namespace Algebra.Parsing
             if (tokenizer.Token == Token.Variable)
             {
                 string name = tokenizer.TokenSignature;
-                Equation node = new Variable(name);
+                Expression node = new Variable(name);
                 tokenizer.NextToken();
                 return node;
             }
@@ -196,7 +196,7 @@ namespace Algebra.Parsing
             {
                 tokenizer.NextToken();
 
-                Equation node = ParseAddSubtract();
+                Expression node = ParseAddSubtract();
 
                 if (tokenizer.Token != Token.CloseBrace)
                 {
@@ -214,11 +214,11 @@ namespace Algebra.Parsing
 
                 tokenizer.NextToken();
 
-                List<Equation> nodes;
+                List<Expression> nodes;
                 if (tokenizer.Token == Token.OpenBrace)
                 {
                     tokenizer.NextToken();
-                    nodes = new List<Equation>()
+                    nodes = new List<Expression>()
                     {
                         ParseAddSubtract()
                     };
@@ -238,7 +238,7 @@ namespace Algebra.Parsing
                 }
                 else
                 {
-                    nodes = new List<Equation>()
+                    nodes = new List<Expression>()
                     {
                         ParseLeaf()
                     };
@@ -250,46 +250,46 @@ namespace Algebra.Parsing
             throw new SyntaxException($"Unexpected leaf token: {tokenizer.Token}");
         }
 
-        private Equation MakeFunction(IList<Equation> nodes, string functionName)
+        private Expression MakeFunction(List<Expression> nodes, string functionName)
         {
-            FunctionFactory factory = functions[functionName];
+            FunctionIdentity factory = functions[functionName];
             return factory.CreateEquation(nodes);
             //int requiredParameters;
-            //Func<IList<Equation>, Equation> constructor;
+            //Func<IList<Expression>, Expression> constructor;
             //switch (functionName)
             //{
             //    case "log":
             //    case "ln":
             //        requiredParameters = 1;
-            //        constructor = ns => Equation.LnOf(ns[0]);
+            //        constructor = ns => Expression.LnOf(ns[0]);
             //        break;
             //    case "sign":
             //        requiredParameters = 1;
-            //        constructor = ns => Equation.SignOf(ns[0]);
+            //        constructor = ns => Expression.SignOf(ns[0]);
             //        break;
             //    case "abs":
             //        requiredParameters = 1;
-            //        constructor = ns => Equation.Abs(ns[0]);
+            //        constructor = ns => Expression.Abs(ns[0]);
             //        break;
             //    case "min":
             //        requiredParameters = 2;
-            //        constructor = ns => Equation.Min(ns[0], ns[1]);
+            //        constructor = ns => Expression.Min(ns[0], ns[1]);
             //        break;
             //    case "max":
             //        requiredParameters = 2;
-            //        constructor = ns => Equation.Max(ns[0], ns[1]);
+            //        constructor = ns => Expression.Max(ns[0], ns[1]);
             //        break;
             //    case "sin":
             //        requiredParameters = 1;
-            //        constructor = ns => Equation.SinOf(ns[0]);
+            //        constructor = ns => Expression.SinOf(ns[0]);
             //        break;
             //    case "cos":
             //        requiredParameters = 1;
-            //        constructor = ns => Equation.CosOf(ns[0]);
+            //        constructor = ns => Expression.CosOf(ns[0]);
             //        break;
             //    case "tan":
             //        requiredParameters = 1;
-            //        constructor = ns => Equation.TanOf(ns[0]);
+            //        constructor = ns => Expression.TanOf(ns[0]);
             //        break;
             //    default:
             //        throw new SyntaxException($"Unknown function name: {tokenizer.FunctionName}");

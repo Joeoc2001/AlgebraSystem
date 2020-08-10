@@ -14,8 +14,8 @@ namespace OperationsTests
         public void Multiplication_IsEqual_WhenSame()
         {
             // ARANGE
-            Equation v1 = Variable.X * 2;
-            Equation v2 = Variable.X * 2;
+            Expression v1 = Variable.X * 2;
+            Expression v2 = Variable.X * 2;
 
             // ACT
 
@@ -34,8 +34,8 @@ namespace OperationsTests
         public void Multiplication_IsEqual_Commutative()
         {
             // ARANGE
-            Equation v1 = Variable.X * 7;
-            Equation v2 = 7 * Variable.X;
+            Expression v1 = Variable.X * 7;
+            Expression v2 = 7 * Variable.X;
 
             // ACT
 
@@ -54,8 +54,8 @@ namespace OperationsTests
         public void Multiplication_EqualReturnFalse_WhenDifferent()
         {
             // ARANGE
-            Equation v1 = Variable.X * 1;
-            Equation v2 = Variable.X * 2;
+            Expression v1 = Variable.X * 1;
+            Expression v2 = Variable.X * 2;
 
             // ACT
 
@@ -74,11 +74,11 @@ namespace OperationsTests
         public void Multiplication_Derivative_IsTermsSum()
         {
             // ARANGE
-            Equation value = Variable.X * Variable.Y;
-            Equation expected = 1 * Variable.Y + Variable.X * 0;
+            Expression value = Variable.X * Variable.Y;
+            Expression expected = 1 * Variable.Y + Variable.X * 0;
 
             // ACT
-            Equation derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative(Variable.X);
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -88,10 +88,10 @@ namespace OperationsTests
         public void Multiplication_EvaluatesCorrectly()
         {
             // ARANGE
-            Equation equation = Constant.From(54321) * Constant.From(7);
+            Expression equation = Constant.From(54321) * Constant.From(7);
 
             // ACT
-            float value = equation.GetExpression(new VariableInputSet())();
+            float value = equation.GetDelegate(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(54321 * 7, value);
@@ -103,8 +103,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Constant.From(54321) * Variable.Z * Constant.From(54321);
-            Equation expected = Constant.From(((Rational)54321) * 54321) * Variable.Z;
+            Expression equation = Constant.From(54321) * Variable.Z * Constant.From(54321);
+            Expression expected = Constant.From(((Rational)54321) * 54321) * Variable.Z;
 
             // ASSERT
             Assert.AreEqual(expected, equation);
@@ -116,8 +116,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Equation.Pow(Variable.Z, 2) * Equation.Pow(Variable.Z, Variable.Y) * Variable.Z;
-            Equation expected = Equation.Pow(Variable.Z, 3 + Variable.Y);
+            Expression equation = Expression.Pow(Variable.Z, 2) * Expression.Pow(Variable.Z, Variable.Y) * Variable.Z;
+            Expression expected = Expression.Pow(Variable.Z, 3 + Variable.Y);
 
             // ASSERT
             Assert.AreEqual(expected, equation);
@@ -129,8 +129,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = 1 * 2 * Variable.Z * (Rational)0.5M;
-            Equation expected = Variable.Z;
+            Expression equation = 1 * 2 * Variable.Z * (Rational)0.5M;
+            Expression expected = Variable.Z;
 
             // ASSERT
             Assert.AreEqual(expected, equation);
@@ -142,8 +142,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Variable.Z / Variable.Z;
-            Equation expected = Constant.From(1);
+            Expression equation = Variable.Z / Variable.Z;
+            Expression expected = Constant.From(1);
 
             // ASSERT
             Assert.AreEqual(expected, equation);
@@ -155,8 +155,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Constant.From(2) * Variable.Z / Variable.Z;
-            Equation expected = Constant.From(2);
+            Expression equation = Constant.From(2) * Variable.Z / Variable.Z;
+            Expression expected = Constant.From(2);
 
             // ASSERT
             Assert.AreEqual(expected, equation);
@@ -168,8 +168,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Equation.Multiply(new List<Equation>() { Equation.Multiply(new List<Equation>() { Variable.X, Variable.Y }), Variable.Z });
-            Equation expected = Equation.Multiply(new List<Equation>() { Variable.X, Variable.Y, Variable.Z });
+            Expression equation = Expression.Multiply(new List<Expression>() { Expression.Multiply(new List<Expression>() { Variable.X, Variable.Y }), Variable.Z });
+            Expression expected = Expression.Multiply(new List<Expression>() { Variable.X, Variable.Y, Variable.Z });
 
             // ASSERT
             Assert.AreEqual(expected, equation);
@@ -181,8 +181,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = 0 * 2 * Variable.Z * (Rational)0.5M;
-            Equation expected = 0;
+            Expression equation = 0 * 2 * Variable.Z * (Rational)0.5M;
+            Expression expected = 0;
 
             // ASSERT
             Assert.AreEqual(expected, equation);
@@ -194,8 +194,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = (Variable.X + 1) * (Variable.X - 1);
-            Equation expected = Equation.Pow(Variable.X, 2) - 1;
+            Expression equation = (Variable.X + 1) * (Variable.X - 1);
+            Expression expected = Expression.Pow(Variable.X, 2) - 1;
 
             // ASSERT
             Assert.AreNotEqual(expected, equation);
@@ -207,8 +207,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = (Variable.X + 1) * (Variable.X + 2);
-            Equation expected = Equation.Pow(Variable.X, 2) + 3 * Variable.X + 2;
+            Expression equation = (Variable.X + 1) * (Variable.X + 2);
+            Expression expected = Expression.Pow(Variable.X, 2) + 3 * Variable.X + 2;
 
             // ASSERT
             Assert.AreNotEqual(expected, equation);
@@ -220,8 +220,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = 3 * (Variable.X + 1) - 3;
-            Equation expected = 3 * Variable.X;
+            Expression equation = 3 * (Variable.X + 1) - 3;
+            Expression expected = 3 * Variable.X;
 
             // ASSERT
             Assert.AreNotEqual(expected, equation);
@@ -233,7 +233,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = 3 * Variable.X;
+            Expression equation = 3 * Variable.X;
 
             // ASSERT
             Assert.AreEqual(20, equation.GetOrderIndex());
@@ -243,8 +243,8 @@ namespace OperationsTests
         public void Multiplication_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Equation equation1 = Variable.X * 2;
-            Equation equation2 = Variable.X * 2;
+            Expression equation1 = Variable.X * 2;
+            Expression equation2 = Variable.X * 2;
 
             // ACT
             equation2.Map(a => Variable.Y * 2);
@@ -257,10 +257,10 @@ namespace OperationsTests
         public void Multiplication_Map_ReturnsAlternative()
         {
             // ARANGE
-            Equation equation1 = Variable.X * 2;
+            Expression equation1 = Variable.X * 2;
 
             // ACT
-            Equation equation2 = equation1.Map(a => Variable.Z);
+            Expression equation2 = equation1.Map(a => Variable.Z);
 
             // ASSERT
             Assert.AreEqual(Variable.Z, equation2);
@@ -270,10 +270,10 @@ namespace OperationsTests
         public void Multiplication_Map_MapsChildren()
         {
             // ARANGE
-            Equation equation1 = Variable.X * Variable.Y;
+            Expression equation1 = Variable.X * Variable.Y;
 
             // ACT
-            Equation equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
+            Expression equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
             Assert.AreEqual(Variable.Z * Variable.Z, equation2);
@@ -283,7 +283,7 @@ namespace OperationsTests
         public void Multiplication_Map_CanSkipSelf()
         {
             // ARANGE
-            Equation equation1 = Variable.X * Variable.Y;
+            Expression equation1 = Variable.X * Variable.Y;
             EquationMapping mapping = new EquationMapping()
             {
                 PostMap = a => Variable.Z,
@@ -291,7 +291,7 @@ namespace OperationsTests
             };
 
             // ACT
-            Equation equation2 = equation1.Map(mapping);
+            Expression equation2 = equation1.Map(mapping);
 
             // ASSERT
             Assert.AreEqual(Variable.Z * Variable.Z, equation2);
@@ -301,7 +301,7 @@ namespace OperationsTests
         public void Multiplication_Map_CanSkipChildren()
         {
             // ARANGE
-            Equation equation1 = Variable.X * Variable.Y;
+            Expression equation1 = Variable.X * Variable.Y;
             EquationMapping mapping = new EquationMapping()
             {
                 PostMap = a => a is Variable ? Variable.Z : a,
@@ -309,7 +309,7 @@ namespace OperationsTests
             };
 
             // ACT
-            Equation equation2 = equation1.Map(mapping);
+            Expression equation2 = equation1.Map(mapping);
 
             // ASSERT
             Assert.AreEqual(Variable.X * Variable.Y, equation2);

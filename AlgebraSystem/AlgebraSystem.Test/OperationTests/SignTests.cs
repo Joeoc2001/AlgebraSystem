@@ -17,7 +17,7 @@ namespace OperationsTests
             Constant c = Constant.ONE;
 
             // ACT
-            Equation e = Equation.SignOf(10);
+            Expression e = Expression.SignOf(10);
 
             // ASSERT
             Assert.IsTrue(e is Constant);
@@ -31,7 +31,7 @@ namespace OperationsTests
             Constant c = Constant.ZERO;
 
             // ACT
-            Equation e = Equation.SignOf(0);
+            Expression e = Expression.SignOf(0);
 
             // ASSERT
             Assert.IsTrue(e is Constant);
@@ -44,7 +44,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            float e = Equation.SignOf(Variable.X).GetExpression(new VariableInputSet(0))();
+            float e = Expression.SignOf(Variable.X).GetDelegate(new VariableInputSet(0))();
 
             // ASSERT
             Assert.AreEqual(0, e);
@@ -56,7 +56,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            float e = Equation.SignOf(Variable.X).GetExpression(new VariableInputSet(145))();
+            float e = Expression.SignOf(Variable.X).GetDelegate(new VariableInputSet(145))();
 
             // ASSERT
             Assert.AreEqual(1, e);
@@ -68,7 +68,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            float e = Equation.SignOf(Variable.X).GetExpression(new VariableInputSet(-14335))();
+            float e = Expression.SignOf(Variable.X).GetDelegate(new VariableInputSet(-14335))();
 
             // ASSERT
             Assert.AreEqual(-1, e);
@@ -80,7 +80,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Equation.SignOf(Variable.X);
+            Expression equation = Expression.SignOf(Variable.X);
 
             // ASSERT
             Assert.AreEqual(0, equation.GetOrderIndex());
@@ -92,8 +92,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation argument = Variable.Y;
-            Equation equation = Equation.SignOf(argument);
+            Expression argument = Variable.Y;
+            Expression equation = Expression.SignOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = equation.GetHashCode();
 
@@ -107,8 +107,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation argument = 2;
-            Equation equation = Equation.SignOf(argument);
+            Expression argument = 2;
+            Expression equation = Expression.SignOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = equation.GetHashCode();
 
@@ -122,8 +122,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation argument = Variable.X + 1;
-            Equation equation = Equation.SignOf(argument);
+            Expression argument = Variable.X + 1;
+            Expression equation = Expression.SignOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = equation.GetHashCode();
 
@@ -135,11 +135,11 @@ namespace OperationsTests
         public void Sign_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Equation equation1 = Equation.SignOf(Variable.X);
-            Equation equation2 = Equation.SignOf(Variable.X);
+            Expression equation1 = Expression.SignOf(Variable.X);
+            Expression equation2 = Expression.SignOf(Variable.X);
 
             // ACT
-            equation2.Map(a => Equation.SignOf(Variable.Y));
+            equation2.Map(a => Expression.SignOf(Variable.Y));
 
             // ASSERT
             Assert.AreEqual(equation1, equation2);
@@ -149,33 +149,33 @@ namespace OperationsTests
         public void Sign_Map_ReturnsAlternative()
         {
             // ARANGE
-            Equation equation1 = Equation.SignOf(Variable.X);
+            Expression equation1 = Expression.SignOf(Variable.X);
 
             // ACT
-            Equation equation2 = equation1.Map(a => Equation.SignOf(Variable.Y));
+            Expression equation2 = equation1.Map(a => Expression.SignOf(Variable.Y));
 
             // ASSERT
-            Assert.AreEqual(Equation.SignOf(Variable.Y), equation2);
+            Assert.AreEqual(Expression.SignOf(Variable.Y), equation2);
         }
 
         [Test]
         public void Sign_Map_MapsChildren()
         {
             // ARANGE
-            Equation equation1 = Equation.SignOf(Variable.X);
+            Expression equation1 = Expression.SignOf(Variable.X);
 
             // ACT
-            Equation equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
+            Expression equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
-            Assert.AreEqual(Equation.SignOf(Variable.Z), equation2);
+            Assert.AreEqual(Expression.SignOf(Variable.Z), equation2);
         }
 
         [Test]
         public void Sign_Map_CanSkipSelf()
         {
             // ARANGE
-            Equation equation1 = Equation.SignOf(Variable.X);
+            Expression equation1 = Expression.SignOf(Variable.X);
             EquationMapping mapping = new EquationMapping()
             {
                 PostMap = a => Variable.Z,
@@ -183,17 +183,17 @@ namespace OperationsTests
             };
 
             // ACT
-            Equation equation2 = equation1.Map(mapping);
+            Expression equation2 = equation1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Equation.SignOf(Variable.Z), equation2);
+            Assert.AreEqual(Expression.SignOf(Variable.Z), equation2);
         }
 
         [Test]
         public void Sign_Map_CanSkipChildren()
         {
             // ARANGE
-            Equation equation1 = Equation.SignOf(Variable.X);
+            Expression equation1 = Expression.SignOf(Variable.X);
             EquationMapping mapping = new EquationMapping()
             {
                 PostMap = a => a is Variable ? Variable.Z : a,
@@ -201,10 +201,10 @@ namespace OperationsTests
             };
 
             // ACT
-            Equation equation2 = equation1.Map(mapping);
+            Expression equation2 = equation1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Equation.SignOf(Variable.X), equation2);
+            Assert.AreEqual(Expression.SignOf(Variable.X), equation2);
         }
     }
 }

@@ -16,14 +16,14 @@ namespace EquivalenceTests
         public void ExpandBraces_Expands_DOTS()
         {
             // ARANGE
-            Equation eq = (Variable.X + 1) * (Variable.X - 1);
-            List<Equation> expected = new List<Equation>()
+            Expression eq = (Variable.X + 1) * (Variable.X - 1);
+            List<Expression> expected = new List<Expression>()
             {
                 (Variable.X * Variable.X) - 1
             };
 
             // ACT
-            List<Equation> actual = ExpandBracesPath(eq);
+            List<Expression> actual = ExpandBracesPath(eq);
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -33,14 +33,14 @@ namespace EquivalenceTests
         public void ExpandBraces_Expands_Quadratic()
         {
             // ARANGE
-            Equation eq = (Variable.X + 1) * (Variable.X + 2);
-            List<Equation> expected = new List<Equation>()
+            Expression eq = (Variable.X + 1) * (Variable.X + 2);
+            List<Expression> expected = new List<Expression>()
             {
                 (Variable.X * Variable.X) + 3 * Variable.X + 2
             };
 
             // ACT
-            List<Equation> actual = ExpandBracesPath(eq);
+            List<Expression> actual = ExpandBracesPath(eq);
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -50,8 +50,8 @@ namespace EquivalenceTests
         public void ExpandBraces_Expands_AllThreeOfCubic()
         {
             // ARANGE
-            Equation eq = (Variable.X + 1) * (Variable.X + 2) * (Variable.X + 3);
-            List<Equation> expected = new List<Equation>()
+            Expression eq = (Variable.X + 1) * (Variable.X + 2) * (Variable.X + 3);
+            List<Expression> expected = new List<Expression>()
             {
                 ((Variable.X * Variable.X) + 3 * Variable.X + 2) * (Variable.X + 3),
                 ((Variable.X * Variable.X) + 4 * Variable.X + 3) * (Variable.X + 2),
@@ -59,7 +59,7 @@ namespace EquivalenceTests
             };
 
             // ACT
-            List<Equation> actual = ExpandBracesPath(eq);
+            List<Expression> actual = ExpandBracesPath(eq);
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -69,14 +69,14 @@ namespace EquivalenceTests
         public void ExpandBraces_DoesntExpandAllOfCubicAtOnce()
         {
             // ARANGE
-            Equation eq = (Variable.X + 1) * (Variable.X + 2) * (Variable.X + 3);
-            Equation nonexpected = Variable.X * Variable.X * Variable.X
+            Expression eq = (Variable.X + 1) * (Variable.X + 2) * (Variable.X + 3);
+            Expression nonexpected = Variable.X * Variable.X * Variable.X
                 + 6 * Variable.X * Variable.X
                 + 11 * Variable.X
                 + 6;
 
             // ACT
-            List<Equation> actual = ExpandBracesPath(eq);
+            List<Expression> actual = ExpandBracesPath(eq);
 
             // ASSERT
             Assert.IsFalse(actual.Contains(nonexpected));
@@ -86,15 +86,15 @@ namespace EquivalenceTests
         public void ExpandBraces_Expands_Nested()
         {
             // ARANGE
-            Equation eq = ((Variable.X + 1) * (Variable.X + 2) + 1) * (Variable.X + 3);
-            List<Equation> expected = new List<Equation>()
+            Expression eq = ((Variable.X + 1) * (Variable.X + 2) + 1) * (Variable.X + 3);
+            List<Expression> expected = new List<Expression>()
             {
                 ((Variable.X * Variable.X) + 3 * Variable.X + 3) * (Variable.X + 3),
                 (Variable.X + 1) * (Variable.X + 2) * Variable.X + (Variable.X + 1) * (Variable.X + 2) * 3 + Variable.X + 3
             };
 
             // ACT
-            List<Equation> actual = ExpandBracesPath(eq);
+            List<Expression> actual = ExpandBracesPath(eq);
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -104,10 +104,10 @@ namespace EquivalenceTests
         public void ExpandBraces_DoesntDistribute()
         {
             // ARANGE
-            Equation eq = (Variable.X + 1) * 3;
+            Expression eq = (Variable.X + 1) * 3;
 
             // ACT
-            List<Equation> actual = ExpandBracesPath(eq);
+            List<Expression> actual = ExpandBracesPath(eq);
 
             // ASSERT
             Assert.That(actual, Has.Count.EqualTo(0));
@@ -117,10 +117,10 @@ namespace EquivalenceTests
         public void ExpandBraces_onAddition_DoesNothing()
         {
             // ARANGE
-            Equation eq = Variable.X + 1;
+            Expression eq = Variable.X + 1;
 
             // ACT
-            List<Equation> actual = ExpandBracesPath(eq);
+            List<Expression> actual = ExpandBracesPath(eq);
 
             // ASSERT
             Assert.That(actual, Has.Count.EqualTo(0));

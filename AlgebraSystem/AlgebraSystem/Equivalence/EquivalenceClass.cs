@@ -13,10 +13,10 @@ namespace Algebra.Equivalence
             EquivalencePaths.EXPAND_BRACES
         };
 
-        private readonly Equation anchorEquation; // The equation used to define the equivalence class
+        private readonly Expression anchorEquation; // The equation used to define the equivalence class
         private readonly List<EquivalencePath> paths;
 
-        public EquivalenceClass(Equation anchorEquation, List<EquivalencePath> paths = null)
+        public EquivalenceClass(Expression anchorEquation, List<EquivalencePath> paths = null)
         {
             this.paths = paths ?? DEFAULT_PATHS;
             this.anchorEquation = anchorEquation;

@@ -9,7 +9,7 @@ namespace Algebra.Operations
 {
     public class Sign : Monad
     {
-        new public static Equation SignOf(Equation argument)
+        new public static Expression SignOf(Expression argument)
         {
             if (argument is Sign)
             {
@@ -35,20 +35,20 @@ namespace Algebra.Operations
             return new Sign(argument);
         }
 
-        private Sign(Equation argument)
+        private Sign(Expression argument)
             : base(argument)
         {
 
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
             return 0; // Not always true, but true 100% of the time :P
         }
 
-        public override ExpressionDelegate GetExpression(VariableInputSet set)
+        public override ExpressionDelegate GetDelegate(VariableInputSet set)
         {
-            ExpressionDelegate eqExpression = Argument.GetExpression(set);
+            ExpressionDelegate eqExpression = Argument.GetDelegate(set);
             return () => Math.Sign(eqExpression());
         }
 
@@ -62,7 +62,7 @@ namespace Algebra.Operations
             return Argument.Equals(other.Argument);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Sign);
         }
@@ -84,7 +84,7 @@ namespace Algebra.Operations
 
         public override string ToRunnableString()
         {
-            return $"Equation.SignOf({Argument.ToRunnableString()})";
+            return $"Expression.SignOf({Argument.ToRunnableString()})";
         }
 
         public override int GetOrderIndex()
@@ -92,7 +92,7 @@ namespace Algebra.Operations
             return 0;
         }
 
-        public override Func<Equation, Equation> GetSimplifyingConstructor()
+        public override Func<Expression, Expression> GetSimplifyingConstructor()
         {
             return SignOf;
         }

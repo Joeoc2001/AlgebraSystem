@@ -61,7 +61,7 @@ namespace OperationsTests
             Variable v1 = new Variable(name);
 
             // ACT
-            Equation derivative = v1.GetDerivative(v1);
+            Expression derivative = v1.GetDerivative(v1);
 
             // ASSERT
             Assert.AreEqual(Constant.From(1), derivative);
@@ -80,7 +80,7 @@ namespace OperationsTests
             Variable v2 = new Variable(name2);
 
             // ACT
-            Equation derivative = v1.GetDerivative(v2);
+            Expression derivative = v1.GetDerivative(v2);
 
             // ASSERT
             Assert.AreEqual(Constant.From(0), derivative);
@@ -96,7 +96,7 @@ namespace OperationsTests
             inputSet.Set(name, expected);
 
             // ACT
-            float value = v.GetExpression(inputSet)();
+            float value = v.GetDelegate(inputSet)();
 
             // ASSERT
             Assert.AreEqual(expected, value);
@@ -114,7 +114,7 @@ namespace OperationsTests
             // ACT
 
             // ASSERT
-            Assert.That(() => v.GetExpression(inputSet), Throws.TypeOf<Variable.NotPresentException>());
+            Assert.That(() => v.GetDelegate(inputSet), Throws.TypeOf<Variable.NotPresentException>());
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Variable.X;
+            Expression equation = Variable.X;
 
             // ASSERT
             Assert.AreEqual(0, equation.GetOrderIndex());
@@ -133,8 +133,8 @@ namespace OperationsTests
         public void Variable_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Equation equation1 = Variable.X;
-            Equation equation2 = Variable.X;
+            Expression equation1 = Variable.X;
+            Expression equation2 = Variable.X;
 
             // ACT
             equation2.Map(a => Variable.Y);
@@ -147,10 +147,10 @@ namespace OperationsTests
         public void Variable_Map_ReturnsAlternative()
         {
             // ARANGE
-            Equation equation1 = Variable.X;
+            Expression equation1 = Variable.X;
 
             // ACT
-            Equation equation2 = equation1.Map(a => Variable.Z);
+            Expression equation2 = equation1.Map(a => Variable.Z);
 
             // ASSERT
             Assert.AreEqual(Variable.Z, equation2);

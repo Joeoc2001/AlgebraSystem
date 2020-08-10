@@ -3,23 +3,23 @@
 
 namespace Algebra.Operations
 {
-    public abstract class Monad : Equation
+    public abstract class Monad : Expression
     {
-        public readonly Equation Argument;
+        public readonly Expression Argument;
 
-        protected Monad(Equation argument)
+        protected Monad(Expression argument)
         {
             this.Argument = argument;
         }
-        public abstract Func<Equation, Equation> GetSimplifyingConstructor();
+        public abstract Func<Expression, Expression> GetSimplifyingConstructor();
 
-        public override Equation Map(EquationMapping map)
+        public override Expression Map(EquationMapping map)
         {
-            Equation currentThis = this;
+            Expression currentThis = this;
 
             if (map.ShouldMapChildren(this))
             {
-                Equation mappedArg = Argument.Map(map);
+                Expression mappedArg = Argument.Map(map);
                 currentThis = GetSimplifyingConstructor()(mappedArg);
             }
 

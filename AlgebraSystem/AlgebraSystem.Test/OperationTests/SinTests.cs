@@ -14,8 +14,8 @@ namespace OperationsTests
         public void Sin_IsEqual_WhenSame()
         {
             // ARANGE
-            Equation v1 = Equation.SinOf(Variable.X);
-            Equation v2 = Equation.SinOf(Variable.X);
+            Expression v1 = Expression.SinOf(Variable.X);
+            Expression v2 = Expression.SinOf(Variable.X);
 
             // ACT
 
@@ -34,8 +34,8 @@ namespace OperationsTests
         public void Sin_EqualReturnFalse_WhenDifferent()
         {
             // ARANGE
-            Equation v1 = Equation.SinOf(Variable.X);
-            Equation v2 = Equation.SinOf(Variable.Y);
+            Expression v1 = Expression.SinOf(Variable.X);
+            Expression v2 = Expression.SinOf(Variable.Y);
 
             // ACT
 
@@ -54,11 +54,11 @@ namespace OperationsTests
         public void Sin_XDerivative_IsCorrect()
         {
             // ARANGE
-            Equation value = Equation.SinOf(Variable.X);
-            Equation expected = Equation.CosOf(Variable.X);
+            Expression value = Expression.SinOf(Variable.X);
+            Expression expected = Expression.CosOf(Variable.X);
 
             // ACT
-            Equation derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative(Variable.X);
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -68,11 +68,11 @@ namespace OperationsTests
         public void Sin_XSquaredDerivative_IsCorrect()
         {
             // ARANGE
-            Equation value = Equation.SinOf(Equation.Pow(Variable.X, 2));
-            Equation expected = 2 * Variable.X * Equation.CosOf(Equation.Pow(Variable.X, 2));
+            Expression value = Expression.SinOf(Expression.Pow(Variable.X, 2));
+            Expression expected = 2 * Variable.X * Expression.CosOf(Expression.Pow(Variable.X, 2));
 
             // ACT
-            Equation derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative(Variable.X);
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -82,10 +82,10 @@ namespace OperationsTests
         public void Sin_Evaluates0Correctly()
         {
             // ARANGE
-            Equation equation = Equation.SinOf(0);
+            Expression equation = Expression.SinOf(0);
 
             // ACT
-            float value = equation.GetExpression(new VariableInputSet())();
+            float value = equation.GetDelegate(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(0, value);
@@ -97,7 +97,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation e = Equation.SinOf(10);
+            Expression e = Expression.SinOf(10);
 
             // ASSERT
             Assert.IsFalse(e is Constant);
@@ -109,7 +109,7 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation equation = Equation.SinOf(Variable.X);
+            Expression equation = Expression.SinOf(Variable.X);
 
             // ASSERT
             Assert.AreEqual(0, equation.GetOrderIndex());
@@ -121,8 +121,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation argument = Variable.Y;
-            Equation equation = Equation.SinOf(argument);
+            Expression argument = Variable.Y;
+            Expression equation = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = equation.GetHashCode();
 
@@ -136,8 +136,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation argument = 2;
-            Equation equation = Equation.SinOf(argument);
+            Expression argument = 2;
+            Expression equation = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = equation.GetHashCode();
 
@@ -151,8 +151,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation argument = Variable.X + 1;
-            Equation equation = Equation.SinOf(argument);
+            Expression argument = Variable.X + 1;
+            Expression equation = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = equation.GetHashCode();
 
@@ -166,9 +166,9 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation argument = Variable.X;
-            Equation ln = Equation.SinOf(argument);
-            Equation sign = Equation.SignOf(argument);
+            Expression argument = Variable.X;
+            Expression ln = Expression.SinOf(argument);
+            Expression sign = Expression.SignOf(argument);
             int hash1 = ln.GetHashCode();
             int hash2 = sign.GetHashCode();
 
@@ -180,11 +180,11 @@ namespace OperationsTests
         public void Sin_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Equation equation1 = Equation.SinOf(Variable.X);
-            Equation equation2 = Equation.SinOf(Variable.X);
+            Expression equation1 = Expression.SinOf(Variable.X);
+            Expression equation2 = Expression.SinOf(Variable.X);
 
             // ACT
-            equation2.Map(a => Equation.SinOf(Variable.Y));
+            equation2.Map(a => Expression.SinOf(Variable.Y));
 
             // ASSERT
             Assert.AreEqual(equation1, equation2);
@@ -194,33 +194,33 @@ namespace OperationsTests
         public void Sin_Map_ReturnsAlternative()
         {
             // ARANGE
-            Equation equation1 = Equation.SinOf(Variable.X);
+            Expression equation1 = Expression.SinOf(Variable.X);
 
             // ACT
-            Equation equation2 = equation1.Map(a => Equation.SinOf(Variable.Y));
+            Expression equation2 = equation1.Map(a => Expression.SinOf(Variable.Y));
 
             // ASSERT
-            Assert.AreEqual(Equation.SinOf(Variable.Y), equation2);
+            Assert.AreEqual(Expression.SinOf(Variable.Y), equation2);
         }
 
         [Test]
         public void Sin_Map_MapsChildren()
         {
             // ARANGE
-            Equation equation1 = Equation.SinOf(Variable.X);
+            Expression equation1 = Expression.SinOf(Variable.X);
 
             // ACT
-            Equation equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
+            Expression equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
-            Assert.AreEqual(Equation.SinOf(Variable.Z), equation2);
+            Assert.AreEqual(Expression.SinOf(Variable.Z), equation2);
         }
 
         [Test]
         public void Sin_Map_CanSkipSelf()
         {
             // ARANGE
-            Equation equation1 = Equation.SinOf(Variable.X);
+            Expression equation1 = Expression.SinOf(Variable.X);
             EquationMapping mapping = new EquationMapping()
             {
                 PostMap = a => Variable.Z,
@@ -228,17 +228,17 @@ namespace OperationsTests
             };
 
             // ACT
-            Equation equation2 = equation1.Map(mapping);
+            Expression equation2 = equation1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Equation.SinOf(Variable.Z), equation2);
+            Assert.AreEqual(Expression.SinOf(Variable.Z), equation2);
         }
 
         [Test]
         public void Sin_Map_CanSkipChildren()
         {
             // ARANGE
-            Equation equation1 = Equation.SinOf(Variable.X);
+            Expression equation1 = Expression.SinOf(Variable.X);
             EquationMapping mapping = new EquationMapping()
             {
                 PostMap = a => a is Variable ? Variable.Z : a,
@@ -246,10 +246,10 @@ namespace OperationsTests
             };
 
             // ACT
-            Equation equation2 = equation1.Map(mapping);
+            Expression equation2 = equation1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Equation.SinOf(Variable.X), equation2);
+            Assert.AreEqual(Expression.SinOf(Variable.X), equation2);
         }
     }
 }

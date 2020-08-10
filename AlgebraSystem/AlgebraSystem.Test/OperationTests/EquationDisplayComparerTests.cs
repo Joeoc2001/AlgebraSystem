@@ -14,8 +14,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = Variable.X;
+            Expression a = Variable.X;
+            Expression b = Variable.X;
             int checkInt = EquationDisplayComparer.COMPARER.Compare(a, b);
 
             // ASSERT
@@ -28,8 +28,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Y;
-            Equation b = Variable.Y;
+            Expression a = Variable.Y;
+            Expression b = Variable.Y;
             int checkInt = EquationDisplayComparer.COMPARER.Compare(a, b);
 
             // ASSERT
@@ -42,8 +42,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Z;
-            Equation b = Variable.Z;
+            Expression a = Variable.Z;
+            Expression b = Variable.Z;
             int checkInt = EquationDisplayComparer.COMPARER.Compare(a, b);
 
             // ASSERT
@@ -56,8 +56,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.W;
-            Equation b = Variable.W;
+            Expression a = Variable.W;
+            Expression b = Variable.W;
             int checkInt = EquationDisplayComparer.COMPARER.Compare(a, b);
 
             // ASSERT
@@ -70,8 +70,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = Variable.Y;
+            Expression a = Variable.X;
+            Expression b = Variable.Y;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -84,8 +84,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = Variable.Z;
+            Expression a = Variable.X;
+            Expression b = Variable.Z;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -98,8 +98,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = Variable.W;
+            Expression a = Variable.X;
+            Expression b = Variable.W;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -112,8 +112,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Y;
-            Equation b = Variable.Z;
+            Expression a = Variable.Y;
+            Expression b = Variable.Z;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -126,8 +126,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Y;
-            Equation b = Variable.W;
+            Expression a = Variable.Y;
+            Expression b = Variable.W;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -140,8 +140,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Z;
-            Equation b = Variable.W;
+            Expression a = Variable.Z;
+            Expression b = Variable.W;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -154,8 +154,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = 1;
+            Expression a = Variable.X;
+            Expression b = 1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -168,8 +168,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = -1;
+            Expression a = Variable.X;
+            Expression b = -1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -182,8 +182,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Y;
-            Equation b = Variable.X;
+            Expression a = Variable.Y;
+            Expression b = Variable.X;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -196,8 +196,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Z;
-            Equation b = Variable.X;
+            Expression a = Variable.Z;
+            Expression b = Variable.X;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -210,8 +210,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.W;
-            Equation b = Variable.X;
+            Expression a = Variable.W;
+            Expression b = Variable.X;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -224,8 +224,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Z;
-            Equation b = Variable.Y;
+            Expression a = Variable.Z;
+            Expression b = Variable.Y;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -238,8 +238,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.W;
-            Equation b = Variable.Y;
+            Expression a = Variable.W;
+            Expression b = Variable.Y;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -252,8 +252,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.W;
-            Equation b = Variable.Z;
+            Expression a = Variable.W;
+            Expression b = Variable.Z;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -266,8 +266,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = 1;
-            Equation b = Variable.X;
+            Expression a = 1;
+            Expression b = Variable.X;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -280,8 +280,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = -1;
-            Equation b = Variable.X;
+            Expression a = -1;
+            Expression b = Variable.X;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -294,8 +294,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X + 1;
-            Equation b = Variable.Z + 1;
+            Expression a = Variable.X + 1;
+            Expression b = Variable.Z + 1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -308,8 +308,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X + 1;
-            Equation b = Variable.X - 1;
+            Expression a = Variable.X + 1;
+            Expression b = Variable.X - 1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -322,8 +322,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = Variable.X + 1;
+            Expression a = Variable.X;
+            Expression b = Variable.X + 1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -336,8 +336,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X + Variable.Y;
-            Equation b = Variable.X + 1;
+            Expression a = Variable.X + Variable.Y;
+            Expression b = Variable.X + 1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -350,8 +350,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.Y;
-            Equation b = Variable.X + 1;
+            Expression a = Variable.Y;
+            Expression b = Variable.X + 1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -364,8 +364,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X + Variable.Y;
-            Equation b = Variable.Y + 1;
+            Expression a = Variable.X + Variable.Y;
+            Expression b = Variable.Y + 1;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -378,8 +378,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Equation.Pow(Variable.X, 2);
-            Equation b = Variable.X;
+            Expression a = Expression.Pow(Variable.X, 2);
+            Expression b = Variable.X;
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -392,8 +392,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Equation.Pow(Variable.X, 2);
-            Equation b = Equation.Pow(Variable.X, 2);
+            Expression a = Expression.Pow(Variable.X, 2);
+            Expression b = Expression.Pow(Variable.X, 2);
 
             // ASSERT
             Assert.AreEqual(0, EquationDisplayComparer.COMPARER.Compare(a, b));
@@ -405,8 +405,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Equation.Pow(Variable.X, 3);
-            Equation b = Equation.Pow(Variable.X, 2);
+            Expression a = Expression.Pow(Variable.X, 3);
+            Expression b = Expression.Pow(Variable.X, 2);
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -419,8 +419,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Variable.X;
-            Equation b = Equation.Pow(Variable.X, 2);
+            Expression a = Variable.X;
+            Expression b = Expression.Pow(Variable.X, 2);
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -433,8 +433,8 @@ namespace OperationsTests
             // ARANGE
 
             // ACT
-            Equation a = Equation.Pow(Variable.X, 2);
-            Equation b = Equation.Pow(Variable.X, 3);
+            Expression a = Expression.Pow(Variable.X, 2);
+            Expression b = Expression.Pow(Variable.X, 3);
             bool check = EquationDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT

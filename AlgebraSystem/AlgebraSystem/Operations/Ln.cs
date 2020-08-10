@@ -9,18 +9,18 @@ namespace Algebra.Operations
 {
     public class Ln : Monad
     {
-        new public static Equation LnOf(Equation argument)
+        new public static Expression LnOf(Expression argument)
         {
             return new Ln(argument);
         }
 
-        public Ln(Equation argument)
+        public Ln(Expression argument)
             : base(argument)
         {
 
         }
 
-        public override ExpressionDelegate GetExpression(VariableInputSet set)
+        public override ExpressionDelegate GetDelegate(VariableInputSet set)
         {
             if (Argument is Constant constant)
             {
@@ -28,15 +28,15 @@ namespace Algebra.Operations
                 return () => value;
             }
 
-            ExpressionDelegate expression = Argument.GetExpression(set);
+            ExpressionDelegate expression = Argument.GetDelegate(set);
 
             // TODO: This can be better
             return () => (float)Math.Log(expression());
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
-            Equation derivative = Argument.GetDerivative(wrt);
+            Expression derivative = Argument.GetDerivative(wrt);
             return derivative / Argument;
         }
 
@@ -50,7 +50,7 @@ namespace Algebra.Operations
             return Argument.Equals(other.Argument);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Ln);
         }
@@ -72,7 +72,7 @@ namespace Algebra.Operations
 
         public override string ToRunnableString()
         {
-            return $"Equation.LnOf({Argument.ToRunnableString()})";
+            return $"Expression.LnOf({Argument.ToRunnableString()})";
         }
 
         public override int GetOrderIndex()
@@ -80,7 +80,7 @@ namespace Algebra.Operations
             return 0;
         }
 
-        public override Func<Equation, Equation> GetSimplifyingConstructor()
+        public override Func<Expression, Expression> GetSimplifyingConstructor()
         {
             return LnOf;
         }

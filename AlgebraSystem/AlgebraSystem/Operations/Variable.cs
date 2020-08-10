@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Algebra.Operations
 {
-    public class Variable : Equation, IEquatable<Variable>
+    public class Variable : Expression, IEquatable<Variable>
     {
         public class NotPresentException : ArgumentException
         {
@@ -25,7 +25,7 @@ namespace Algebra.Operations
             this.Name = name.ToLower();
         }
 
-        public override ExpressionDelegate GetExpression(VariableInputSet set)
+        public override ExpressionDelegate GetDelegate(VariableInputSet set)
         {
             if (!set.Contains(Name))
             {
@@ -36,7 +36,7 @@ namespace Algebra.Operations
             return () => input.Value;
         }
 
-        public override Equation GetDerivative(Variable wrt)
+        public override Expression GetDerivative(Variable wrt)
         {
             if (wrt == this)
             {
@@ -55,7 +55,7 @@ namespace Algebra.Operations
             return this.Name.Equals(obj.Name);
         }
 
-        public override bool Equals(Equation obj)
+        public override bool Equals(Expression obj)
         {
             return this.Equals(obj as Variable);
         }
@@ -70,6 +70,7 @@ namespace Algebra.Operations
             return Name;
         }
 
+        [Obsolete]
         public override string ToRunnableString()
         {
             return $"new Variable(\"{Name}\")";
@@ -80,7 +81,7 @@ namespace Algebra.Operations
             return 0;
         }
 
-        public override Equation Map(EquationMapping map)
+        public override Expression Map(EquationMapping map)
         {
             if (!map.ShouldMapThis(this))
             {
