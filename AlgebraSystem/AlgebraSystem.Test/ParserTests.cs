@@ -407,8 +407,8 @@ namespace AlgebraTests
         public void Parser_ParsesMinMaxMultiplication()
         {
             // ARANGE
-            string equation = "min (1, 3) * max(x * y, y * z)";
-            Expression expected = Expression.Min(1, 3) * Expression.Max(Variable.X * Variable.Y, Variable.Y * Variable.Z);
+            string equation = "min (1, x) * max(x * y, y * z)";
+            Expression expected = Expression.Min(1, Variable.X) * Expression.Max(Variable.X * Variable.Y, Variable.Y * Variable.Z);
 
             // ACT
             Expression result = Parser.Parse(equation);
@@ -699,8 +699,8 @@ namespace AlgebraTests
         public void Parser_FuzzerGeneratedFailure3()
         {
             // ARANGE
-            Expression expected = (Variable.Z * Expression.Pow(Variable.Y, Constant.From((Rational)(2) / (1))) * Expression.SignOf((Expression.LnOf(Constant.From((Rational)(4971) / (5138))) + Constant.From((Rational)(3996) / (4441)) + Expression.Pow(Variable.W, Expression.Pow(Constant.From((Rational)(2401) / (4209)), Expression.SignOf(Expression.Pow(Expression.LnOf(Expression.Pow(Constant.From((Rational)(39449) / (47989)), Expression.SignOf(Variable.Z))), Expression.Pow(((Variable.Z + Constant.From((Rational)(815) / (6387)) + Variable.Y) * Constant.From((Rational)(1894) / (5563))), Constant.From((Rational)(13524) / (15523))))))) + Expression.LnOf(Expression.SignOf(Constant.From((Rational)(1368) / (19661)))))));
-            string equation = "(z * (y ^ 2) * sign (ln 4971/5138 + 3996/4441 + (w ^ (2401/4209 ^ sign (ln (39449/47989 ^ sign z) ^ (((z + 815/6387 + y) * 1894/5563) ^ 13524/15523)))) + ln sign 1368/19661))";
+            Expression expected = (Variable.Z * Expression.Pow(Variable.Y, Constant.From((Rational)(2) / (1))) * Expression.SignOf((Expression.LnOf(Constant.From((Rational)(4971) / (5138))) + Constant.From((Rational)(3996) / (4441)) + Expression.Pow(Variable.X, Expression.Pow(Constant.From((Rational)(2401) / (4209)), Expression.SignOf(Expression.Pow(Expression.LnOf(Expression.Pow(Constant.From((Rational)(39449) / (47989)), Expression.SignOf(Variable.Z))), Expression.Pow(((Variable.Z + Constant.From((Rational)(815) / (6387)) + Variable.Y) * Constant.From((Rational)(1894) / (5563))), Constant.From((Rational)(13524) / (15523))))))) + Expression.LnOf(Expression.SignOf(Constant.From((Rational)(1368) / (19661)))))));
+            string equation = "(z * (y ^ 2) * sign (ln 4971/5138 + 3996/4441 + (x ^ (2401/4209 ^ sign (ln (39449/47989 ^ sign z) ^ (((z + 815/6387 + y) * 1894/5563) ^ 13524/15523)))) + ln sign 1368/19661))";
 
             // ACT
             Expression result = Parser.Parse(equation);

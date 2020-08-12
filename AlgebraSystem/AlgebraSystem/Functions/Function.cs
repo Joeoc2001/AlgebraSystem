@@ -54,9 +54,9 @@ namespace Algebra.Functions
 
         public bool Equals(Function obj)
         {
-            if (ReferenceEquals(this, obj))
+            if (obj == null)
             {
-                return true;
+                return false;
             }
 
             if (!identity.Equals(obj.identity))

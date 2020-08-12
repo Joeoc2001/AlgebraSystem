@@ -8,11 +8,16 @@ namespace Algebra.Functions
 {
     public abstract class FunctionGenerator : IFunctionGenerator
     {
+        private static readonly IFunctionGenerator sinFunctionGenerator  = new AtomicFunctionGenerator(1, list => Expression.SinOf(list[0]));
+        private static readonly IFunctionGenerator lnFunctionGenerator   = new AtomicFunctionGenerator(1, list => Expression.LnOf(list[0]));
+        private static readonly IFunctionGenerator signFunctionGenerator = new AtomicFunctionGenerator(1, list => Expression.SignOf(list[0]));
+
         public static readonly Dictionary<string, IFunctionGenerator> DefaultFunctions = new Dictionary<string, IFunctionGenerator>()
         {
-            { "sin",  new AtomicFunctionGenerator(1, list => Expression.SinOf(list[0])  ) },
-            { "ln",   new AtomicFunctionGenerator(1, list => Expression.LnOf(list[0])   ) },
-            { "sign", new AtomicFunctionGenerator(1, list => Expression.SignOf(list[0]) ) },
+            { "sin", sinFunctionGenerator },
+            { "ln", lnFunctionGenerator },
+            { "log", lnFunctionGenerator },
+            { "sign", signFunctionGenerator },
             { "max", MaxIdentity.Instance },
             { "min", MinIdentity.Instance },
             { "select", SelectIdentity.Instance }
