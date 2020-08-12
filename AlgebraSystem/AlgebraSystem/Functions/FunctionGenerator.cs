@@ -20,7 +20,11 @@ namespace Algebra.Functions
             { "sign", signFunctionGenerator },
             { "max", MaxIdentity.Instance },
             { "min", MinIdentity.Instance },
-            { "select", SelectIdentity.Instance }
+            { "select", SelectIdentity.Instance },
+            { "abs", AbsIdentity.Instance },
+            { "sinh", SinhIdentity.Instance },
+            { "cosh", CoshIdentity.Instance },
+            { "tanh", TanhIdentity.Instance },
         };
 
         protected abstract Expression CreateExpressionImpl(Dictionary<string, Expression> parameters);

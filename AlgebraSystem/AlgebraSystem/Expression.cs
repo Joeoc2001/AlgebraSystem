@@ -97,6 +97,11 @@ namespace Algebra
             return Add(new List<Expression>() { left, -1 * right });
         }
 
+        public static Expression operator -(Expression a)
+        {
+            return -1 * a;
+        }
+
         public static Expression Add(List<Expression> eqs)
         {
             return Sum.Add(eqs);
@@ -109,8 +114,7 @@ namespace Algebra
 
         public static Expression operator /(Expression left, Expression right)
         {
-            // a/b = a * (b^-1)
-            return Multiply(new List<Expression>() { left, Pow(right, -1) });
+            return DivIdentity.Instance.CreateExpression(left, right);
         }
 
         public static Expression Multiply(List<Expression> eqs)
@@ -166,6 +170,21 @@ namespace Algebra
         public static Expression SelectOn(Expression lt, Expression gt, Expression condition)
         {
             return SelectIdentity.Instance.CreateExpression(lt, gt, condition);
+        }
+
+        public static Expression SinhOf(Expression a)
+        {
+            return SinhIdentity.Instance.CreateExpression(a);
+        }
+
+        public static Expression CoshOf(Expression a)
+        {
+            return CoshIdentity.Instance.CreateExpression(a);
+        }
+
+        public static Expression TanhOf(Expression a)
+        {
+            return TanhIdentity.Instance.CreateExpression(a);
         }
 
         public bool ShouldParenthesise(Expression other)
