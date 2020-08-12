@@ -155,7 +155,7 @@ namespace Algebra
 
         public static Expression Min(Expression a, Expression b)
         {
-            return 0.5 * (a + b - Abs(a - b));
+            return MinIdentity.Instance.CreateExpression(a, b);
         }
 
         public static Expression Max(Expression a, Expression b)

@@ -7,14 +7,8 @@ using System.Text;
 
 namespace Algebra.Functions
 {
-    public class FunctionIdentity
+    public class FunctionIdentity : FunctionGenerator
     {
-        public static readonly Dictionary<string, FunctionIdentity> DefaultFunctions = new Dictionary<string, FunctionIdentity>()
-        {
-            { "max", MaxIdentity.Instance },
-            { "select", SelectIdentity.Instance }
-        };
-
         private readonly List<string> parameterNames;
         private readonly int hashSeed;
 
@@ -37,71 +31,20 @@ namespace Algebra.Functions
             this.getDerivative = getDerivative;
         }
 
-        /// <summary>
-        /// Return a new function node from the given parameters.
-        /// This constructor matches the parameter positions with the parameter names internally
-        /// </summary>
-        /// <param name="nodes">The parameters to be given to the function</param>
-        /// <returns>The new function node</returns>
-        public Expression CreateExpression(List<Expression> nodes)
-        {
-            ReadOnlyCollection<string> requiredParameters = GetRequiredParameters();
-
-            if (nodes.Count != requiredParameters.Count)
-            {
-                throw new ArgumentException("Incorrect number of parameters were provided");
-            }
-
-            Dictionary<string, Expression> parameters = new Dictionary<string, Expression>();
-            for (int i = 0; i < requiredParameters.Count; i++)
-            {
-                parameters.Add(requiredParameters[i], nodes[i]);
-            }
-
-            return CreateExpression(parameters);
-        }
-
-        /// <summary>
-        /// Return a new function node from the given parameters.
-        /// This constructor uses the given parameter names and ignores their positions
-        /// </summary>
-        /// <param name="nodes">The parameters to be given to the function</param>
-        /// <returns>The new function node</returns>
-        public Expression CreateExpression(Dictionary<string, Expression> nodes)
+        protected override Expression CreateExpressionImpl(Dictionary<string, Expression> nodes)
         {
             return new Function(this, nodes);
         }
 
-        public ReadOnlyCollection<string> GetRequiredParameters()
+        public override ReadOnlyCollection<string> GetRequiredParameters()
         {
             return parameterNames.AsReadOnly();
-        }
-
-        public bool AreParametersSatisfied(Dictionary<string, Expression> parameters)
-        {
-            // Ensure that all required parameters are filled
-            ReadOnlyCollection<string> requiredParameters = GetRequiredParameters();
-            if (parameters.Count != requiredParameters.Count)
-            { 
-                return false;
-            }
-
-            foreach (string parameter in requiredParameters)
-            {
-                if (!parameters.ContainsKey(parameter))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         public int GetHashSeed()
         {
             return hashSeed;
         }
-
 
         public Expression.ExpressionDelegate GetDelegate(Dictionary<string, Expression.ExpressionDelegate> parameterDelegates)
         {

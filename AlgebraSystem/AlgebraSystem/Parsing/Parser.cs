@@ -9,9 +9,9 @@ namespace Algebra.Parsing
     public class Parser
     {
         private readonly Tokenizer tokenizer;
-        private readonly IDictionary<string, FunctionIdentity> functions;
+        private readonly IDictionary<string, IFunctionGenerator> functions;
 
-        public Parser(Tokenizer tokenizer, IDictionary<string, FunctionIdentity> functions)
+        public Parser(Tokenizer tokenizer, IDictionary<string, IFunctionGenerator> functions)
         {
             this.tokenizer = tokenizer;
             this.functions = functions;
@@ -25,11 +25,11 @@ namespace Algebra.Parsing
 
         public static Expression Parse(string s, ICollection<string> variables)
         {
-            IDictionary<string, FunctionIdentity> functions = FunctionIdentity.DefaultFunctions;
+            IDictionary<string, IFunctionGenerator> functions = FunctionGenerator.DefaultFunctions;
             return Parse(s, variables, functions);
         }
 
-        public static Expression Parse(string s, ICollection<string> variables, IDictionary<string, FunctionIdentity> functions)
+        public static Expression Parse(string s, ICollection<string> variables, IDictionary<string, IFunctionGenerator> functions)
         {
             // Ensure that all identifiers are in lower case
             HashSet<string> variablesLower = new HashSet<string>();
@@ -37,7 +37,7 @@ namespace Algebra.Parsing
             {
                 variablesLower.Add(variable.ToLower());
             }
-            Dictionary<string, FunctionIdentity> functionsLower = new Dictionary<string, FunctionIdentity>();
+            Dictionary<string, IFunctionGenerator> functionsLower = new Dictionary<string, IFunctionGenerator>();
             foreach (string function in functions.Keys)
             {
                 functionsLower.Add(function.ToLower(), functions[function]);
@@ -244,63 +244,19 @@ namespace Algebra.Parsing
                     };
                 }
 
-                return MakeFunction(nodes, functionName);
+                // Create the function
+                IFunctionGenerator factory = functions[functionName];
+                try
+                {
+                    return factory.CreateExpression(nodes);
+                }
+                catch (ArgumentException e)
+                {
+                    throw new SyntaxException($"Incorrect arguments on function {functionName} - {e.Message}");
+                }
             }
 
             throw new SyntaxException($"Unexpected leaf token: {tokenizer.Token}");
-        }
-
-        private Expression MakeFunction(List<Expression> nodes, string functionName)
-        {
-            FunctionIdentity factory = functions[functionName];
-            return factory.CreateExpression(nodes);
-            //int requiredParameters;
-            //Func<IList<Expression>, Expression> constructor;
-            //switch (functionName)
-            //{
-            //    case "log":
-            //    case "ln":
-            //        requiredParameters = 1;
-            //        constructor = ns => Expression.LnOf(ns[0]);
-            //        break;
-            //    case "sign":
-            //        requiredParameters = 1;
-            //        constructor = ns => Expression.SignOf(ns[0]);
-            //        break;
-            //    case "abs":
-            //        requiredParameters = 1;
-            //        constructor = ns => Expression.Abs(ns[0]);
-            //        break;
-            //    case "min":
-            //        requiredParameters = 2;
-            //        constructor = ns => Expression.Min(ns[0], ns[1]);
-            //        break;
-            //    case "max":
-            //        requiredParameters = 2;
-            //        constructor = ns => Expression.Max(ns[0], ns[1]);
-            //        break;
-            //    case "sin":
-            //        requiredParameters = 1;
-            //        constructor = ns => Expression.SinOf(ns[0]);
-            //        break;
-            //    case "cos":
-            //        requiredParameters = 1;
-            //        constructor = ns => Expression.CosOf(ns[0]);
-            //        break;
-            //    case "tan":
-            //        requiredParameters = 1;
-            //        constructor = ns => Expression.TanOf(ns[0]);
-            //        break;
-            //    default:
-            //        throw new SyntaxException($"Unknown function name: {tokenizer.FunctionName}");
-            //}
-
-            //if (nodes.Count != requiredParameters)
-            //{
-            //    throw new SyntaxException($"Incorrect number of parameters for {tokenizer.FunctionName}: {nodes.Count}");
-            //}
-
-            //return constructor(nodes);
         }
     }
 }
