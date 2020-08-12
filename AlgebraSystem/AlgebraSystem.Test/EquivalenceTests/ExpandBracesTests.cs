@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using Algebra;
-using Algebra.Operations;
+using Algebra.Atoms;
 using Algebra.Parsing;
 
 namespace EquivalenceTests

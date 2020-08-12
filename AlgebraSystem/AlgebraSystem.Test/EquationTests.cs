@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Algebra;
-using Algebra.Operations;
+using Algebra.Atoms;
 using NUnit.Framework;
 
 namespace AlgebraTests

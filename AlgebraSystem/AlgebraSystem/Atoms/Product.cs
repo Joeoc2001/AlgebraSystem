@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Product : CommutativeOperation, IEquatable<Product>
     {

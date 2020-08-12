@@ -1,4 +1,5 @@
-﻿using Algebra.Operations;
+﻿using Algebra.Atoms;
+using Algebra.Functions.HardcodedFunctionIdentities;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -159,7 +160,12 @@ namespace Algebra
 
         public static Expression Max(Expression a, Expression b)
         {
-            return 0.5 * (a + b + Abs(a - b));
+            return MaxIdentity.Instance.CreateExpression(a, b);
+        }
+
+        public static Expression SelectOn(Expression lt, Expression gt, Expression condition)
+        {
+            return SelectIdentity.Instance.CreateExpression(lt, gt, condition);
         }
 
         public bool ShouldParenthesise(Expression other)

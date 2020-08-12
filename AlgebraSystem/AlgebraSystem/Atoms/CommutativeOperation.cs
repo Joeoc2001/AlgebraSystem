@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public abstract class CommutativeOperation : Expression
     {

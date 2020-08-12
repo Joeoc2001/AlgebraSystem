@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public abstract class Monad : Expression
     {

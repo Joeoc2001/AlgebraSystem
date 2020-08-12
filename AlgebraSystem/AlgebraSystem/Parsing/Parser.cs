@@ -1,5 +1,5 @@
 ﻿using Algebra.Functions;
-using Algebra.Operations;
+using Algebra.Atoms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -253,7 +253,7 @@ namespace Algebra.Parsing
         private Expression MakeFunction(List<Expression> nodes, string functionName)
         {
             FunctionIdentity factory = functions[functionName];
-            return factory.CreateEquation(nodes);
+            return factory.CreateExpression(nodes);
             //int requiredParameters;
             //Func<IList<Expression>, Expression> constructor;
             //switch (functionName)

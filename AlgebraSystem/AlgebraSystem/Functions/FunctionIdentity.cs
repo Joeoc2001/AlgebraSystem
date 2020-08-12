@@ -1,4 +1,5 @@
-﻿using Algebra.Operations;
+﻿using Algebra.Atoms;
+using Algebra.Functions.HardcodedFunctionIdentities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,20 +7,34 @@ using System.Text;
 
 namespace Algebra.Functions
 {
-    public abstract class FunctionIdentity
+    public class FunctionIdentity
     {
         public static readonly Dictionary<string, FunctionIdentity> DefaultFunctions = new Dictionary<string, FunctionIdentity>()
         {
-
+            { "max", MaxIdentity.Instance },
+            { "select", SelectIdentity.Instance }
         };
 
         private readonly List<string> parameterNames;
         private readonly int hashSeed;
 
-        protected FunctionIdentity(List<string> parameterNames, int hashSeed)
+        public readonly Expression AtomicExpression;
+
+        public delegate Expression.ExpressionDelegate GetDelegateDelegate(Dictionary<string, Expression.ExpressionDelegate> parameterDelegates);
+        public delegate Expression GetDerivativeDelegate(Dictionary<string, Expression> parameterExpressions, Variable wrt);
+
+        private readonly GetDelegateDelegate getDelegate;
+        private readonly GetDerivativeDelegate getDerivative;
+
+        public FunctionIdentity(List<string> parameterNames, int hashSeed, Expression atomicExpression, GetDelegateDelegate getDelegate, GetDerivativeDelegate getDerivative)
         {
             this.parameterNames = parameterNames ?? throw new ArgumentNullException(nameof(parameterNames));
             this.hashSeed = hashSeed;
+
+            this.AtomicExpression = atomicExpression;
+
+            this.getDelegate = getDelegate;
+            this.getDerivative = getDerivative;
         }
 
         /// <summary>
@@ -28,7 +43,7 @@ namespace Algebra.Functions
         /// </summary>
         /// <param name="nodes">The parameters to be given to the function</param>
         /// <returns>The new function node</returns>
-        public Expression CreateEquation(List<Expression> nodes)
+        public Expression CreateExpression(List<Expression> nodes)
         {
             ReadOnlyCollection<string> requiredParameters = GetRequiredParameters();
 
@@ -43,7 +58,7 @@ namespace Algebra.Functions
                 parameters.Add(requiredParameters[i], nodes[i]);
             }
 
-            return CreateEquation(parameters);
+            return CreateExpression(parameters);
         }
 
         /// <summary>
@@ -52,7 +67,7 @@ namespace Algebra.Functions
         /// </summary>
         /// <param name="nodes">The parameters to be given to the function</param>
         /// <returns>The new function node</returns>
-        public Expression CreateEquation(Dictionary<string, Expression> nodes)
+        public Expression CreateExpression(Dictionary<string, Expression> nodes)
         {
             return new Function(this, nodes);
         }
@@ -87,8 +102,21 @@ namespace Algebra.Functions
             return hashSeed;
         }
 
-        public abstract Expression.ExpressionDelegate GetExpression(Dictionary<string, Expression.ExpressionDelegate> parameterExpressions);
 
-        public abstract Expression GetDerivative(Variable wrt);
+        public Expression.ExpressionDelegate GetDelegate(Dictionary<string, Expression.ExpressionDelegate> parameterDelegates)
+        {
+            return getDelegate(parameterDelegates);
+        }
+
+        public Expression GetDerivative(Function function, Variable wrt)
+        {
+            if (!function.GetIdentity().Equals(this))
+            {
+                throw new ArgumentException("Function is not of this identity");
+            }
+
+            Dictionary<string, Expression> parameterExpressions = function.GetParameters();
+            return getDerivative(parameterExpressions, wrt);
+        }
     }
 }

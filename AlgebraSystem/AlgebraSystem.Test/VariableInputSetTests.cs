@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Rationals;
 using Algebra;
-using Algebra.Operations;
+using Algebra.Atoms;
 using Algebra.Parsing;
 using System.Numerics;
 

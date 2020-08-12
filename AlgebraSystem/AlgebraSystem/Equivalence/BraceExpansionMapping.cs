@@ -1,4 +1,4 @@
-﻿using Algebra.Operations;
+﻿using Algebra.Atoms;
 using System;
 using System.Collections.Generic;
 using System.Linq;

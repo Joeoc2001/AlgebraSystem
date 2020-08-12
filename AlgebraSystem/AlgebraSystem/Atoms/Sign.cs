@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Sign : Monad
     {
@@ -82,6 +82,7 @@ namespace Algebra.Operations
             return builder.ToString();
         }
 
+        [Obsolete]
         public override string ToRunnableString()
         {
             return $"Expression.SignOf({Argument.ToRunnableString()})";

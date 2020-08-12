@@ -1,4 +1,4 @@
-﻿using Algebra.Operations;
+﻿using Algebra.Atoms;
 using System.Collections.Generic;
 
 namespace Algebra.Equivalence

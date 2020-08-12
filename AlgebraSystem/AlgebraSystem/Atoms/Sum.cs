@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Sum : CommutativeOperation, IEquatable<Sum>
     {

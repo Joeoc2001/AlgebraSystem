@@ -1,4 +1,4 @@
-﻿using Algebra.Operations;
+﻿using Algebra.Atoms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Algebra.Functions
 {
-    public class Function : Expression
+    public class Function: Expression
     {
         private readonly FunctionIdentity identity;
         private readonly Dictionary<string, Expression> parameters;
@@ -35,23 +35,22 @@ namespace Algebra.Functions
 
         public override ExpressionDelegate GetDelegate(VariableInputSet set)
         {
-            // Create expressions for parameters
-            Dictionary<string, ExpressionDelegate> parameterExpressions = new Dictionary<string, ExpressionDelegate>();
+            // Create delegates for parameters
+            Dictionary<string, ExpressionDelegate> parameterDelegates = new Dictionary<string, ExpressionDelegate>();
             foreach (KeyValuePair<string, Expression> parameter in parameters)
             {
                 ExpressionDelegate newDelegate = parameter.Value.GetDelegate(set);
-                parameterExpressions.Add(parameter.Key, newDelegate);
+                parameterDelegates.Add(parameter.Key, newDelegate);
             }
 
-            // Create an expression from the parameter expressions
-            return identity.GetExpression(parameterExpressions);
+            // Create a delegate from the parameter expressions
+            return identity.GetDelegate(parameterDelegates);
         }
 
         public override Expression GetDerivative(Variable wrt)
         {
-            return identity.GetDerivative(wrt);
+            return identity.GetDerivative(this, wrt);
         }
-
 
         public bool Equals(Function obj)
         {
@@ -131,7 +130,7 @@ namespace Algebra.Functions
                     mappedParameters.Add(parameterName, parameters[parameterName].Map(map));
                 }
 
-                currentThis = identity.CreateEquation(mappedParameters);
+                currentThis = identity.CreateExpression(mappedParameters);
             }
 
             if (map.ShouldMapThis(this))
@@ -146,6 +145,28 @@ namespace Algebra.Functions
         public override string ToRunnableString()
         {
             throw new NotImplementedException();
+        }
+
+        public Expression GetEquivalentAtomicExpression()
+        {
+            Expression atomicVariabledExpression = identity.AtomicExpression;
+
+            // Replace variables with their expressions
+            Expression atomicExpression = atomicVariabledExpression.Map(new EquationMapping()
+            {
+                PostMap = expression =>
+                {
+                    switch (expression)
+                    {
+                        case Variable v:
+                            return parameters[v.Name];
+                        default:
+                            return expression;
+                    }
+                }
+            });
+
+            return atomicExpression;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Constant : Expression, IEquatable<Constant>
     {

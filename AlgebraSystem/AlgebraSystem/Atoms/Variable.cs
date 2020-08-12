@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Variable : Expression, IEquatable<Variable>
     {

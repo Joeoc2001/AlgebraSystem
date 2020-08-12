@@ -5,7 +5,7 @@ using System.Text;
 using System;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Sin : Monad
     {

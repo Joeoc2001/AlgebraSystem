@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Exponent : Expression, IEquatable<Exponent>
     {
@@ -116,6 +116,7 @@ namespace Algebra.Operations
             return builder.ToString();
         }
 
+        [Obsolete]
         public override string ToRunnableString()
         {
             return $"Expression.Pow({Base.ToRunnableString()}, {Power.ToRunnableString()})";

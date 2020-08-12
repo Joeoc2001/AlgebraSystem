@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Algebra;
-using Algebra.Operations;
+using Algebra.Atoms;
 using Algebra.Parsing;
 using NUnit.Framework;
 using Rationals;

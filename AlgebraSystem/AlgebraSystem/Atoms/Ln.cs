@@ -5,7 +5,7 @@ using System.Text;
 using System;
 
 
-namespace Algebra.Operations
+namespace Algebra.Atoms
 {
     public class Ln : Monad
     {
@@ -70,6 +70,7 @@ namespace Algebra.Operations
             return builder.ToString();
         }
 
+        [Obsolete]
         public override string ToRunnableString()
         {
             return $"Expression.LnOf({Argument.ToRunnableString()})";
