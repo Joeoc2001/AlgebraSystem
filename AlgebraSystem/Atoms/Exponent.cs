@@ -116,12 +116,6 @@ namespace Algebra.Atoms
             return builder.ToString();
         }
 
-        [Obsolete]
-        public override string ToRunnableString()
-        {
-            return $"Expression.Pow({Base.ToRunnableString()}, {Power.ToRunnableString()})";
-        }
-
         public override int GetOrderIndex()
         {
             return 10;

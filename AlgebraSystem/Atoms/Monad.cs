@@ -11,6 +11,7 @@ namespace Algebra.Atoms
         {
             this.Argument = argument;
         }
+
         public abstract Func<Expression, Expression> GetSimplifyingConstructor();
 
         public override Expression Map(ExpressionMapping map)

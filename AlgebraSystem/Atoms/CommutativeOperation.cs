@@ -131,30 +131,6 @@ namespace Algebra.Atoms
             return builder.ToString();
         }
 
-        [Obsolete]
-        public override string ToRunnableString()
-        {
-            if (Arguments.Count == 0)
-            {
-                return EmptyName();
-            }
-
-            StringBuilder builder = new StringBuilder("(");
-            builder.Append(Arguments[0].ToRunnableString());
-
-            for (int i = 1; i < Arguments.Count; i++)
-            {
-                builder.Append(" ");
-                builder.Append(OperationSymbol());
-                builder.Append(" ");
-                builder.Append(Arguments[i].ToRunnableString());
-            }
-
-            builder.Append(")");
-
-            return builder.ToString();
-        }
-
         public override Expression Map(ExpressionMapping map)
         {
             Expression currentThis = this;

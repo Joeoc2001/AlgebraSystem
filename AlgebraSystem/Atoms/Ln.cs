@@ -70,12 +70,6 @@ namespace Algebra.Atoms
             return builder.ToString();
         }
 
-        [Obsolete]
-        public override string ToRunnableString()
-        {
-            return $"Expression.LnOf({Argument.ToRunnableString()})";
-        }
-
         public override int GetOrderIndex()
         {
             return 0;

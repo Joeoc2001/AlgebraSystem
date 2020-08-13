@@ -70,12 +70,6 @@ namespace Algebra.Atoms
             return Name;
         }
 
-        [Obsolete]
-        public override string ToRunnableString()
-        {
-            return $"new Variable(\"{Name}\")";
-        }
-
         public override int GetOrderIndex()
         {
             return 0;

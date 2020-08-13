@@ -72,12 +72,6 @@ namespace Algebra.Atoms
             return $"{value}";
         }
 
-        [Obsolete]
-        public override string ToRunnableString()
-        {
-            return $"Constant.From((Rational)({value.Numerator})/({value.Denominator}))";
-        }
-
         public override int GetOrderIndex()
         {
             return 0;

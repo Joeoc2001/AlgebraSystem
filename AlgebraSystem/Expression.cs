@@ -27,8 +27,6 @@ namespace Algebra
         public abstract Expression Map(ExpressionMapping map);
         public abstract int GenHashCode();
         public abstract bool Equals(Expression obj);
-        [Obsolete]
-        public abstract string ToRunnableString();
 
         /* Used for displaying braces when printing a human-readable string
          * Should be:

@@ -163,12 +163,6 @@ namespace Algebra.Functions
             return builder.ToString();
         }
 
-        [Obsolete]
-        public override string ToRunnableString()
-        {
-            throw new NotImplementedException();
-        }
-
         public Expression GetEquivalentAtomicExpression()
         {
             Expression atomicVariabledExpression = identity.AtomicExpression;
