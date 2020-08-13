@@ -5,6 +5,7 @@ using Rationals;
 using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
+using System;
 
 namespace AtomTests
 {
@@ -79,16 +80,17 @@ namespace AtomTests
         }
 
         [Test]
-        public void Sin_Evaluates0Correctly()
+        public void Sin_EvaluatesCorrectly([Range(-100, 100)] int v)
         {
             // ARANGE
-            Expression equation = Expression.SinOf(0);
+            Expression equation = Expression.SinOf(v);
 
             // ACT
             float value = equation.GetDelegate(new VariableInputSet())();
+            double expected = Math.Sin(v);
 
             // ASSERT
-            Assert.AreEqual(0, value);
+            Assert.That(value, Is.EqualTo(expected).Within(0.00001f));
         }
 
         [Test]

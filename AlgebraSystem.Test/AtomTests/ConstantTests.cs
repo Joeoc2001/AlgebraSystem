@@ -64,16 +64,16 @@ namespace AtomTests
         }
 
         [Test]
-        public void Constant_EvaluatesCorrectly()
+        public void Constant_EvaluatesCorrectly([Range(-1000, 1000, 10)] float v)
         {
             // ARANGE
-            Constant equation = Constant.From(54321);
+            Constant equation = v;
 
             // ACT
             float value = equation.GetDelegate(new VariableInputSet())();
 
             // ASSERT
-            Assert.AreEqual(54321, value);
+            Assert.AreEqual(v, value);
         }
 
         [Test]

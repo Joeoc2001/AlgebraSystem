@@ -5,6 +5,7 @@ using Rationals;
 using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
+using System;
 
 namespace AtomTests
 {
@@ -107,16 +108,16 @@ namespace AtomTests
         }
 
         [Test]
-        public void Exponentiation_EvaluatesCorrectly()
+        public void Exponentiation_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(0, 10)] int b)
         {
             // ARANGE
-            Expression equation = Expression.Pow(2, Constant.From(7));
+            Expression equation = Expression.Pow(a, b);
 
             // ACT
             float value = equation.GetDelegate(new VariableInputSet())();
 
             // ASSERT
-            Assert.AreEqual(128.0f, value);
+            Assert.AreEqual(Math.Pow(a, b), value);
         }
 
         [Test]

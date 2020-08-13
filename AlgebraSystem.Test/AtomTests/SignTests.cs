@@ -5,6 +5,7 @@ using Rationals;
 using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
+using System;
 
 namespace AtomTests
 {
@@ -72,6 +73,20 @@ namespace AtomTests
 
             // ASSERT
             Assert.AreEqual(-1, e);
+        }
+
+        [Test]
+        public void Addition_EvaluatesCorrectlyFor([Range(-1000, 1000, 10)] int a)
+        {
+            // ARANGE
+            Expression equation = Expression.SignOf(a);
+
+            // ACT
+            float value = equation.GetDelegate(new VariableInputSet())();
+            int expected = Math.Sign(a);
+
+            // ASSERT
+            Assert.AreEqual(expected, value);
         }
 
         [Test]

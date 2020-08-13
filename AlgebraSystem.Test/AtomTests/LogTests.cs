@@ -5,6 +5,7 @@ using Rationals;
 using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
+using System;
 
 namespace AtomTests
 {
@@ -32,6 +33,20 @@ namespace AtomTests
 
             // ASSERT
             Assert.AreEqual(0, equation.GetOrderIndex());
+        }
+
+        [Test]
+        public void Log_EvaluatesCorrectly([Range(1, 100)] int v)
+        {
+            // ARANGE
+            Expression equation = Expression.LnOf(v);
+
+            // ACT
+            float value = equation.GetDelegate(new VariableInputSet())();
+            double expected = Math.Log(v);
+
+            // ASSERT
+            Assert.That(value, Is.EqualTo(expected).Within(0.00001f));
         }
 
         [Test]

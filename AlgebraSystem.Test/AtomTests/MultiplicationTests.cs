@@ -85,16 +85,16 @@ namespace AtomTests
         }
 
         [Test]
-        public void Multiplication_EvaluatesCorrectly()
+        public void Multiplication_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(-10, 10)] int b)
         {
             // ARANGE
-            Expression equation = Constant.From(54321) * Constant.From(7);
+            Expression equation = Constant.From(a) * Constant.From(b);
 
             // ACT
             float value = equation.GetDelegate(new VariableInputSet())();
 
             // ASSERT
-            Assert.AreEqual(54321 * 7, value);
+            Assert.AreEqual(a * b, value);
         }
 
         [Test]

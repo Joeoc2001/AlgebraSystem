@@ -87,10 +87,9 @@ namespace AtomTests
         }
 
         [Test]
-        public void Variable_EvaluatesCorrectly([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
+        public void Variable_EvaluatesCorrectly([Values("X", "Y", "Z", "W", "V", "val", "t")] string name, [Range(-100, 100)] int expected)
         {
             // ARANGE
-            float expected = 167283;
             Variable v = new Variable(name);
             VariableInputSet inputSet = new VariableInputSet();
             inputSet.Set(name, expected);
@@ -103,10 +102,9 @@ namespace AtomTests
         }
 
         [Test]
-        public void Variable_ThrowsIfNotPresent([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
+        public void Variable_ThrowsIfNotPresent([Values("X", "Y", "Z", "W", "V", "val", "t")] string name, [Range(-10, 10)] int falseValue)
         {
             // ARANGE
-            float falseValue = -193742;
             Variable v = new Variable(name);
             VariableInputSet inputSet = new VariableInputSet();
             inputSet.Set("q", falseValue);
