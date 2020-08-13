@@ -29,20 +29,20 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Expression.LnOf(Variable.X);
+            Expression expression = Expression.LnOf(Variable.X);
 
             // ASSERT
-            Assert.AreEqual(0, equation.GetOrderIndex());
+            Assert.AreEqual(0, expression.GetOrderIndex());
         }
 
         [Test]
         public void Log_EvaluatesCorrectly([Range(1, 100)] int v)
         {
             // ARANGE
-            Expression equation = Expression.LnOf(v);
+            Expression expression = Expression.LnOf(v);
 
             // ACT
-            float value = equation.GetDelegate(new VariableInputSet())();
+            float value = expression.GetDelegate(new VariableInputSet())();
             double expected = Math.Log(v);
 
             // ASSERT
@@ -56,9 +56,9 @@ namespace AtomTests
 
             // ACT
             Expression argument = Variable.Y;
-            Expression equation = Expression.LnOf(argument);
+            Expression expression = Expression.LnOf(argument);
             int hash1 = argument.GetHashCode();
-            int hash2 = equation.GetHashCode();
+            int hash2 = expression.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
@@ -71,9 +71,9 @@ namespace AtomTests
 
             // ACT
             Expression argument = 2;
-            Expression equation = Expression.LnOf(argument);
+            Expression expression = Expression.LnOf(argument);
             int hash1 = argument.GetHashCode();
-            int hash2 = equation.GetHashCode();
+            int hash2 = expression.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
@@ -86,9 +86,9 @@ namespace AtomTests
 
             // ACT
             Expression argument = Variable.X + 1;
-            Expression equation = Expression.LnOf(argument);
+            Expression expression = Expression.LnOf(argument);
             int hash1 = argument.GetHashCode();
-            int hash2 = equation.GetHashCode();
+            int hash2 = expression.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
@@ -114,76 +114,76 @@ namespace AtomTests
         public void Log_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Expression equation1 = Expression.LnOf(Variable.X);
-            Expression equation2 = Expression.LnOf(Variable.X);
+            Expression expression1 = Expression.LnOf(Variable.X);
+            Expression expression2 = Expression.LnOf(Variable.X);
 
             // ACT
-            equation2.Map(a => Expression.LnOf(Variable.Y));
+            expression2.Map(a => Expression.LnOf(Variable.Y));
 
             // ASSERT
-            Assert.AreEqual(equation1, equation2);
+            Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
         public void Log_Map_ReturnsAlternative()
         {
             // ARANGE
-            Expression equation1 = Expression.LnOf(Variable.X);
+            Expression expression1 = Expression.LnOf(Variable.X);
 
             // ACT
-            Expression equation2 = equation1.Map(a => Expression.LnOf(Variable.Y));
+            Expression expression2 = expression1.Map(a => Expression.LnOf(Variable.Y));
 
             // ASSERT
-            Assert.AreEqual(Expression.LnOf(Variable.Y), equation2);
+            Assert.AreEqual(Expression.LnOf(Variable.Y), expression2);
         }
 
         [Test]
         public void Log_Map_MapsChildren()
         {
             // ARANGE
-            Expression equation1 = Expression.LnOf(Variable.X);
+            Expression expression1 = Expression.LnOf(Variable.X);
 
             // ACT
-            Expression equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
+            Expression expression2 = expression1.Map(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
-            Assert.AreEqual(Expression.LnOf(Variable.Z), equation2);
+            Assert.AreEqual(Expression.LnOf(Variable.Z), expression2);
         }
 
         [Test]
         public void Log_Map_CanSkipSelf()
         {
             // ARANGE
-            Expression equation1 = Expression.LnOf(Variable.X);
-            EquationMapping mapping = new EquationMapping()
+            Expression expression1 = Expression.LnOf(Variable.X);
+            ExpressionMapping mapping = new ExpressionMapping()
             {
                 PostMap = a => Variable.Z,
                 ShouldMapThis = a => !(a is Ln)
             };
 
             // ACT
-            Expression equation2 = equation1.Map(mapping);
+            Expression expression2 = expression1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Expression.LnOf(Variable.Z), equation2);
+            Assert.AreEqual(Expression.LnOf(Variable.Z), expression2);
         }
 
         [Test]
         public void Log_Map_CanSkipChildren()
         {
             // ARANGE
-            Expression equation1 = Expression.LnOf(Variable.X);
-            EquationMapping mapping = new EquationMapping()
+            Expression expression1 = Expression.LnOf(Variable.X);
+            ExpressionMapping mapping = new ExpressionMapping()
             {
                 PostMap = a => a is Variable ? Variable.Z : a,
                 ShouldMapChildren = a => false
             };
 
             // ACT
-            Expression equation2 = equation1.Map(mapping);
+            Expression expression2 = expression1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Expression.LnOf(Variable.X), equation2);
+            Assert.AreEqual(Expression.LnOf(Variable.X), expression2);
         }
     }
 }

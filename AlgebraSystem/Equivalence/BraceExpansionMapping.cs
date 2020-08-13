@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Algebra.Equivalence
 {
-    internal class BraceExpansionMapping : EquationMapping
+    internal class BraceExpansionMapping : ExpressionMapping
     {
         private int index;
 

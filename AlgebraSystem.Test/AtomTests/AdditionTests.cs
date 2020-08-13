@@ -88,10 +88,10 @@ namespace AtomTests
         public void Addition_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(-10, 10)] int b)
         {
             // ARANGE
-            Expression equation = Constant.From(a) + Constant.From(b);
+            Expression expression = Constant.From(a) + Constant.From(b);
 
             // ACT
-            float value = equation.GetDelegate(new VariableInputSet())();
+            float value = expression.GetDelegate(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(a + b, value);
@@ -103,11 +103,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Constant.From(54321) + Variable.Z + Constant.From(54321);
+            Expression expression = Constant.From(54321) + Variable.Z + Constant.From(54321);
             Expression expected = Constant.From(54321 + 54321) + Variable.Z;
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -116,11 +116,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = (Constant.From(54321) * Variable.Z) + (Constant.From(54321) * Variable.Z) + Variable.Z;
+            Expression expression = (Constant.From(54321) * Variable.Z) + (Constant.From(54321) * Variable.Z) + Variable.Z;
             Expression expected = Constant.From(54321 + 54321 + 1) * Variable.Z;
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -129,11 +129,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Constant.From(0) + Constant.From(1) + Constant.From(-1) + Variable.Z;
+            Expression expression = Constant.From(0) + Constant.From(1) + Constant.From(-1) + Variable.Z;
             Expression expected = Variable.Z;
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -142,11 +142,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Variable.Z - Variable.Z;
+            Expression expression = Variable.Z - Variable.Z;
             Expression expected = Constant.From(0);
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -155,11 +155,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Constant.From(1) + Variable.Z - Variable.Z;
+            Expression expression = Constant.From(1) + Variable.Z - Variable.Z;
             Expression expected = Constant.From(1);
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -168,11 +168,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Constant.From(1) + 2 * Variable.Z - Variable.Z;
+            Expression expression = Constant.From(1) + 2 * Variable.Z - Variable.Z;
             Expression expected = Constant.From(1) + Variable.Z;
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -181,11 +181,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Expression.Add(new List<Expression>() { Expression.Add(new List<Expression>() { Variable.X, Variable.Y }), Variable.Z });
+            Expression expression = Expression.Add(new List<Expression>() { Expression.Add(new List<Expression>() { Variable.X, Variable.Y }), Variable.Z });
             Expression expected = Expression.Add(new List<Expression>() { Variable.X, Variable.Y, Variable.Z });
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -194,11 +194,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = (Expression.Pow(Variable.X, 2) + (3 * Variable.X) + 2) / (Variable.X + 1);
+            Expression expression = (Expression.Pow(Variable.X, 2) + (3 * Variable.X) + 2) / (Variable.X + 1);
             Expression expected = Variable.X + 2;
 
             // ASSERT
-            Assert.AreNotEqual(expected, equation);
+            Assert.AreNotEqual(expected, expression);
         }
 
         [Test]
@@ -207,86 +207,86 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Variable.X + 1;
+            Expression expression = Variable.X + 1;
 
             // ASSERT
-            Assert.AreEqual(30, equation.GetOrderIndex());
+            Assert.AreEqual(30, expression.GetOrderIndex());
         }
 
         [Test]
         public void Addition_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Expression equation1 = Variable.X + 1;
-            Expression equation2 = Variable.X + 1;
+            Expression expression1 = Variable.X + 1;
+            Expression expression2 = Variable.X + 1;
 
             // ACT
-            equation2.Map(a => Variable.Y + 2);
+            expression2.Map(a => Variable.Y + 2);
 
             // ASSERT
-            Assert.AreEqual(equation1, equation2);
+            Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
         public void Addition_Map_ReturnsAlternative()
         {
             // ARANGE
-            Expression equation1 = Variable.X + 1;
+            Expression expression1 = Variable.X + 1;
 
             // ACT
-            Expression equation2 = equation1.Map(a => Variable.Z);
+            Expression expression2 = expression1.Map(a => Variable.Z);
 
             // ASSERT
-            Assert.AreEqual(Variable.Z, equation2);
+            Assert.AreEqual(Variable.Z, expression2);
         }
 
         [Test]
         public void Addition_Map_MapsChildren()
         {
             // ARANGE
-            Expression equation1 = Variable.X + Variable.Y;
+            Expression expression1 = Variable.X + Variable.Y;
 
             // ACT
-            Expression equation2 = equation1.Map(a => a is Variable? Variable.Z : a);
+            Expression expression2 = expression1.Map(a => a is Variable? Variable.Z : a);
 
             // ASSERT
-            Assert.AreEqual(2 * Variable.Z, equation2);
+            Assert.AreEqual(2 * Variable.Z, expression2);
         }
 
         [Test]
         public void Addition_Map_CanSkipSelf()
         {
             // ARANGE
-            Expression equation1 = Variable.X + 1;
-            EquationMapping mapping = new EquationMapping()
+            Expression expression1 = Variable.X + 1;
+            ExpressionMapping mapping = new ExpressionMapping()
             {
                 PostMap = a => Variable.Z,
                 ShouldMapThis = a => !(a is Sum)
             };
 
             // ACT
-            Expression equation2 = equation1.Map(mapping);
+            Expression expression2 = expression1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(2 * Variable.Z, equation2);
+            Assert.AreEqual(2 * Variable.Z, expression2);
         }
 
         [Test]
         public void Addition_Map_CanSkipChildren()
         {
             // ARANGE
-            Expression equation1 = Variable.X + 1;
-            EquationMapping mapping = new EquationMapping()
+            Expression expression1 = Variable.X + 1;
+            ExpressionMapping mapping = new ExpressionMapping()
             {
                 PostMap = a => a is Variable ? Variable.Z : a,
                 ShouldMapChildren = a => false
             };
 
             // ACT
-            Expression equation2 = equation1.Map(mapping);
+            Expression expression2 = expression1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Variable.X + 1, equation2);
+            Assert.AreEqual(Variable.X + 1, expression2);
         }
     }
 }

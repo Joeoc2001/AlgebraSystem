@@ -13,7 +13,7 @@ namespace Algebra.Equivalence
             List<Expression> newEqs = new List<Expression>();
             while (true)
             {
-                EquationMapping expansionMapping = new BraceExpansionMapping(i);
+                ExpressionMapping expansionMapping = new BraceExpansionMapping(i);
 
                 Expression newEq = eq.Map(expansionMapping);
 

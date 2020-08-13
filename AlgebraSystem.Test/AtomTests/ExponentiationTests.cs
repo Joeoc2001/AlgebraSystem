@@ -111,10 +111,10 @@ namespace AtomTests
         public void Exponentiation_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(0, 10)] int b)
         {
             // ARANGE
-            Expression equation = Expression.Pow(a, b);
+            Expression expression = Expression.Pow(a, b);
 
             // ACT
-            float value = equation.GetDelegate(new VariableInputSet())();
+            float value = expression.GetDelegate(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual((float)Math.Pow(a, b), value);
@@ -126,11 +126,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Expression.Pow(5, Constant.From(2));
+            Expression expression = Expression.Pow(5, Constant.From(2));
             Expression expected = Constant.From(25);
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -139,11 +139,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Expression.Pow(Variable.Z, 1);
+            Expression expression = Expression.Pow(Variable.Z, 1);
             Expression expected = Variable.Z;
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -152,11 +152,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Expression.Pow(Variable.Y, 0);
+            Expression expression = Expression.Pow(Variable.Y, 0);
             Expression expected = 1;
 
             // ASSERT
-            Assert.AreEqual(expected, equation);
+            Assert.AreEqual(expected, expression);
         }
 
         [Test]
@@ -165,10 +165,10 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Expression.Pow(Variable.Y, 3);
+            Expression expression = Expression.Pow(Variable.Y, 3);
 
             // ASSERT
-            Assert.AreEqual(10, equation.GetOrderIndex());
+            Assert.AreEqual(10, expression.GetOrderIndex());
         }
 
         [Test]
@@ -177,10 +177,10 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation1 = Expression.Pow(Variable.Y, 3);
-            Expression equation2 = Expression.Pow(3, Variable.Y);
-            int hash1 = equation1.GetHashCode();
-            int hash2 = equation2.GetHashCode();
+            Expression expression1 = Expression.Pow(Variable.Y, 3);
+            Expression expression2 = Expression.Pow(3, Variable.Y);
+            int hash1 = expression1.GetHashCode();
+            int hash2 = expression2.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
@@ -192,10 +192,10 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation1 = Expression.Pow(Variable.Y, Variable.X);
-            Expression equation2 = Expression.Pow(Variable.X, Variable.Y);
-            int hash1 = equation1.GetHashCode();
-            int hash2 = equation2.GetHashCode();
+            Expression expression1 = Expression.Pow(Variable.Y, Variable.X);
+            Expression expression2 = Expression.Pow(Variable.X, Variable.Y);
+            int hash1 = expression1.GetHashCode();
+            int hash2 = expression2.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
@@ -207,10 +207,10 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation1 = Expression.Pow(Variable.Y, Variable.X + 1);
-            Expression equation2 = Expression.Pow(Variable.X + 1, Variable.Y);
-            int hash1 = equation1.GetHashCode();
-            int hash2 = equation2.GetHashCode();
+            Expression expression1 = Expression.Pow(Variable.Y, Variable.X + 1);
+            Expression expression2 = Expression.Pow(Variable.X + 1, Variable.Y);
+            int hash1 = expression1.GetHashCode();
+            int hash2 = expression2.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
@@ -220,76 +220,76 @@ namespace AtomTests
         public void Exponentiation_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Expression equation1 = Expression.Pow(Variable.X, 2);
-            Expression equation2 = Expression.Pow(Variable.X, 2);
+            Expression expression1 = Expression.Pow(Variable.X, 2);
+            Expression expression2 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            equation2.Map(a => Expression.Pow(Variable.Y, 4));
+            expression2.Map(a => Expression.Pow(Variable.Y, 4));
 
             // ASSERT
-            Assert.AreEqual(equation1, equation2);
+            Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
         public void Exponentiation_Map_ReturnsAlternative()
         {
             // ARANGE
-            Expression equation1 = Expression.Pow(Variable.X, 2);
+            Expression expression1 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            Expression equation2 = equation1.Map(a => Expression.Pow(Variable.Y, 4));
+            Expression expression2 = expression1.Map(a => Expression.Pow(Variable.Y, 4));
 
             // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Y, 4), equation2);
+            Assert.AreEqual(Expression.Pow(Variable.Y, 4), expression2);
         }
 
         [Test]
         public void Exponentiation_Map_MapsChildren()
         {
             // ARANGE
-            Expression equation1 = Expression.Pow(Variable.X, 5);
+            Expression expression1 = Expression.Pow(Variable.X, 5);
 
             // ACT
-            Expression equation2 = equation1.Map(a => a is Variable ? Variable.Z : a);
+            Expression expression2 = expression1.Map(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Z, 5), equation2);
+            Assert.AreEqual(Expression.Pow(Variable.Z, 5), expression2);
         }
 
         [Test]
         public void Exponentiation_Map_CanSkipSelf()
         {
             // ARANGE
-            Expression equation1 = Expression.Pow(Variable.X, Variable.Y);
-            EquationMapping mapping = new EquationMapping()
+            Expression expression1 = Expression.Pow(Variable.X, Variable.Y);
+            ExpressionMapping mapping = new ExpressionMapping()
             {
                 PostMap = a => Variable.Z,
                 ShouldMapThis = a => !(a is Exponent)
             };
 
             // ACT
-            Expression equation2 = equation1.Map(mapping);
+            Expression expression2 = expression1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Z, Variable.Z), equation2);
+            Assert.AreEqual(Expression.Pow(Variable.Z, Variable.Z), expression2);
         }
 
         [Test]
         public void Exponentiation_Map_CanSkipChildren()
         {
             // ARANGE
-            Expression equation1 = Expression.Pow(Variable.X, 5);
-            EquationMapping mapping = new EquationMapping()
+            Expression expression1 = Expression.Pow(Variable.X, 5);
+            ExpressionMapping mapping = new ExpressionMapping()
             {
                 PostMap = a => a is Variable ? Variable.Z : a,
                 ShouldMapChildren = a => false
             };
 
             // ACT
-            Expression equation2 = equation1.Map(mapping);
+            Expression expression2 = expression1.Map(mapping);
 
             // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.X, 5), equation2);
+            Assert.AreEqual(Expression.Pow(Variable.X, 5), expression2);
         }
     }
 }

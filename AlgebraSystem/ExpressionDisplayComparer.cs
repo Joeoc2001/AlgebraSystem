@@ -7,16 +7,16 @@ using System.Collections.ObjectModel;
 
 namespace Algebra
 {
-    public class EquationDisplayComparer : IComparer<Expression>
+    public class ExpressionDisplayComparer : IComparer<Expression>
     {
-        public static readonly EquationDisplayComparer COMPARER = new EquationDisplayComparer();
+        public static readonly ExpressionDisplayComparer COMPARER = new ExpressionDisplayComparer();
 
-        private EquationDisplayComparer()
+        private ExpressionDisplayComparer()
         {
 
         }
 
-        public static int GetEquationOrdering(Expression e)
+        public static int GetExpressionOrdering(Expression e)
         {
             switch (e)
             {
@@ -45,7 +45,7 @@ namespace Algebra
 
         public int Compare(Expression x, Expression y)
         {
-            int cmp = GetEquationOrdering(x).CompareTo(GetEquationOrdering(y));
+            int cmp = GetExpressionOrdering(x).CompareTo(GetExpressionOrdering(y));
 
             if (cmp != 0)
             {

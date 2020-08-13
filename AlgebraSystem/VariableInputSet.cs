@@ -10,7 +10,7 @@ namespace Algebra
     /// <summary>
     /// A dictionary of variable input nodes as well as their names. 
     /// Used at function compilation time to assign all of the variables
-    /// in an equation to a cell where the value can be inputted
+    /// in an expression to a cell where the value can be inputted
     /// </summary>
     public class VariableInputSet : IEquatable<VariableInputSet>, IEnumerable<VariableInput>
     {

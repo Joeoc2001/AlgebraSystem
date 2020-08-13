@@ -81,7 +81,7 @@ namespace Algebra.Atoms
             return 0;
         }
 
-        public override Expression Map(EquationMapping map)
+        public override Expression Map(ExpressionMapping map)
         {
             if (!map.ShouldMapThis(this))
             {

@@ -67,10 +67,10 @@ namespace AtomTests
         public void Constant_EvaluatesCorrectly([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            Constant equation = Constant.From(v);
+            Constant expression = Constant.From(v);
 
             // ACT
-            float value = equation.GetDelegate(new VariableInputSet())();
+            float value = expression.GetDelegate(new VariableInputSet())();
 
             // ASSERT
             Assert.AreEqual(v, value);
@@ -82,10 +82,10 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Constant equation = Constant.From(v);
+            Constant expression = Constant.From(v);
 
             // ASSERT
-            Assert.AreEqual((Rational)v, equation.GetValue());
+            Assert.AreEqual((Rational)v, expression.GetValue());
         }
 
         [Test]
@@ -94,37 +94,37 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = 1;
+            Expression expression = 1;
 
             // ASSERT
-            Assert.AreEqual(0, equation.GetOrderIndex());
+            Assert.AreEqual(0, expression.GetOrderIndex());
         }
 
         [Test]
         public void Constant_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Expression equation1 = 5;
-            Expression equation2 = 5;
+            Expression expression1 = 5;
+            Expression expression2 = 5;
 
             // ACT
-            equation2.Map(a => 2);
+            expression2.Map(a => 2);
 
             // ASSERT
-            Assert.AreEqual(equation1, equation2);
+            Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
         public void Constant_Map_ReturnsAlternative()
         {
             // ARANGE
-            Expression equation1 = 5;
+            Expression expression1 = 5;
 
             // ACT
-            Expression equation2 = equation1.Map(a => 2);
+            Expression expression2 = expression1.Map(a => 2);
 
             // ASSERT
-            Assert.AreEqual((Expression)2, equation2);
+            Assert.AreEqual((Expression)2, expression2);
         }
     }
 }

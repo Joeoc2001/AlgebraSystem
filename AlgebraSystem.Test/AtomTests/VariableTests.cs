@@ -121,37 +121,37 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression equation = Variable.X;
+            Expression expression = Variable.X;
 
             // ASSERT
-            Assert.AreEqual(0, equation.GetOrderIndex());
+            Assert.AreEqual(0, expression.GetOrderIndex());
         }
 
         [Test]
         public void Variable_Map_DoesntChangeOriginal()
         {
             // ARANGE
-            Expression equation1 = Variable.X;
-            Expression equation2 = Variable.X;
+            Expression expression1 = Variable.X;
+            Expression expression2 = Variable.X;
 
             // ACT
-            equation2.Map(a => Variable.Y);
+            expression2.Map(a => Variable.Y);
 
             // ASSERT
-            Assert.AreEqual(equation1, equation2);
+            Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
         public void Variable_Map_ReturnsAlternative()
         {
             // ARANGE
-            Expression equation1 = Variable.X;
+            Expression expression1 = Variable.X;
 
             // ACT
-            Expression equation2 = equation1.Map(a => Variable.Z);
+            Expression expression2 = expression1.Map(a => Variable.Z);
 
             // ASSERT
-            Assert.AreEqual(Variable.Z, equation2);
+            Assert.AreEqual(Variable.Z, expression2);
         }
     }
 }

@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace AlgebraTests
 {
-    public class EquationTests
+    public class ExpressionTests
     {
 
     }

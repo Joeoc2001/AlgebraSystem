@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Algebra
 {
-    public class RandomEquationGenerator
+    public class RandomExpressionGenerator
     {
         //public float baseProb;
         //public int maxDepth;

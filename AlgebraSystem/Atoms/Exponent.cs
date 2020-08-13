@@ -127,7 +127,7 @@ namespace Algebra.Atoms
             return 10;
         }
 
-        public override Expression Map(EquationMapping map)
+        public override Expression Map(ExpressionMapping map)
         {
             Expression currentThis = this;
 

@@ -69,7 +69,7 @@ namespace Algebra.Atoms
         public List<Expression> GetDisplaySortedArguments()
         {
             List<Expression> sortedEqs = new List<Expression>(Arguments);
-            sortedEqs.Sort(EquationDisplayComparer.COMPARER);
+            sortedEqs.Sort(ExpressionDisplayComparer.COMPARER);
             return sortedEqs;
         }
 
@@ -155,7 +155,7 @@ namespace Algebra.Atoms
             return builder.ToString();
         }
 
-        public override Expression Map(EquationMapping map)
+        public override Expression Map(ExpressionMapping map)
         {
             Expression currentThis = this;
 

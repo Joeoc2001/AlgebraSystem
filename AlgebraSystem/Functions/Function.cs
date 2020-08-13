@@ -75,12 +75,12 @@ namespace Algebra.Functions
 
             foreach (string parameterName in p1.Keys)
             {
-                if (!p2.TryGetValue(parameterName, out Expression equation2))
+                if (!p2.TryGetValue(parameterName, out Expression expression2))
                 {
                     return false; // The parameter with given name doesn't exist in p2
                 }
-                Expression equation1 = p1[parameterName];
-                if (!equation1.Equals(equation2))
+                Expression expression1 = p1[parameterName];
+                if (!expression1.Equals(expression2))
                 {
                     return false;
                 }
@@ -116,7 +116,7 @@ namespace Algebra.Functions
             return 0;
         }
 
-        public override Expression Map(EquationMapping map)
+        public override Expression Map(ExpressionMapping map)
         {
             Expression currentThis = this;
 
@@ -174,7 +174,7 @@ namespace Algebra.Functions
             Expression atomicVariabledExpression = identity.AtomicExpression;
 
             // Replace variables with their expressions
-            Expression atomicExpression = atomicVariabledExpression.Map(new EquationMapping()
+            Expression atomicExpression = atomicVariabledExpression.Map(new ExpressionMapping()
             {
                 PostMap = expression =>
                 {

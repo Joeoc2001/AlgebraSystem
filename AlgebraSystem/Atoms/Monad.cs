@@ -13,7 +13,7 @@ namespace Algebra.Atoms
         }
         public abstract Func<Expression, Expression> GetSimplifyingConstructor();
 
-        public override Expression Map(EquationMapping map)
+        public override Expression Map(ExpressionMapping map)
         {
             Expression currentThis = this;
 

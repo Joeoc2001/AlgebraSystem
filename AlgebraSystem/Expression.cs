@@ -23,8 +23,8 @@ namespace Algebra
 
         public abstract ExpressionDelegate GetDelegate(VariableInputSet set);
         public abstract Expression GetDerivative(Variable wrt);
-        public Expression Map(EquationMapping.EquationMap map) => Map((EquationMapping)map);
-        public abstract Expression Map(EquationMapping map);
+        public Expression Map(ExpressionMapping.ExpressionMap map) => Map((ExpressionMapping)map);
+        public abstract Expression Map(ExpressionMapping map);
         public abstract int GenHashCode();
         public abstract bool Equals(Expression obj);
         [Obsolete]
