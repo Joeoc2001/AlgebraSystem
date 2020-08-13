@@ -11,8 +11,9 @@ namespace Algebra.Functions.HardcodedFunctionIdentities
         private static readonly Variable param2 = new Variable("b");
         private static readonly Expression atomicExpression = 0.5 * (param1 + param2 - Expression.Abs(param1 - param2));
         private static readonly int hashSeed = 1435958181;
+        private static readonly string name = "min";
 
-        public static readonly DyadIdentity Instance = new DyadIdentity(param1, param2, hashSeed, atomicExpression, GetDelegate, GetDerivative);
+        public static readonly DyadIdentity Instance = new DyadIdentity(name, param1, param2, hashSeed, atomicExpression, GetDelegate, GetDerivative);
 
         private static Expression GetDerivative(Expression parameter1, Expression parameter2, Variable wrt)
         {

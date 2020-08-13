@@ -51,10 +51,10 @@ namespace AtomTests
         }
 
         [Test]
-        public void Constant_Derivative_IsZero()
+        public void Constant_Derivative_IsZero([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            Constant value = Constant.From(54321);
+            Constant value = Constant.From(v);
 
             // ACT
             Expression derivative = value.GetDerivative(Variable.X);
@@ -64,10 +64,10 @@ namespace AtomTests
         }
 
         [Test]
-        public void Constant_EvaluatesCorrectly([Range(-1000, 1000, 10)] float v)
+        public void Constant_EvaluatesCorrectly([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            Constant equation = v;
+            Constant equation = Constant.From(v);
 
             // ACT
             float value = equation.GetDelegate(new VariableInputSet())();
@@ -77,15 +77,15 @@ namespace AtomTests
         }
 
         [Test]
-        public void Constant_ParsesCorrectly()
+        public void Constant_ParsesCorrectly([Range(-100, 100, 10)] int v)
         {
             // ARANGE
 
             // ACT
-            Constant equation = Constant.From(54321);
+            Constant equation = Constant.From(v);
 
             // ASSERT
-            Assert.AreEqual((Rational)54321, equation.GetValue());
+            Assert.AreEqual((Rational)v, equation.GetValue());
         }
 
         [Test]

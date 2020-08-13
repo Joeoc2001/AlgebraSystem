@@ -8,9 +8,9 @@ namespace Algebra.Functions
 {
     public abstract class FunctionGenerator : IFunctionGenerator
     {
-        private static readonly IFunctionGenerator sinFunctionGenerator  = new AtomicFunctionGenerator(1, list => Expression.SinOf(list[0]));
-        private static readonly IFunctionGenerator lnFunctionGenerator   = new AtomicFunctionGenerator(1, list => Expression.LnOf(list[0]));
-        private static readonly IFunctionGenerator signFunctionGenerator = new AtomicFunctionGenerator(1, list => Expression.SignOf(list[0]));
+        private static readonly IFunctionGenerator sinFunctionGenerator  = new AtomicFunctionGenerator("sin", 1, list => Expression.SinOf(list[0]));
+        private static readonly IFunctionGenerator lnFunctionGenerator   = new AtomicFunctionGenerator("ln", 1, list => Expression.LnOf(list[0]));
+        private static readonly IFunctionGenerator signFunctionGenerator = new AtomicFunctionGenerator("sign", 1, list => Expression.SignOf(list[0]));
 
         public static readonly Dictionary<string, IFunctionGenerator> DefaultFunctions = new Dictionary<string, IFunctionGenerator>()
         {
@@ -27,8 +27,32 @@ namespace Algebra.Functions
             { "tanh", TanhIdentity.Instance },
         };
 
+        private readonly string name;
+        private readonly ReadOnlyCollection<string> parameterNames;
+
+        protected FunctionGenerator(string name, List<string> parameterNames)
+            : this(name, parameterNames.AsReadOnly())
+        {
+
+        }
+
+        protected FunctionGenerator(string name, ReadOnlyCollection<string> parameterNames)
+        {
+            this.name = name ?? throw new ArgumentNullException(nameof(name));
+            this.parameterNames = parameterNames ?? throw new ArgumentNullException(nameof(parameterNames));
+        }
+
         protected abstract Expression CreateExpressionImpl(Dictionary<string, Expression> parameters);
-        public abstract ReadOnlyCollection<string> GetRequiredParameters();
+
+        public ReadOnlyCollection<string> GetRequiredParameters()
+        {
+            return parameterNames;
+        }
+
+        public string GetName()
+        {
+            return name;
+        }
 
         /// <summary>
         /// Return a new function node from the given parameters.

@@ -13,8 +13,8 @@ namespace Algebra.Functions
         public delegate Expression.ExpressionDelegate GetDyadDelegateDelegate(Expression.ExpressionDelegate delegate1, Expression.ExpressionDelegate delegate2);
         public delegate Expression GetDyadDerivativeDelegate(Expression parameter1, Expression parameter2, Variable wrt);
 
-        public DyadIdentity(Variable parameter1, Variable parameter2, int hashSeed, Expression atomicExpression, GetDyadDelegateDelegate getDelegate, GetDyadDerivativeDelegate getDerivative)
-            : base(new List<string>() { parameter1.Name, parameter2.Name }, hashSeed, atomicExpression,
+        public DyadIdentity(string name, Variable parameter1, Variable parameter2, int hashSeed, Expression atomicExpression, GetDyadDelegateDelegate getDelegate, GetDyadDerivativeDelegate getDerivative)
+            : base(name, new List<string>() { parameter1.Name, parameter2.Name }, hashSeed, atomicExpression,
                   dels => getDelegate(dels[parameter1.Name], dels[parameter2.Name]),
                   (exprs, wrt) => getDerivative(exprs[parameter1.Name], exprs[parameter2.Name], wrt))
         {

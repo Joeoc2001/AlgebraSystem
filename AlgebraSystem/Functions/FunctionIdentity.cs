@@ -9,7 +9,6 @@ namespace Algebra.Functions
 {
     public class FunctionIdentity : FunctionGenerator
     {
-        private readonly List<string> parameterNames;
         private readonly int hashSeed;
 
         public readonly Expression AtomicExpression;
@@ -20,9 +19,9 @@ namespace Algebra.Functions
         private readonly GetDelegateDelegate getDelegate;
         private readonly GetDerivativeDelegate getDerivative;
 
-        public FunctionIdentity(List<string> parameterNames, int hashSeed, Expression atomicExpression, GetDelegateDelegate getDelegate, GetDerivativeDelegate getDerivative)
+        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, Expression atomicExpression, GetDelegateDelegate getDelegate, GetDerivativeDelegate getDerivative)
+            : base(name, parameterNames)
         {
-            this.parameterNames = parameterNames ?? throw new ArgumentNullException(nameof(parameterNames));
             this.hashSeed = hashSeed;
 
             this.AtomicExpression = atomicExpression;
@@ -34,11 +33,6 @@ namespace Algebra.Functions
         protected override Expression CreateExpressionImpl(Dictionary<string, Expression> nodes)
         {
             return new Function(this, nodes);
-        }
-
-        public override ReadOnlyCollection<string> GetRequiredParameters()
-        {
-            return parameterNames.AsReadOnly();
         }
 
         public int GetHashSeed()

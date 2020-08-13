@@ -7,6 +7,7 @@ namespace Algebra.Functions
 {
     public interface IFunctionGenerator
     {
+        string GetName();
         Expression CreateExpression(Dictionary<string, Expression> parameters);
         ReadOnlyCollection<string> GetRequiredParameters();
         Expression CreateExpression(List<Expression> nodes);

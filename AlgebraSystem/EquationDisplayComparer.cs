@@ -1,8 +1,9 @@
 ﻿using Algebra.Atoms;
+using Algebra.Functions;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
-
+using System.Collections.ObjectModel;
 
 namespace Algebra
 {
@@ -35,6 +36,8 @@ namespace Algebra
                     return 1;
                 case Sin _:
                     return 0;
+                case Function _:
+                    return -1;
                 default:
                     throw new NotImplementedException($"Unsuported Expression type {e.GetType()}");
             };
@@ -67,6 +70,8 @@ namespace Algebra
                     return CompareMonad(c, (Sign)y);
                 case Sin c:
                     return CompareMonad(c, (Sin)y);
+                case Function c:
+                    return CompareFunctions(c, (Function)y);
                 default:
                     throw new NotImplementedException($"Unsuported Expression type {x.GetType()}");
             };
@@ -118,6 +123,52 @@ namespace Algebra
         private int CompareMonad(Monad a, Monad b)
         {
             return Compare(a.Argument, b.Argument);
+        }
+
+        private int CompareFunctions(Function a, Function b)
+        {
+            // Sort by name first, then each parameter
+            FunctionIdentity aId = a.GetIdentity();
+            FunctionIdentity bId = b.GetIdentity();
+            ReadOnlyCollection<string> aReq = aId.GetRequiredParameters();
+            ReadOnlyCollection<string> bReq = bId.GetRequiredParameters();
+            if (aId != bId)
+            {
+                // Less parameters => comes first
+                int aLen = aReq.Count;
+                int bLen = bReq.Count;
+                int cmp1 = aLen.CompareTo(bLen);
+                if (cmp1 != 0)
+                {
+                    return cmp1;
+                }
+
+                // Second sort on name
+                int cmp2 = aId.GetName().CompareTo(bId.GetName());
+                if (cmp2 != 0)
+                {
+                    return cmp2;
+                }
+            }
+
+            // ASSERT: Function types are the same
+            // Therefore parameter keys are the same
+            // Sort on parameter values
+            Dictionary<string, Expression> aParams = a.GetParameters();
+            Dictionary<string, Expression> bParams = b.GetParameters();
+            foreach (string parameterName in aReq)
+            {
+                Expression aExp = aParams[parameterName];
+                Expression bExp = bParams[parameterName];
+                int cmp3 = Compare(aExp, bExp);
+                if (cmp3 != 0)
+                {
+                    return cmp3;
+                }
+            }
+
+            // Else functions are identical
+            return 0;
         }
     }
 }

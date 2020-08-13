@@ -15,8 +15,8 @@ namespace Algebra.Functions
         public delegate Expression GetTryadDerivativeDelegate(Expression parameter1, Expression parameter2, Expression parameter3, Variable wrt);
 
         // Oh how I wish I was working in a functional language :(
-        public TryadIdentity(Variable parameter1, Variable parameter2, Variable parameter3, int hashSeed, Expression atomicExpression, GetTryadDelegateDelegate getDelegate, GetTryadDerivativeDelegate getDerivative)
-            : base(new List<string>() { parameter1.Name, parameter2.Name, parameter3.Name }, hashSeed, atomicExpression,
+        public TryadIdentity(string name, Variable parameter1, Variable parameter2, Variable parameter3, int hashSeed,Expression atomicExpression, GetTryadDelegateDelegate getDelegate, GetTryadDerivativeDelegate getDerivative)
+            : base(name, new List<string>() { parameter1.Name, parameter2.Name, parameter3.Name }, hashSeed, atomicExpression,
                   dels => getDelegate(dels[parameter1.Name], dels[parameter2.Name], dels[parameter3.Name]),
                   (exprs, wrt) => getDerivative(exprs[parameter1.Name], exprs[parameter2.Name], exprs[parameter3.Name], wrt))
         {

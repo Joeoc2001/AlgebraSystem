@@ -1,6 +1,7 @@
 ﻿using Algebra.Atoms;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -139,6 +140,27 @@ namespace Algebra.Functions
             }
 
             return currentThis;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            ReadOnlyCollection<string> paramNames = identity.GetRequiredParameters();
+
+            builder.Append(identity.GetName());
+            builder.Append(" (");
+            for (int i = 0; i < paramNames.Count; i++)
+            {
+                builder.Append(parameters[paramNames[i]]);
+                if (i < paramNames.Count - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+            builder.Append(")");
+
+            return builder.ToString();
         }
 
         [Obsolete]

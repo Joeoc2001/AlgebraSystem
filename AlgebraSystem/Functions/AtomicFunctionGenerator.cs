@@ -12,19 +12,15 @@ namespace Algebra.Functions
     {
         public delegate Expression AtomicFunctionGeneratorDelegate(List<Expression> parameters);
 
-        private readonly int parameterCount;
         private readonly AtomicFunctionGeneratorDelegate gen;
 
-        private readonly ReadOnlyCollection<string> parameterNames;
-
-        public AtomicFunctionGenerator(int parameterCount, AtomicFunctionGeneratorDelegate gen)
+        public AtomicFunctionGenerator(string name, int parameterCount, AtomicFunctionGeneratorDelegate gen)
+            : base(name, GenerateRequiredParameters(parameterCount))
         {
-            this.parameterCount = parameterCount;
             this.gen = gen;
-            parameterNames = GenerateRequiredParameters();
         }
 
-        private ReadOnlyCollection<string> GenerateRequiredParameters()
+        private static ReadOnlyCollection<string> GenerateRequiredParameters(int parameterCount)
         {
             char start = 'a';
             List<string> names = new List<string>();
@@ -34,11 +30,6 @@ namespace Algebra.Functions
                 start = (char)(start + 1);
             }
             return names.AsReadOnly();
-        }
-
-        public override ReadOnlyCollection<string> GetRequiredParameters()
-        {
-            return parameterNames;
         }
 
         protected override Expression CreateExpressionImpl(Dictionary<string, Expression> parameters)

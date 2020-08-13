@@ -10,8 +10,9 @@ namespace Algebra.Functions.HardcodedFunctionIdentities
         private static readonly Variable param = new Variable("a");
         private static readonly Expression atomicExpression = param * Expression.SignOf(param);
         private static readonly int hashSeed = -2124003897;
+        private static readonly string name = "abs";
 
-        public static readonly MonadIdentity Instance = new MonadIdentity(param, hashSeed, atomicExpression, GetDelegate, GetDerivative);
+        public static readonly MonadIdentity Instance = new MonadIdentity(name, param, hashSeed, atomicExpression, GetDelegate, GetDerivative);
 
         private static Expression GetDerivative(Expression parameter, Variable wrt)
         {

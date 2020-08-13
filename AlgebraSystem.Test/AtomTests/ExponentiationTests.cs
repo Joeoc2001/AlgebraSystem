@@ -117,7 +117,7 @@ namespace AtomTests
             float value = equation.GetDelegate(new VariableInputSet())();
 
             // ASSERT
-            Assert.AreEqual(Math.Pow(a, b), value);
+            Assert.AreEqual((float)Math.Pow(a, b), value);
         }
 
         [Test]
