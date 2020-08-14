@@ -287,12 +287,12 @@ namespace Algebra
         /// <returns>True if the expression has the same atomic representation as this</returns>
         public bool Equals(Expression e)
         {
-            return Equals(e, EqalityLevel.Atomic);
+            return Equals(e, EqualityLevel.Atomic);
         }
 
         /// <summary>
         /// Checks if an expression is equal to this on a variable level.
-        /// Each <see cref="EqalityLevel"/> gives a different level of effort to put in to calculate equality.
+        /// Each <see cref="EqualityLevel"/> gives a different level of effort to put in to calculate equality.
         /// Note that the problem of expression equality is undecidable, so with the deepest setting it is not guaranteed that this method will terminate.
         /// This method will however terminate on all other levels.
         /// Also note that a return of false does not ever guarantee that two expressions are not equal, however a return of true guarantees that they are equal.
@@ -300,7 +300,7 @@ namespace Algebra
         /// <param name="e">The expression to check against this</param>
         /// <param name="level">The level of effort to put in to calculate equality</param>
         /// <returns>True if the equations are equal, false if equality could not be proven, or if e is null.</returns>
-        public bool Equals(Expression e, EqalityLevel level)
+        public bool Equals(Expression e, EqualityLevel level)
         {
             if (e is null)
             {
@@ -309,21 +309,21 @@ namespace Algebra
 
             switch (level)
             {
-                case EqalityLevel.Exactly:
+                case EqualityLevel.Exactly:
                     // Check hash first
                     if (GetHashCode() != e.GetHashCode())
                     {
                         return false;
                     }
                     return ExactlyEquals(e);
-                case EqalityLevel.Atomic:
+                case EqualityLevel.Atomic:
                     // Get atomic expressions and check if they are equal on the mimimum level
                     Expression atomicA = this.GetAtomicExpression();
                     Expression atomicB = e.GetAtomicExpression();
-                    return atomicA.Equals(atomicB, EqalityLevel.Exactly);
-                case EqalityLevel.Deep:
+                    return atomicA.Equals(atomicB, EqualityLevel.Exactly);
+                case EqualityLevel.Deep:
                     throw new NotImplementedException();
-                case EqalityLevel.Deepest:
+                case EqualityLevel.Deepest:
                     throw new NotImplementedException();
                 default:
                     throw new NotImplementedException($"Unknown equality level: {level}");

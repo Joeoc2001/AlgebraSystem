@@ -7,7 +7,7 @@ namespace Algebra
     /// <summary>
     /// Represents how much effort should be put in to calculating if two expressions are the same
     /// </summary>
-    public enum EqalityLevel
+    public enum EqualityLevel
     {
         Exactly, Atomic, Deep, Deepest
     }

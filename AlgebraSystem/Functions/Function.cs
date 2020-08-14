@@ -29,6 +29,17 @@ namespace Algebra.Functions
             return parameters;
         }
 
+        public List<Expression> GetParameterList()
+        {
+            List<Expression> parameterList = new List<Expression>();
+
+            foreach (string name in identity.GetRequiredParameters())
+            {
+                parameterList.Add(parameters[name]);
+            }
+            return parameterList;
+        }
+
         public FunctionIdentity GetIdentity()
         {
             return identity;
@@ -80,7 +91,7 @@ namespace Algebra.Functions
                     return false; // The parameter with given name doesn't exist in p2
                 }
                 Expression expression1 = p1[parameterName];
-                if (!expression1.Equals(expression2, EqalityLevel.Exactly))
+                if (!expression1.Equals(expression2, EqualityLevel.Exactly))
                 {
                     return false;
                 }

@@ -75,7 +75,7 @@ namespace Algebra.Atoms
                 bool found = false;
                 foreach (Expression otherArg in expressions)
                 {
-                    if (otherArg.Equals(thisArg, EqalityLevel.Exactly))
+                    if (otherArg.Equals(thisArg, EqualityLevel.Exactly))
                     {
                         found = true;
                         expressions.Remove(otherArg);
