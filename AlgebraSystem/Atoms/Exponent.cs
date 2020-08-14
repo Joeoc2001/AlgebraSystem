@@ -100,9 +100,9 @@ namespace Algebra.Atoms
             return this.Equals(obj as Exponent);
         }
 
-        public override int GenHashCode()
+        protected override int GenHashCode()
         {
-            return (31 * Base.GenHashCode() - Power.GenHashCode()) ^ 642859777;
+            return (65 * Base.GetHashCode() - Power.GetHashCode()) ^ 642859777;
         }
 
         public override string ToString()

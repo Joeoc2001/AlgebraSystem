@@ -67,9 +67,9 @@ namespace Algebra.Atoms
             return this.Equals(obj as Sign);
         }
 
-        public override int GenHashCode()
+        protected override int GenHashCode()
         {
-            return Argument.GenHashCode() ^ -322660314;
+            return Argument.GetHashCode() ^ -322660314;
         }
 
         public override string ToString()

@@ -99,8 +99,8 @@ namespace AlgebraTests
         public void Parser_ParsesDivision()
         {
             // ARANGE
-            string expression = "x / 2";
-            Expression expected = Variable.X / 2;
+            string expression = "x / y";
+            Expression expected = Variable.X / Variable.Y;
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -166,7 +166,7 @@ namespace AlgebraTests
         }
 
         [Test]
-        public void Parser_ParsesLogBraceless()
+        public void Parser_ParsesLnBraceless()
         {
             // ARANGE
             string expression = "ln 5";
@@ -180,11 +180,25 @@ namespace AlgebraTests
         }
 
         [Test]
-        public void Parser_ParsesLogBraces()
+        public void Parser_ParsesLnBraces()
         {
             // ARANGE
-            string expression = "log(52)";
+            string expression = "ln(52)";
             Expression expected = Expression.LnOf(Constant.From(52));
+
+            // ACT
+            Expression result = Parser.Parse(expression);
+
+            // ASSERT
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void Parser_ParsesLog()
+        {
+            // ARANGE
+            string expression = "Log (y, x) ";
+            Expression expected = Expression.LogOf(Variable.Y, Variable.X);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -197,8 +211,8 @@ namespace AlgebraTests
         public void Parser_ParsesLogCapital()
         {
             // ARANGE
-            string expression = "LOG 152 ";
-            Expression expected = Expression.LnOf(Constant.From(152));
+            string expression = "LOG (152, x) ";
+            Expression expected = Expression.LogOf(Constant.From(152), Variable.X);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -208,10 +222,10 @@ namespace AlgebraTests
         }
 
         [Test]
-        public void Parser_ParsesChainedLogBraceless()
+        public void Parser_ParsesChainedLnBraceless()
         {
             // ARANGE
-            string expression = "log ln 15";
+            string expression = "ln ln 15";
             Expression expected = Expression.LnOf(Expression.LnOf(Constant.From(15)));
 
             // ACT
@@ -222,7 +236,7 @@ namespace AlgebraTests
         }
 
         [Test]
-        public void Parser_ParsesLogBracelessAsOnlyNextLeaf()
+        public void Parser_ParsesLnBracelessAsOnlyNextLeaf()
         {
             // ARANGE
             string expression = "y * ln 5 * x + 3";

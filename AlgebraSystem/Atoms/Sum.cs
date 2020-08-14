@@ -117,11 +117,6 @@ namespace Algebra.Atoms
             return this.Equals(obj as Sum);
         }
 
-        public override int GenHashCode()
-        {
-            return base.GenHashCode() ^ -1375070008;
-        }
-
         public override int IdentityValue()
         {
             return 0;

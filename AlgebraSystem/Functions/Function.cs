@@ -94,7 +94,7 @@ namespace Algebra.Functions
             return Equals(obj as Function);
         }
 
-        public override int GenHashCode()
+        protected override int GenHashCode()
         {
             int value = identity.GetHashSeed();
 
@@ -105,7 +105,7 @@ namespace Algebra.Functions
             foreach (string paramName in parameterNames)
             {
                 value *= 33;
-                value ^= parameters[paramName].GenHashCode();
+                value ^= parameters[paramName].GetHashCode();
             }
 
             return value;
@@ -163,7 +163,7 @@ namespace Algebra.Functions
             return builder.ToString();
         }
 
-        public Expression GetEquivalentAtomicExpression()
+        protected override Expression GenAtomicExpression()
         {
             Expression atomicVariabledExpression = identity.AtomicExpression;
 
@@ -182,7 +182,7 @@ namespace Algebra.Functions
                 }
             });
 
-            return atomicExpression;
+            return atomicExpression.GetAtomicExpression();
         }
     }
 }

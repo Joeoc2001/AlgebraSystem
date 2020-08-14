@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace Algebra.Atoms
@@ -68,9 +69,25 @@ namespace Algebra.Atoms
 
         public List<Expression> GetDisplaySortedArguments()
         {
-            List<Expression> sortedEqs = new List<Expression>(Arguments);
+            return GetDisplaySortedArguments(Arguments);
+        }
+
+        private static List<Expression> GetDisplaySortedArguments(IList<Expression> eqs)
+        {
+            List<Expression> sortedEqs = new List<Expression>(eqs);
             sortedEqs.Sort(ExpressionDisplayComparer.COMPARER);
             return sortedEqs;
+        }
+
+        protected override int GenHashCode()
+        {
+            int value = -1906136416 * OperationSymbol().GetHashCode();
+            foreach (Expression eq in GetDisplaySortedArguments())
+            {
+                value *= 33;
+                value ^= eq.GetHashCode();
+            }
+            return value;
         }
 
         protected static List<Expression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : Expression
@@ -97,17 +114,6 @@ namespace Algebra.Atoms
             }
 
             return newEqs;
-        }
-
-        public override int GenHashCode()
-        {
-            int value = -1906136416 ^ OperationSymbol().GetHashCode();
-            foreach (Expression eq in GetDisplaySortedArguments())
-            {
-                value *= 33;
-                value ^= eq.GenHashCode();
-            }
-            return value;
         }
 
         public override string ToString()

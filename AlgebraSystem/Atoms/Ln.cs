@@ -55,9 +55,9 @@ namespace Algebra.Atoms
             return this.Equals(obj as Ln);
         }
 
-        public override int GenHashCode()
+        protected override int GenHashCode()
         {
-            return Argument.GenHashCode() ^ -1043105826;
+            return Argument.GetHashCode() ^ -1043105826;
         }
 
         public override string ToString()

@@ -1,4 +1,5 @@
 ﻿using Algebra.Atoms;
+using Algebra.Functions;
 using Algebra.Functions.HardcodedFunctionIdentities;
 using Rationals;
 using System;
@@ -25,7 +26,7 @@ namespace Algebra
         public abstract Expression GetDerivative(Variable wrt);
         public Expression Map(ExpressionMapping.ExpressionMap map) => Map((ExpressionMapping)map);
         public abstract Expression Map(ExpressionMapping map);
-        public abstract int GenHashCode();
+        protected abstract int GenHashCode();
         public abstract bool Equals(Expression obj);
 
         /* Used for displaying braces when printing a human-readable string
@@ -39,16 +40,63 @@ namespace Algebra
          */
         public abstract int GetOrderIndex();
 
-        // Cache hash
-        int? hash = null;
+        // Cache commonly queried results
+        private int? hash = null;
+        private Expression atomicExpression = null;
+
         public override sealed int GetHashCode()
         {
             if (!hash.HasValue)
             {
                 hash = GenHashCode();
             }
-
             return hash.Value;
+        }
+
+        /// <summary>
+        /// Replaces all non-atomic operations with their atomic counterparts.
+        /// The resulting expressions should not be executed as it will be far slower.
+        /// Instead, this form is used as an intermediate form for performing simplifications.
+        /// This function is cached, so is O(1) after first invocation
+        /// </summary>
+        /// <returns>An expression in atomic form</returns>
+        public Expression GetAtomicExpression()
+        {
+            if (atomicExpression is null)
+            {
+                atomicExpression = GenAtomicExpression();
+            }
+            return atomicExpression;
+        }
+
+        /// <summary>
+        /// See <see cref="GetAtomicExpression"/>.
+        /// Functions should override this method
+        /// </summary>
+        /// <returns>An expression in atomic form</returns>
+        protected virtual Expression GenAtomicExpression()
+        {
+            bool primary = true;
+
+            // Replace types with themselves but with their children's atomic expressions
+            Expression atomicExpression = Map(new ExpressionMapping()
+            {
+                ShouldMapChildren = expression => primary,
+                ShouldMapThis = expression => !primary,
+                PostMap = expression =>
+                {
+                    if (primary)
+                    {
+                        return expression;
+                    }
+                    else
+                    {
+                        return expression.GetAtomicExpression();
+                    }
+                }
+            });
+
+            return atomicExpression;
         }
 
         public sealed override bool Equals(object obj)
@@ -130,6 +178,11 @@ namespace Algebra
             return Ln.LnOf(eq);
         }
 
+        public static Expression LogOf(Expression a, Expression b)
+        {
+            return LogIdentity.Instance.CreateExpression(a, b);
+        }
+
         public static Expression SignOf(Expression eq)
         {
             return Sign.SignOf(eq);
@@ -142,17 +195,17 @@ namespace Algebra
 
         public static Expression CosOf(Expression eq)
         {
-            return SinOf(eq + (Constant.PI / 2));
+            return CosIdentity.Instance.CreateExpression(eq);
         }
 
         public static Expression TanOf(Expression eq)
         {
-            return SinOf(eq) / CosOf(eq);
+            return TanIdentity.Instance.CreateExpression(eq);
         }
 
         public static Expression Abs(Expression eq)
         {
-            return eq * SignOf(eq);
+            return AbsIdentity.Instance.CreateExpression(eq);
         }
 
         public static Expression Min(Expression a, Expression b)

@@ -60,7 +60,7 @@ namespace Algebra.Atoms
             return this.Equals(obj as Variable);
         }
 
-        public override int GenHashCode()
+        protected override int GenHashCode()
         {
             return Name.GetHashCode() * 1513357220;
         }

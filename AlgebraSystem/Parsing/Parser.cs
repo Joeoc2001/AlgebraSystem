@@ -70,7 +70,7 @@ namespace Algebra.Parsing
             // Collate all terms into a list
             List<Expression> terms = new List<Expression>
         {
-            ParseMultiplyDivide()
+            ParseMultiply()
         };
 
             bool subtractNext;
@@ -93,7 +93,7 @@ namespace Algebra.Parsing
                 tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                Expression rhs = ParseMultiplyDivide();
+                Expression rhs = ParseMultiply();
                 if (subtractNext)
                 {
                     if (rhs is Constant constant)
@@ -109,27 +109,18 @@ namespace Algebra.Parsing
             }
         }
 
-        // Parse an sequence of multiply/divide operators
-        Expression ParseMultiplyDivide()
+        // Parse an sequence of multiply operators
+        Expression ParseMultiply()
         {
             // Collate all terms into a list
             List<Expression> terms = new List<Expression>
-        {
-            ParseExponent()
-        };
+            {
+                ParseDivision()
+            };
 
-            bool reciprocalNext;
             while (true)
             {
-                if (tokenizer.Token == Token.Multiply)
-                {
-                    reciprocalNext = false;
-                }
-                else if (tokenizer.Token == Token.Divide)
-                {
-                    reciprocalNext = true;
-                }
-                else
+                if (tokenizer.Token != Token.Multiply)
                 {
                     return Product.Multiply(terms);
                 }
@@ -138,12 +129,29 @@ namespace Algebra.Parsing
                 tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                Expression rhs = ParseExponent();
-                if (reciprocalNext)
-                {
-                    rhs = Expression.Pow(rhs, -1);
-                }
+                Expression rhs = ParseDivision();
                 terms.Add(rhs);
+            }
+        }
+
+        // Parse an sequence of Division operators
+        Expression ParseDivision()
+        {
+            Expression lhs = ParseExponent();
+
+            while (true)
+            {
+                if (tokenizer.Token != Token.Divide)
+                {
+                    return lhs;
+                }
+
+                // Skip the operator
+                tokenizer.NextToken();
+
+                // Parse the next term in the expression
+                Expression rhs = ParseExponent();
+                lhs /= rhs;
             }
         }
 

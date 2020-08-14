@@ -49,9 +49,9 @@ namespace Algebra.Atoms
             return this.Equals(obj as Sin);
         }
 
-        public override int GenHashCode()
+        protected override int GenHashCode()
         {
-            return Argument.GenHashCode() ^ -1010034057;
+            return Argument.GetHashCode() ^ -1010034057;
         }
 
         public override string ToString()

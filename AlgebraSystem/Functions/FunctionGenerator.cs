@@ -15,8 +15,10 @@ namespace Algebra.Functions
         public static readonly Dictionary<string, IFunctionGenerator> DefaultFunctions = new Dictionary<string, IFunctionGenerator>()
         {
             { "sin", sinFunctionGenerator },
+            { "cos", CosIdentity.Instance },
+            { "tan", TanIdentity.Instance },
             { "ln", lnFunctionGenerator },
-            { "log", lnFunctionGenerator },
+            { "log", LogIdentity.Instance },
             { "sign", signFunctionGenerator },
             { "max", MaxIdentity.Instance },
             { "min", MinIdentity.Instance },

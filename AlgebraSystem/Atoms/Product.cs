@@ -151,11 +151,6 @@ namespace Algebra.Atoms
             return this.Equals(obj as Product);
         }
 
-        public override int GenHashCode()
-        {
-            return base.GenHashCode() ^ -914308772;
-        }
-
         public override int IdentityValue()
         {
             return 1;
