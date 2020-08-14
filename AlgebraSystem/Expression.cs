@@ -27,7 +27,7 @@ namespace Algebra
         public Expression Map(ExpressionMapping.ExpressionMap map) => Map((ExpressionMapping)map);
         public abstract Expression Map(ExpressionMapping map);
         protected abstract int GenHashCode();
-        public abstract bool Equals(Expression obj);
+        protected abstract bool ExactlyEquals(Expression expression);
 
         /* Used for displaying braces when printing a human-readable string
          * Should be:
@@ -97,11 +97,6 @@ namespace Algebra
             });
 
             return atomicExpression;
-        }
-
-        public sealed override bool Equals(object obj)
-        {
-            return Equals(obj as Expression);
         }
 
         public ExpressionDelegate GetDerivitiveExpression(VariableInputSet set, Variable wrt)
@@ -270,6 +265,69 @@ namespace Algebra
         public static bool operator !=(Expression left, Expression right)
         {
             return !(left == right);
+        }
+
+        // Equality methods
+        /// <summary>
+        /// Default object equality method.
+        /// If obj is an Expression, checks equality on the atomic level
+        /// </summary>
+        /// <param name="obj">The object to check</param>
+        /// <returns>True if obj is an Expression and has the same atomic representation as this</returns>
+        public sealed override bool Equals(object obj)
+        {
+            return Equals(obj as Expression);
+        }
+
+        /// <summary>
+        /// Default Expression equality method.
+        /// Checks equality on the atomic level
+        /// </summary>
+        /// <param name="e">The expression to check</param>
+        /// <returns>True if the expression has the same atomic representation as this</returns>
+        public bool Equals(Expression e)
+        {
+            return Equals(e, EqalityLevel.Atomic);
+        }
+
+        /// <summary>
+        /// Checks if an expression is equal to this on a variable level.
+        /// Each <see cref="EqalityLevel"/> gives a different level of effort to put in to calculate equality.
+        /// Note that the problem of expression equality is undecidable, so with the deepest setting it is not guaranteed that this method will terminate.
+        /// This method will however terminate on all other levels.
+        /// Also note that a return of false does not ever guarantee that two expressions are not equal, however a return of true guarantees that they are equal.
+        /// </summary>
+        /// <param name="e">The expression to check against this</param>
+        /// <param name="level">The level of effort to put in to calculate equality</param>
+        /// <returns>True if the equations are equal, false if equality could not be proven, or if e is null.</returns>
+        public bool Equals(Expression e, EqalityLevel level)
+        {
+            if (e is null)
+            {
+                return false;
+            }
+
+            switch (level)
+            {
+                case EqalityLevel.Exactly:
+                    // Check hash first
+                    if (GetHashCode() != e.GetHashCode())
+                    {
+                        return false;
+                    }
+                    return ExactlyEquals(e);
+                case EqalityLevel.Atomic:
+                    // Get atomic expressions and check if they are equal on the mimimum level
+                    Expression atomicA = this.GetAtomicExpression();
+                    Expression atomicB = e.GetAtomicExpression();
+                    return atomicA.Equals(atomicB, EqalityLevel.Exactly);
+                case EqalityLevel.Deep:
+                    throw new NotImplementedException();
+                case EqalityLevel.Deepest:
+                    throw new NotImplementedException();
+                default:
+                    throw new NotImplementedException($"Unknown equality level: {level}");
+            }
         }
     }
 }

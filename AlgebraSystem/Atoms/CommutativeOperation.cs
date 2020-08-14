@@ -45,26 +45,52 @@ namespace Algebra.Atoms
             };
         }
 
-        public bool OperandsEquals(IList<Expression> operands)
+        protected bool OperandsExactlyEquals(IList<Expression> otherArgs)
         {
             // Check for commutativity
-            var counts = Arguments
-                .GroupBy(v => v)
-                .ToDictionary(g => g.Key, g => g.Count());
-            var ok = true;
-            foreach (Expression n in operands)
+            // Add all parameters to dict by hash
+            Dictionary<int, List<Expression>> expressionsByHashes = new Dictionary<int, List<Expression>>();
+            foreach (Expression otherArg in otherArgs)
             {
-                if (counts.TryGetValue(n, out int c))
+                int hash = otherArg.GetHashCode();
+                if (!expressionsByHashes.TryGetValue(hash, out List<Expression> expressions))
                 {
-                    counts[n] = c - 1;
+                    expressions = new List<Expression>();
+                    expressionsByHashes.Add(hash, expressions);
                 }
-                else
+                expressions.Add(otherArg);
+            }
+
+            // Check all parameters in this are present
+            IList<Expression> thisArgs = Arguments;
+            foreach (Expression thisArg in thisArgs)
+            {
+                int hash = thisArg.GetHashCode();
+                if (!expressionsByHashes.TryGetValue(hash, out List<Expression> expressions))
                 {
-                    ok = false;
-                    break;
+                    return false;
+                }
+
+                // Perform linear search on all equations with same hash
+                bool found = false;
+                foreach (Expression otherArg in expressions)
+                {
+                    if (otherArg.Equals(thisArg, EqalityLevel.Exactly))
+                    {
+                        found = true;
+                        expressions.Remove(otherArg);
+                        break;
+                    }
+                }
+
+                // If linear search failed then args are different
+                if (!found)
+                {
+                    return false;
                 }
             }
-            return ok && counts.Values.All(c => c == 0);
+
+            return true;
         }
 
         public List<Expression> GetDisplaySortedArguments()

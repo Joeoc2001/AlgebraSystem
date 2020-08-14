@@ -52,19 +52,14 @@ namespace Algebra.Atoms
             return () => Math.Sign(eqExpression());
         }
 
-        public bool Equals(Sign other)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (other is null)
+            if (!(expression is Sign sign))
             {
                 return false;
             }
 
-            return Argument.Equals(other.Argument);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Sign);
+            return Argument.Equals(sign.Argument);
         }
 
         protected override int GenHashCode()

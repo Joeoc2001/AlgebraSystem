@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Algebra.Atoms
 {
-    public class Exponent : Expression, IEquatable<Exponent>
+    public class Exponent : Expression
     {
         public readonly Expression Base;
         public readonly Expression Power;
@@ -85,19 +85,14 @@ namespace Algebra.Atoms
             return this * ((Power * baseDeriv / Base) + (expDeriv * LnOf(Base)));
         }
 
-        public bool Equals(Exponent other)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (other is null)
+            if (!(expression is Exponent exponent))
             {
                 return false;
             }
 
-            return Base.Equals(other.Base) && Power.Equals(other.Power);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Exponent);
+            return Base.Equals(exponent.Base) && Power.Equals(exponent.Power);
         }
 
         protected override int GenHashCode()

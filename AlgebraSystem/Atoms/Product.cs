@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Algebra.Atoms
 {
-    public class Product : CommutativeOperation, IEquatable<Product>
+    public class Product : CommutativeOperation
     {
         public static Expression Multiply<T>(List<T> eqs) where T : Expression
         {
@@ -135,20 +135,15 @@ namespace Algebra.Atoms
             return Sum.Add(terms);
         }
 
-        public bool Equals(Product obj)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (obj is null)
+            if (!(expression is Product product))
             {
                 return false;
             }
 
             // Check for commutativity
-            return OperandsEquals(obj.Arguments);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Product);
+            return OperandsExactlyEquals(product.Arguments);
         }
 
         public override int IdentityValue()

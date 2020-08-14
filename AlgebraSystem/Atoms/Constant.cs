@@ -4,7 +4,7 @@ using System;
 
 namespace Algebra.Atoms
 {
-    public class Constant : Expression, IEquatable<Constant>
+    public class Constant : Expression
     {
         public static readonly Constant ZERO = 0;
         public static readonly Constant ONE = 1;
@@ -42,19 +42,14 @@ namespace Algebra.Atoms
             return 0;
         }
 
-        public bool Equals(Constant obj)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (obj == null)
+            if (!(expression is Constant constant))
             {
                 return false;
             }
 
-            return value.Equals(obj.value);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Constant);
+            return value.Equals(constant.value);
         }
 
         protected override int GenHashCode()

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Algebra.Atoms
 {
-    public class Sum : CommutativeOperation, IEquatable<Sum>
+    public class Sum : CommutativeOperation
     {
         public static Expression Add<T>(List<T> eqs) where T : Expression
         {
@@ -101,20 +101,15 @@ namespace Algebra.Atoms
             return Add(derivatives);
         }
 
-        public bool Equals(Sum obj)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (obj is null)
+            if (!(expression is Sum sum))
             {
                 return false;
             }
 
             // Check for commutativity
-            return OperandsEquals(obj.Arguments);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Sum);
+            return OperandsExactlyEquals(sum.Arguments);
         }
 
         public override int IdentityValue()

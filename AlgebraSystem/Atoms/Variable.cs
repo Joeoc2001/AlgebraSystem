@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Algebra.Atoms
 {
-    public class Variable : Expression, IEquatable<Variable>
+    public class Variable : Expression
     {
         public class NotPresentException : ArgumentException
         {
@@ -45,19 +45,14 @@ namespace Algebra.Atoms
             return 0;
         }
 
-        public bool Equals(Variable obj)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (obj is null)
+            if (!(expression is Variable variable))
             {
                 return false;
             }
 
-            return this.Name.Equals(obj.Name);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Variable);
+            return Name.Equals(variable.Name);
         }
 
         protected override int GenHashCode()

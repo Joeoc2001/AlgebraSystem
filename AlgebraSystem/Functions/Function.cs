@@ -53,20 +53,20 @@ namespace Algebra.Functions
             return identity.GetDerivative(this, wrt);
         }
 
-        public bool Equals(Function obj)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (obj == null)
+            if (!(expression is Function function))
             {
                 return false;
             }
 
-            if (!identity.Equals(obj.identity))
+            if (!identity.Equals(function.identity))
             {
                 return false;
             }
 
             IDictionary<string, Expression> p1 = GetParameters();
-            IDictionary<string, Expression> p2 = obj.GetParameters();
+            IDictionary<string, Expression> p2 = function.GetParameters();
 
             if (p1.Count != p2.Count)
             {
@@ -80,18 +80,13 @@ namespace Algebra.Functions
                     return false; // The parameter with given name doesn't exist in p2
                 }
                 Expression expression1 = p1[parameterName];
-                if (!expression1.Equals(expression2))
+                if (!expression1.Equals(expression2, EqalityLevel.Exactly))
                 {
                     return false;
                 }
             }
 
             return true;
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return Equals(obj as Function);
         }
 
         protected override int GenHashCode()

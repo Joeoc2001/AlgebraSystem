@@ -40,19 +40,14 @@ namespace Algebra.Atoms
             return derivative / Argument;
         }
 
-        public bool Equals(Ln other)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (other is null)
+            if (!(expression is Ln ln))
             {
                 return false;
             }
 
-            return Argument.Equals(other.Argument);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Ln);
+            return Argument.Equals(ln.Argument);
         }
 
         protected override int GenHashCode()

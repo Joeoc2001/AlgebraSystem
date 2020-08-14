@@ -34,19 +34,14 @@ namespace Algebra.Atoms
             return derivative * CosOf(Argument);
         }
 
-        public bool Equals(Sin other)
+        protected override bool ExactlyEquals(Expression expression)
         {
-            if (other is null)
+            if (!(expression is Sin sin))
             {
                 return false;
             }
 
-            return Argument.Equals(other.Argument);
-        }
-
-        public override bool Equals(Expression obj)
-        {
-            return this.Equals(obj as Sin);
+            return Argument.Equals(sin.Argument);
         }
 
         protected override int GenHashCode()
