@@ -1,4 +1,5 @@
 ﻿using Algebra.Atoms;
+using Algebra.Equivalence;
 using Algebra.Functions;
 using Algebra.Functions.HardcodedFunctionIdentities;
 using Rationals;
@@ -142,6 +143,15 @@ namespace Algebra
             }
 
             return currentThis;
+        }
+
+        /// <summary>
+        /// Creates a new Equivalence Class used for proving equivalence and for finding alternate forms of an equation.
+        /// </summary>
+        /// <returns>A queriable equivalence class for this expression</returns>
+        public EquivalenceClass GetEquivalenceClass()
+        {
+            return new EquivalenceClass(this);
         }
 
         public static Expression operator +(Expression left, Expression right)
@@ -338,9 +348,9 @@ namespace Algebra
                     Expression atomicB = e.GetAtomicExpression();
                     return atomicA.Equals(atomicB, EqualityLevel.Exactly);
                 case EqualityLevel.Deep:
-                    throw new NotImplementedException();
+                    return GetEquivalenceClass().IsInClass(e, 3);
                 case EqualityLevel.Deepest:
-                    throw new NotImplementedException();
+                    return GetEquivalenceClass().IsInClass(e);
                 default:
                     throw new NotImplementedException($"Unknown equality level: {level}");
             }

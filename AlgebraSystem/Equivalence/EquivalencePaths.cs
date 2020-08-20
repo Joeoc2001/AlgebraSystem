@@ -5,8 +5,6 @@ namespace Algebra.Equivalence
 {
     public static class EquivalencePaths
     {
-        public static readonly EquivalencePath IDENTITY = eq => new List<Expression> { eq };
-
         public static readonly EquivalencePath EXPAND_BRACES = eq =>
         {
             int i = 0;
