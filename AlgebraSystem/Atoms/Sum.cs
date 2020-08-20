@@ -8,7 +8,7 @@ namespace Algebra.Atoms
 {
     public class Sum : CommutativeOperation
     {
-        public static Expression Add<T>(List<T> eqs) where T : Expression
+        new public static Expression Add<T>(IEnumerable<T> eqs) where T : Expression
         {
             // Loop and find all other addition nodes and put them into this one
             List<Expression> collatedEqs = new List<Expression>();

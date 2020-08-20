@@ -24,8 +24,7 @@ namespace Algebra
 
         public abstract ExpressionDelegate GetDelegate(VariableInputSet set);
         public abstract Expression GetDerivative(Variable wrt);
-        public Expression Map(ExpressionMapping.ExpressionMap map) => Map((ExpressionMapping)map);
-        public abstract Expression Map(ExpressionMapping map);
+        public abstract Expression MapChildren(ExpressionMapping.ExpressionMap map);
         protected abstract int GenHashCode();
         protected abstract bool ExactlyEquals(Expression expression);
 
@@ -79,14 +78,15 @@ namespace Algebra
             bool primary = true;
 
             // Replace types with themselves but with their children's atomic expressions
-            Expression atomicExpression = Map(new ExpressionMapping()
+            Expression atomicExpression = PreMap(new ExpressionMapping()
             {
                 ShouldMapChildren = expression => primary,
-                ShouldMapThis = expression => !primary,
-                PostMap = expression =>
+                ShouldMapThis = expression => true,
+                Map = expression =>
                 {
                     if (primary)
                     {
+                        primary = false;
                         return expression;
                     }
                     else
@@ -128,6 +128,43 @@ namespace Algebra
             return () => new Vector4(dxFunc(), dyFunc(), dzFunc(), dwFunc());
         }
 
+        public Expression PreMap(ExpressionMapping.ExpressionMap map) => PreMap((ExpressionMapping)map);
+        public Expression PostMap(ExpressionMapping.ExpressionMap map) => PostMap((ExpressionMapping)map);
+
+        public Expression PreMap(ExpressionMapping map)
+        {
+            Expression currentThis = this;
+
+            if (map.ShouldMapThis(this))
+            {
+                currentThis = map.Map(currentThis);
+            }
+
+            if (map.ShouldMapChildren(this))
+            {
+                currentThis = currentThis.MapChildren(child => child.PreMap(map));
+            }
+
+            return currentThis;
+        }
+
+        public Expression PostMap(ExpressionMapping map)
+        {
+            Expression currentThis = this;
+
+            if (map.ShouldMapChildren(this))
+            {
+                currentThis = currentThis.MapChildren(child => child.PostMap(map));
+            }
+
+            if (map.ShouldMapThis(currentThis))
+            {
+                currentThis = map.Map(currentThis);
+            }
+
+            return currentThis;
+        }
+
         public static Expression operator +(Expression left, Expression right)
         {
             return Add(new List<Expression>() { left, right });
@@ -143,7 +180,7 @@ namespace Algebra
             return -1 * a;
         }
 
-        public static Expression Add(List<Expression> eqs)
+        public static Expression Add<T>(IEnumerable<T> eqs) where T : Expression
         {
             return Sum.Add(eqs);
         }
@@ -158,7 +195,7 @@ namespace Algebra
             return DivIdentity.Instance.CreateExpression(left, right);
         }
 
-        public static Expression Multiply(List<Expression> eqs)
+        public static Expression Multiply<T>(IEnumerable<T> eqs) where T : Expression
         {
             return Product.Multiply(eqs);
         }
@@ -270,10 +307,10 @@ namespace Algebra
         // Equality methods
         /// <summary>
         /// Default object equality method.
-        /// If obj is an Expression, checks equality on the atomic level
+        /// If obj is an Expression, checks equality on the exact level
         /// </summary>
         /// <param name="obj">The object to check</param>
-        /// <returns>True if obj is an Expression and has the same atomic representation as this</returns>
+        /// <returns>True if obj is an Expression and has the same exact representation as this</returns>
         public sealed override bool Equals(object obj)
         {
             return Equals(obj as Expression);
@@ -281,13 +318,13 @@ namespace Algebra
 
         /// <summary>
         /// Default Expression equality method.
-        /// Checks equality on the atomic level
+        /// Checks equality on the exact level
         /// </summary>
         /// <param name="e">The expression to check</param>
-        /// <returns>True if the expression has the same atomic representation as this</returns>
+        /// <returns>True if the expression has the same exact representation as this</returns>
         public bool Equals(Expression e)
         {
-            return Equals(e, EqualityLevel.Atomic);
+            return Equals(e, EqualityLevel.Exactly);
         }
 
         /// <summary>

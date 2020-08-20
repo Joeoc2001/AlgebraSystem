@@ -10,7 +10,7 @@ namespace Algebra.Atoms
 {
     public class Product : CommutativeOperation
     {
-        public static Expression Multiply<T>(List<T> eqs) where T : Expression
+        new public static Expression Multiply<T>(IEnumerable<T> eqs) where T : Expression
         {
             // Collate multiplications into one big multiplication
             List<Expression> collatedEqs = new List<Expression>();

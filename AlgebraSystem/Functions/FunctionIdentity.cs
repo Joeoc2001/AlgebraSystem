@@ -19,12 +19,12 @@ namespace Algebra.Functions
         private readonly GetDelegateDelegate getDelegate;
         private readonly GetDerivativeDelegate getDerivative;
 
-        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, Expression atomicExpression, GetDelegateDelegate getDelegate, GetDerivativeDelegate getDerivative)
+        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, Expression alternateExpression, GetDelegateDelegate getDelegate, GetDerivativeDelegate getDerivative)
             : base(name, parameterNames)
         {
             this.hashSeed = hashSeed;
 
-            this.AtomicExpression = atomicExpression;
+            this.AtomicExpression = alternateExpression.GetAtomicExpression();
 
             this.getDelegate = getDelegate;
             this.getDerivative = getDerivative;

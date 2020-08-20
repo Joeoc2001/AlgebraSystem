@@ -114,10 +114,10 @@ namespace FunctionTests
 
             // Act
             Expression atomic = expression.GetAtomicExpression();
-            bool areExactlyEqual = expected.Equals(atomic, EqualityLevel.Exactly);
+            bool areEqual = expected.Equals(atomic, EqualityLevel.Exactly);
 
             // Assert
-            Assert.IsTrue(areExactlyEqual);
+            Assert.IsTrue(areEqual);
         }
 
         [Test]
@@ -142,24 +142,24 @@ namespace FunctionTests
             Expression expected = 1;
 
             // Act
-            bool areExactlyEqual = expected.Equals(expression, EqualityLevel.Atomic);
+            bool areEqual = expected.Equals(expression, EqualityLevel.Atomic);
 
             // Assert
-            Assert.IsTrue(areExactlyEqual);
+            Assert.IsTrue(areEqual);
         }
 
         [Test]
-        public void Div_InstancesXDivX_NonSpecifiedEquals1()
+        public void Div_InstancesXDivX_NonSpecifiedDoesNotEqual1()
         {
             // Arrange
             Expression expression = DivIdentity.Instance.CreateExpression(Variable.X, Variable.X);
             Expression expected = 1;
 
             // Act
-            bool areExactlyEqual = expected.Equals(expression);
+            bool areEqual = expected.Equals(expression);
 
             // Assert
-            Assert.IsTrue(areExactlyEqual);
+            Assert.IsFalse(areEqual);
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace FunctionTests
             Expression expected = DivIdentity.Instance.CreateExpression(Variable.Z, Variable.Z);
 
             // Act
-            Expression result = expression.Map(e => e is Variable v ? Variable.Z : e);
+            Expression result = expression.PostMap(e => e is Variable v ? Variable.Z : e);
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -197,7 +197,7 @@ namespace FunctionTests
             Expression expected = DivIdentity.Instance.CreateExpression(Variable.X, Variable.Y);
 
             // Act
-            expression.Map(e => e is Variable v ? Variable.Z : e);
+            expression.PostMap(e => e is Variable v ? Variable.Z : e);
 
             // Assert
             Assert.AreEqual(expected, expression);

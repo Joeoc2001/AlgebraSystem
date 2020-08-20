@@ -7,7 +7,7 @@ using System;
 
 namespace Algebra.Atoms
 {
-    public class Ln : Monad
+    public class Ln : AtomicMonad
     {
         new public static Expression LnOf(Expression argument)
         {
@@ -50,29 +50,19 @@ namespace Algebra.Atoms
             return Argument.Equals(ln.Argument);
         }
 
-        protected override int GenHashCode()
-        {
-            return Argument.GetHashCode() ^ -1043105826;
-        }
-
-        public override string ToString()
-        {
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("ln ");
-            builder.Append(ToParenthesisedString(Argument));
-
-            return builder.ToString();
-        }
-
-        public override int GetOrderIndex()
-        {
-            return 0;
-        }
-
         public override Func<Expression, Expression> GetSimplifyingConstructor()
         {
             return LnOf;
+        }
+
+        protected override int GetHashSeed()
+        {
+            return -1043105826;
+        }
+
+        protected override string GetMonadFunctionName()
+        {
+            return "ln";
         }
     }
 }

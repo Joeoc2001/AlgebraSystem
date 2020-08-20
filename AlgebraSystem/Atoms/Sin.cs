@@ -7,7 +7,7 @@ using System;
 
 namespace Algebra.Atoms
 {
-    public class Sin : Monad
+    public class Sin : AtomicMonad
     {
         new public static Expression SinOf(Expression argument)
         {
@@ -44,29 +44,19 @@ namespace Algebra.Atoms
             return Argument.Equals(sin.Argument);
         }
 
-        protected override int GenHashCode()
-        {
-            return Argument.GetHashCode() ^ -1010034057;
-        }
-
-        public override string ToString()
-        {
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("sin ");
-            builder.Append(ToParenthesisedString(Argument));
-
-            return builder.ToString();
-        }
-
-        public override int GetOrderIndex()
-        {
-            return 0;
-        }
-
         public override Func<Expression, Expression> GetSimplifyingConstructor()
         {
             return SinOf;
+        }
+
+        protected override int GetHashSeed()
+        {
+            return 507056861;
+        }
+
+        protected override string GetMonadFunctionName()
+        {
+            return "sin";
         }
     }
 }

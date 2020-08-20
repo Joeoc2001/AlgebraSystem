@@ -120,7 +120,7 @@ namespace Algebra
             return Compare(a.Power, b.Power);
         }
 
-        private int CompareMonad(Monad a, Monad b)
+        private int CompareMonad(AtomicMonad a, AtomicMonad b)
         {
             return Compare(a.Argument, b.Argument);
         }

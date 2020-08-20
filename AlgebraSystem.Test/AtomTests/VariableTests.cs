@@ -135,7 +135,7 @@ namespace AtomTests
             Expression expression2 = Variable.X;
 
             // ACT
-            expression2.Map(a => Variable.Y);
+            expression2.PostMap(a => Variable.Y);
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);
@@ -148,7 +148,7 @@ namespace AtomTests
             Expression expression1 = Variable.X;
 
             // ACT
-            Expression expression2 = expression1.Map(a => Variable.Z);
+            Expression expression2 = expression1.PostMap(a => Variable.Z);
 
             // ASSERT
             Assert.AreEqual(Variable.Z, expression2);

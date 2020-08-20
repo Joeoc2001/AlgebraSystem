@@ -5,6 +5,7 @@ using Rationals;
 using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
+using AlgebraSystem.Test;
 
 namespace AtomTests
 {
@@ -142,7 +143,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Variable.Z / Variable.Z;
+            Expression expression = Variable.Z * Expression.Pow(Variable.Z, -1);
             Expression expected = Constant.From(1);
 
             // ASSERT
@@ -155,7 +156,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Constant.From(2) * Variable.Z / Variable.Z;
+            Expression expression = Constant.From(2) * Variable.Z * Expression.Pow(Variable.Z, -1);
             Expression expected = Constant.From(2);
 
             // ASSERT
@@ -240,79 +241,220 @@ namespace AtomTests
         }
 
         [Test]
-        public void Multiplication_Map_DoesntChangeOriginal()
+        public void Multiplication_PostMap_DoesntChangeOriginal()
         {
             // ARANGE
             Expression expression1 = Variable.X * 2;
             Expression expression2 = Variable.X * 2;
 
             // ACT
-            expression2.Map(a => Variable.Y * 2);
+            expression2.PostMap(a => Variable.Y * 2);
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
-        public void Multiplication_Map_ReturnsAlternative()
+        public void Multiplication_PostMap_ReturnsAlternative()
         {
             // ARANGE
             Expression expression1 = Variable.X * 2;
 
             // ACT
-            Expression expression2 = expression1.Map(a => Variable.Z);
+            Expression expression2 = expression1.PostMap(a => Variable.Z);
 
             // ASSERT
             Assert.AreEqual(Variable.Z, expression2);
         }
 
         [Test]
-        public void Multiplication_Map_MapsChildren()
+        public void Multiplication_PostMap_PostMapsChildren()
         {
             // ARANGE
             Expression expression1 = Variable.X * Variable.Y;
 
             // ACT
-            Expression expression2 = expression1.Map(a => a is Variable ? Variable.Z : a);
+            Expression expression2 = expression1.PostMap(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
             Assert.AreEqual(Variable.Z * Variable.Z, expression2);
         }
 
         [Test]
-        public void Multiplication_Map_CanSkipSelf()
+        public void Multiplication_PostMap_CanSkipSelf()
         {
             // ARANGE
             Expression expression1 = Variable.X * Variable.Y;
             ExpressionMapping mapping = new ExpressionMapping()
             {
-                PostMap = a => Variable.Z,
+                Map = a => Variable.Z,
                 ShouldMapThis = a => !(a is Product)
             };
 
             // ACT
-            Expression expression2 = expression1.Map(mapping);
+            Expression expression2 = expression1.PostMap(mapping);
 
             // ASSERT
             Assert.AreEqual(Variable.Z * Variable.Z, expression2);
         }
 
         [Test]
-        public void Multiplication_Map_CanSkipChildren()
+        public void Multiplication_PostMap_CanSkipChildren()
         {
             // ARANGE
             Expression expression1 = Variable.X * Variable.Y;
             ExpressionMapping mapping = new ExpressionMapping()
             {
-                PostMap = a => a is Variable ? Variable.Z : a,
+                Map = a => a is Variable ? Variable.Z : a,
                 ShouldMapChildren = a => false
             };
 
             // ACT
-            Expression expression2 = expression1.Map(mapping);
+            Expression expression2 = expression1.PostMap(mapping);
 
             // ASSERT
             Assert.AreEqual(Variable.X * Variable.Y, expression2);
+        }
+
+        [Test]
+        public void Multiplication_PostMap_MapsChildrenFirst()
+        {
+            // ARANGE
+            Expression expression1 = Variable.X * 2;
+
+            // ACT
+            Expression expression2 = expression1.PreMap(eq => eq is Product s ? Expression.Add(s.Arguments) : 4);
+
+            // ASSERT
+            Assert.AreEqual(Constant.From(16), expression2);
+        }
+
+        [Test]
+        public void Multiplication_PreMap_DoesntChangeOriginal()
+        {
+            // ARANGE
+            Expression expression1 = Variable.X * 2;
+            Expression expression2 = Variable.X * 2;
+
+            // ACT
+            expression2.PreMap(a => Variable.Y * 2);
+
+            // ASSERT
+            Assert.AreEqual(expression1, expression2);
+        }
+
+        [Test]
+        public void Multiplication_PreMap_ReturnsAlternative()
+        {
+            // ARANGE
+            Expression expression1 = Variable.X * 2;
+
+            // ACT
+            Expression expression2 = expression1.PreMap(a => Variable.Z);
+
+            // ASSERT
+            Assert.AreEqual(Variable.Z, expression2);
+        }
+
+        [Test]
+        public void Multiplication_PreMap_PostMapsChildren()
+        {
+            // ARANGE
+            Expression expression1 = Variable.X * Variable.Y;
+
+            // ACT
+            Expression expression2 = expression1.PreMap(a => a is Variable ? Variable.Z : a);
+
+            // ASSERT
+            Assert.AreEqual(Variable.Z * Variable.Z, expression2);
+        }
+
+        [Test]
+        public void Multiplication_PreMap_CanSkipSelf()
+        {
+            // ARANGE
+            Expression expression1 = Variable.X * Variable.Y;
+            ExpressionMapping mapping = new ExpressionMapping()
+            {
+                Map = a => Variable.Z,
+                ShouldMapThis = a => !(a is Product)
+            };
+
+            // ACT
+            Expression expression2 = expression1.PreMap(mapping);
+
+            // ASSERT
+            Assert.AreEqual(Variable.Z * Variable.Z, expression2);
+        }
+
+        [Test]
+        public void Multiplication_PreMap_CanSkipChildren()
+        {
+            // ARANGE
+            Expression expression1 = Variable.X * Variable.Y;
+            ExpressionMapping mapping = new ExpressionMapping()
+            {
+                Map = a => a is Variable ? Variable.Z : a,
+                ShouldMapChildren = a => false
+            };
+
+            // ACT
+            Expression expression2 = expression1.PreMap(mapping);
+
+            // ASSERT
+            Assert.AreEqual(Variable.X * Variable.Y, expression2);
+        }
+
+        [Test]
+        public void Multiplication_PreMap_MapsParentFirst()
+        {
+            // ARANGE
+            Expression expression1 = Variable.X * 2;
+
+            // ACT
+            Expression expression2 = expression1.PreMap(eq => eq is Product s ? Expression.Add(s.Arguments) : 4);
+
+            // ASSERT
+            Assert.AreEqual(Constant.From(8), expression2);
+        }
+
+        [Test]
+        public void Multiplication_Simplify_DoesntUseAtomicForm()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = dummy1 * 2;
+
+            // ASSERT
+            Assert.IsFalse(dummy1.GenAtomicExpressionCalled);
+        }
+
+        [Test]
+        public void Multiplication_Simplify_DoesntUseToString()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = dummy1 * 2;
+
+            // ASSERT
+            Assert.IsFalse(dummy1.ToStringCalled);
+        }
+
+        [Test]
+        public void Multiplication_Simplify_DoesntUseMap()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = dummy1 * 2;
+
+            // ASSERT
+            Assert.IsFalse(dummy1.MapChildrenCalled);
         }
     }
 }

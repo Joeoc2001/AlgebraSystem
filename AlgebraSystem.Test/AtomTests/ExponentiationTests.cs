@@ -6,6 +6,7 @@ using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
 using System;
+using AlgebraSystem.Test;
 
 namespace AtomTests
 {
@@ -94,17 +95,17 @@ namespace AtomTests
         }
 
         [Test]
-        public void Exponentiation_BothVariableDerivative_IsCorrect()
+        public void Exponentiation_BothVariableDerivative_IsAtomicallyCorrect()
         {
             // ARANGE
             Expression value = Expression.Pow(Variable.X, Variable.X);
             Expression expected = (1 + Expression.LnOf(Variable.X)) * Expression.Pow(Variable.X, Variable.X);
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression stomicDerivative = value.GetDerivative(Variable.X).GetAtomicExpression();
 
             // ASSERT
-            Assert.AreEqual(expected, derivative);
+            Assert.AreEqual(expected, stomicDerivative);
         }
 
         [Test]
@@ -217,79 +218,220 @@ namespace AtomTests
         }
 
         [Test]
-        public void Exponentiation_Map_DoesntChangeOriginal()
+        public void Exponentiation_PostMap_DoesntChangeOriginal()
         {
             // ARANGE
             Expression expression1 = Expression.Pow(Variable.X, 2);
             Expression expression2 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            expression2.Map(a => Expression.Pow(Variable.Y, 4));
+            expression2.PostMap(a => Expression.Pow(Variable.Y, 4));
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
-        public void Exponentiation_Map_ReturnsAlternative()
+        public void Exponentiation_PostMap_ReturnsAlternative()
         {
             // ARANGE
             Expression expression1 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            Expression expression2 = expression1.Map(a => Expression.Pow(Variable.Y, 4));
+            Expression expression2 = expression1.PostMap(a => Expression.Pow(Variable.Y, 4));
 
             // ASSERT
             Assert.AreEqual(Expression.Pow(Variable.Y, 4), expression2);
         }
 
         [Test]
-        public void Exponentiation_Map_MapsChildren()
+        public void Exponentiation_PostMap_MapsChildren()
         {
             // ARANGE
             Expression expression1 = Expression.Pow(Variable.X, 5);
 
             // ACT
-            Expression expression2 = expression1.Map(a => a is Variable ? Variable.Z : a);
+            Expression expression2 = expression1.PostMap(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
             Assert.AreEqual(Expression.Pow(Variable.Z, 5), expression2);
         }
 
         [Test]
-        public void Exponentiation_Map_CanSkipSelf()
+        public void Exponentiation_PostMap_CanSkipSelf()
         {
             // ARANGE
             Expression expression1 = Expression.Pow(Variable.X, Variable.Y);
             ExpressionMapping mapping = new ExpressionMapping()
             {
-                PostMap = a => Variable.Z,
+                Map = a => Variable.Z,
                 ShouldMapThis = a => !(a is Exponent)
             };
 
             // ACT
-            Expression expression2 = expression1.Map(mapping);
+            Expression expression2 = expression1.PostMap(mapping);
 
             // ASSERT
             Assert.AreEqual(Expression.Pow(Variable.Z, Variable.Z), expression2);
         }
 
         [Test]
-        public void Exponentiation_Map_CanSkipChildren()
+        public void Exponentiation_PostMap_CanSkipChildren()
         {
             // ARANGE
             Expression expression1 = Expression.Pow(Variable.X, 5);
             ExpressionMapping mapping = new ExpressionMapping()
             {
-                PostMap = a => a is Variable ? Variable.Z : a,
+                Map = a => a is Variable ? Variable.Z : a,
                 ShouldMapChildren = a => false
             };
 
             // ACT
-            Expression expression2 = expression1.Map(mapping);
+            Expression expression2 = expression1.PostMap(mapping);
 
             // ASSERT
             Assert.AreEqual(Expression.Pow(Variable.X, 5), expression2);
+        }
+
+        [Test]
+        public void Exponentiation_PostMap_MapsChildrenFirst()
+        {
+            // ARANGE
+            Expression expression1 = Expression.Pow(Variable.X, 2);
+
+            // ACT
+            Expression expression2 = expression1.PreMap(eq => eq is Exponent e ? Expression.LnOf(e.Base) : Constant.From(2));
+
+            // ASSERT
+            Assert.AreEqual(4, expression2);
+        }
+
+        [Test]
+        public void Exponentiation_PreMap_DoesntChangeOriginal()
+        {
+            // ARANGE
+            Expression expression1 = Expression.Pow(Variable.X, 2);
+            Expression expression2 = Expression.Pow(Variable.X, 2);
+
+            // ACT
+            expression2.PreMap(a => Expression.Pow(Variable.Y, 4));
+
+            // ASSERT
+            Assert.AreEqual(expression1, expression2);
+        }
+
+        [Test]
+        public void Exponentiation_PreMap_ReturnsAlternative()
+        {
+            // ARANGE
+            Expression expression1 = Expression.Pow(Variable.X, 2);
+
+            // ACT
+            Expression expression2 = expression1.PreMap(a => Expression.Pow(Variable.Y, 4));
+
+            // ASSERT
+            Assert.AreEqual(Expression.Pow(Variable.Y, 4), expression2);
+        }
+
+        [Test]
+        public void Exponentiation_PreMap_MapsChildren()
+        {
+            // ARANGE
+            Expression expression1 = Expression.Pow(Variable.X, 5);
+
+            // ACT
+            Expression expression2 = expression1.PreMap(a => a is Variable ? Variable.Z : a);
+
+            // ASSERT
+            Assert.AreEqual(Expression.Pow(Variable.Z, 5), expression2);
+        }
+
+        [Test]
+        public void Exponentiation_PreMap_CanSkipSelf()
+        {
+            // ARANGE
+            Expression expression1 = Expression.Pow(Variable.X, Variable.Y);
+            ExpressionMapping mapping = new ExpressionMapping()
+            {
+                Map = a => Variable.Z,
+                ShouldMapThis = a => !(a is Exponent)
+            };
+
+            // ACT
+            Expression expression2 = expression1.PreMap(mapping);
+
+            // ASSERT
+            Assert.AreEqual(Expression.Pow(Variable.Z, Variable.Z), expression2);
+        }
+
+        [Test]
+        public void Exponentiation_PreMap_CanSkipChildren()
+        {
+            // ARANGE
+            Expression expression1 = Expression.Pow(Variable.X, 5);
+            ExpressionMapping mapping = new ExpressionMapping()
+            {
+                Map = a => a is Variable ? Variable.Z : a,
+                ShouldMapChildren = a => false
+            };
+
+            // ACT
+            Expression expression2 = expression1.PreMap(mapping);
+
+            // ASSERT
+            Assert.AreEqual(Expression.Pow(Variable.X, 5), expression2);
+        }
+
+        [Test]
+        public void Exponentiation_PreMap_MapsParentFirst()
+        {
+            // ARANGE
+            Expression expression1 = Expression.Pow(Variable.X, 2);
+
+            // ACT
+            Expression expression2 = expression1.PreMap(eq => eq is Exponent e ? Expression.LnOf(e.Base) : Constant.From(2));
+
+            // ASSERT
+            Assert.AreEqual(Expression.LnOf(Variable.X), expression2);
+        }
+
+        [Test]
+        public void Exponentiation_Simplify_DoesntUseAtomicForm()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = Expression.Pow(dummy1, 2);
+
+            // ASSERT
+            Assert.IsFalse(dummy1.GenAtomicExpressionCalled);
+        }
+
+        [Test]
+        public void Exponentiation_Simplify_DoesntUseToString()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = Expression.Pow(dummy1, 2);
+
+            // ASSERT
+            Assert.IsFalse(dummy1.ToStringCalled);
+        }
+
+        [Test]
+        public void Exponentiation_Simplify_DoesntUseMap()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = Expression.Pow(dummy1, 2);
+
+            // ASSERT
+            Assert.IsFalse(dummy1.MapChildrenCalled);
         }
     }
 }

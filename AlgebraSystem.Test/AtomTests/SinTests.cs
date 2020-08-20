@@ -6,6 +6,7 @@ using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
 using System;
+using AlgebraSystem.Test;
 
 namespace AtomTests
 {
@@ -186,7 +187,7 @@ namespace AtomTests
             Expression expression2 = Expression.SinOf(Variable.X);
 
             // ACT
-            expression2.Map(a => Expression.SinOf(Variable.Y));
+            expression2.PostMap(a => Expression.SinOf(Variable.Y));
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);
@@ -199,7 +200,7 @@ namespace AtomTests
             Expression expression1 = Expression.SinOf(Variable.X);
 
             // ACT
-            Expression expression2 = expression1.Map(a => Expression.SinOf(Variable.Y));
+            Expression expression2 = expression1.PostMap(a => Expression.SinOf(Variable.Y));
 
             // ASSERT
             Assert.AreEqual(Expression.SinOf(Variable.Y), expression2);
@@ -212,7 +213,7 @@ namespace AtomTests
             Expression expression1 = Expression.SinOf(Variable.X);
 
             // ACT
-            Expression expression2 = expression1.Map(a => a is Variable ? Variable.Z : a);
+            Expression expression2 = expression1.PostMap(a => a is Variable ? Variable.Z : a);
 
             // ASSERT
             Assert.AreEqual(Expression.SinOf(Variable.Z), expression2);
@@ -225,12 +226,12 @@ namespace AtomTests
             Expression expression1 = Expression.SinOf(Variable.X);
             ExpressionMapping mapping = new ExpressionMapping()
             {
-                PostMap = a => Variable.Z,
+                Map = a => Variable.Z,
                 ShouldMapThis = a => !(a is Sin)
             };
 
             // ACT
-            Expression expression2 = expression1.Map(mapping);
+            Expression expression2 = expression1.PostMap(mapping);
 
             // ASSERT
             Assert.AreEqual(Expression.SinOf(Variable.Z), expression2);
@@ -243,15 +244,54 @@ namespace AtomTests
             Expression expression1 = Expression.SinOf(Variable.X);
             ExpressionMapping mapping = new ExpressionMapping()
             {
-                PostMap = a => a is Variable ? Variable.Z : a,
+                Map = a => a is Variable ? Variable.Z : a,
                 ShouldMapChildren = a => false
             };
 
             // ACT
-            Expression expression2 = expression1.Map(mapping);
+            Expression expression2 = expression1.PostMap(mapping);
 
             // ASSERT
             Assert.AreEqual(Expression.SinOf(Variable.X), expression2);
+        }
+
+        [Test]
+        public void Sin_Simplify_DoesntUseAtomicForm()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = Expression.SinOf(dummy1);
+
+            // ASSERT
+            Assert.IsFalse(dummy1.GenAtomicExpressionCalled);
+        }
+
+        [Test]
+        public void Sin_Simplify_DoesntUseToString()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = Expression.SinOf(dummy1);
+
+            // ASSERT
+            Assert.IsFalse(dummy1.ToStringCalled);
+        }
+
+        [Test]
+        public void Sin_Simplify_DoesntUseMap()
+        {
+            // ARANGE
+            DummyExpression dummy1 = new DummyExpression();
+
+            // ACT
+            Expression _ = Expression.SinOf(dummy1);
+
+            // ASSERT
+            Assert.IsFalse(dummy1.MapChildrenCalled);
         }
     }
 }

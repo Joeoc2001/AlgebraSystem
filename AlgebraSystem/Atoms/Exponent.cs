@@ -116,24 +116,12 @@ namespace Algebra.Atoms
             return 10;
         }
 
-        public override Expression Map(ExpressionMapping map)
+        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
         {
-            Expression currentThis = this;
+            Expression mappedBase = map(Base);
+            Expression mappedPower = map(Power);
 
-            if (map.ShouldMapChildren(this))
-            {
-                Expression mappedBase = Base.Map(map);
-                Expression mappedPower = Power.Map(map);
-
-                currentThis = Pow(mappedBase, mappedPower);
-            }
-
-            if (map.ShouldMapThis(this))
-            {
-                currentThis = map.PostMap(currentThis);
-            }
-
-            return currentThis;
+            return Pow(mappedBase, mappedPower);
         }
     }
 }

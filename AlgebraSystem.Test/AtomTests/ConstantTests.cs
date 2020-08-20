@@ -101,27 +101,54 @@ namespace AtomTests
         }
 
         [Test]
-        public void Constant_Map_DoesntChangeOriginal()
+        public void Constant_PostMap_DoesntChangeOriginal()
         {
             // ARANGE
             Expression expression1 = 5;
             Expression expression2 = 5;
 
             // ACT
-            expression2.Map(a => 2);
+            expression2.PostMap(a => 2);
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);
         }
 
         [Test]
-        public void Constant_Map_ReturnsAlternative()
+        public void Constant_PostMap_ReturnsAlternative()
         {
             // ARANGE
             Expression expression1 = 5;
 
             // ACT
-            Expression expression2 = expression1.Map(a => 2);
+            Expression expression2 = expression1.PostMap(a => 2);
+
+            // ASSERT
+            Assert.AreEqual((Expression)2, expression2);
+        }
+
+        [Test]
+        public void Constant_PreMap_DoesntChangeOriginal()
+        {
+            // ARANGE
+            Expression expression1 = 5;
+            Expression expression2 = 5;
+
+            // ACT
+            expression2.PreMap(a => 2);
+
+            // ASSERT
+            Assert.AreEqual(expression1, expression2);
+        }
+
+        [Test]
+        public void Constant_PreMap_ReturnsAlternative()
+        {
+            // ARANGE
+            Expression expression1 = 5;
+
+            // ACT
+            Expression expression2 = expression1.PreMap(a => 2);
 
             // ASSERT
             Assert.AreEqual((Expression)2, expression2);

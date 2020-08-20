@@ -163,28 +163,16 @@ namespace Algebra.Atoms
             return builder.ToString();
         }
 
-        public override Expression Map(ExpressionMapping map)
+        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
         {
-            Expression currentThis = this;
+            List<Expression> mappedEqs = new List<Expression>(Arguments.Count);
 
-            if (map.ShouldMapChildren(this))
+            foreach (Expression eq in Arguments)
             {
-                List<Expression> mappedEqs = new List<Expression>(Arguments.Count);
-
-                foreach (Expression eq in Arguments)
-                {
-                    mappedEqs.Add(eq.Map(map));
-                }
-
-                currentThis = GetSimplifyingConstructor()(mappedEqs);
+                mappedEqs.Add(map(eq));
             }
 
-            if (map.ShouldMapThis(this))
-            {
-                currentThis = map.PostMap(currentThis);
-            }
-
-            return currentThis;
+            return GetSimplifyingConstructor()(mappedEqs);
         }
     }
 }

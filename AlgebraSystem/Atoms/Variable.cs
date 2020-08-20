@@ -70,14 +70,9 @@ namespace Algebra.Atoms
             return 0;
         }
 
-        public override Expression Map(ExpressionMapping map)
+        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
         {
-            if (!map.ShouldMapThis(this))
-            {
-                return this;
-            }
-
-            return map.PostMap(this);
+            return this;
         }
     }
 }

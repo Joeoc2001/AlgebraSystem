@@ -122,30 +122,18 @@ namespace Algebra.Functions
             return 0;
         }
 
-        public override Expression Map(ExpressionMapping map)
+        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
         {
-            Expression currentThis = this;
-
             IDictionary<string, Expression> parameters = GetParameters();
 
-            if (map.ShouldMapChildren(this))
+            Dictionary<string, Expression> mappedParameters = new Dictionary<string, Expression>(parameters.Count);
+
+            foreach (string parameterName in parameters.Keys)
             {
-                Dictionary<string, Expression> mappedParameters = new Dictionary<string, Expression>(parameters.Count);
-
-                foreach (string parameterName in parameters.Keys)
-                {
-                    mappedParameters.Add(parameterName, parameters[parameterName].Map(map));
-                }
-
-                currentThis = identity.CreateExpression(mappedParameters);
+                mappedParameters.Add(parameterName, map(parameters[parameterName]));
             }
 
-            if (map.ShouldMapThis(this))
-            {
-                currentThis = map.PostMap(currentThis);
-            }
-
-            return currentThis;
+            return identity.CreateExpression(mappedParameters);
         }
 
         public override string ToString()
@@ -174,21 +162,21 @@ namespace Algebra.Functions
             Expression atomicVariabledExpression = identity.AtomicExpression;
 
             // Replace variables with their expressions
-            Expression atomicExpression = atomicVariabledExpression.Map(new ExpressionMapping()
+            Expression atomicExpression = atomicVariabledExpression.PostMap(new ExpressionMapping()
             {
-                PostMap = expression =>
+                Map = expression =>
                 {
                     switch (expression)
                     {
                         case Variable v:
-                            return parameters[v.Name];
+                            return parameters[v.Name].GetAtomicExpression();
                         default:
                             return expression;
                     }
                 }
             });
 
-            return atomicExpression.GetAtomicExpression();
+            return atomicExpression;
         }
     }
 }

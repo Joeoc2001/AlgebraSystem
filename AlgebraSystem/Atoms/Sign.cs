@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Algebra.Atoms
 {
-    public class Sign : Monad
+    public class Sign : AtomicMonad
     {
         new public static Expression SignOf(Expression argument)
         {
@@ -62,29 +62,19 @@ namespace Algebra.Atoms
             return Argument.Equals(sign.Argument);
         }
 
-        protected override int GenHashCode()
-        {
-            return Argument.GetHashCode() ^ -322660314;
-        }
-
-        public override string ToString()
-        {
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("sign ");
-            builder.Append(ToParenthesisedString(Argument));
-
-            return builder.ToString();
-        }
-
-        public override int GetOrderIndex()
-        {
-            return 0;
-        }
-
         public override Func<Expression, Expression> GetSimplifyingConstructor()
         {
             return SignOf;
+        }
+
+        protected override int GetHashSeed()
+        {
+            return -322660314;
+        }
+
+        protected override string GetMonadFunctionName()
+        {
+            return "sign";
         }
     }
 }

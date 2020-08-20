@@ -15,7 +15,7 @@ namespace Algebra.Equivalence
         {
             this.index = i;
 
-            PostMap = map;
+            Map = map;
             ShouldMapChildren = shouldMapChildren;
             ShouldMapThis = shouldMapThis;
         }

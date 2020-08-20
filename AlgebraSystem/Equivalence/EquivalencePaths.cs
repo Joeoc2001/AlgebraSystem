@@ -15,7 +15,7 @@ namespace Algebra.Equivalence
             {
                 ExpressionMapping expansionMapping = new BraceExpansionMapping(i);
 
-                Expression newEq = eq.Map(expansionMapping);
+                Expression newEq = eq.PostMap(expansionMapping);
 
                 if (newEq.Equals(eq))
                 {
