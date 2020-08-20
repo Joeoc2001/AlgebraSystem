@@ -164,6 +164,7 @@ namespace Algebra.Functions
             // Replace variables with their expressions
             Expression atomicExpression = atomicVariabledExpression.PostMap(new ExpressionMapping()
             {
+                ShouldMapThis = eq => eq is Variable,
                 Map = expression =>
                 {
                     switch (expression)

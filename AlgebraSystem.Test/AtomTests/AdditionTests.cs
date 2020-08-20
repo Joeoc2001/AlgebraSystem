@@ -297,12 +297,7 @@ namespace AtomTests
             Expression expression1 = Variable.X + 1;
 
             // ACT
-            bool first = true;
-            Expression expression2 = expression1.PostMap(eq => 
-            { 
-                first = false;
-                return first ? Variable.X : eq;
-            });
+            Expression expression2 = expression1.PostMap(eq => eq is Constant c ? c : Constant.From(11));
 
             // ASSERT
             Assert.AreEqual(Constant.From(12), expression2);
@@ -316,7 +311,7 @@ namespace AtomTests
             Expression expression2 = Variable.X + 1;
 
             // ACT
-            expression2.PreMap(a => Variable.Y + 2);
+            expression2.PreMap(a => Variable.Y);
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);

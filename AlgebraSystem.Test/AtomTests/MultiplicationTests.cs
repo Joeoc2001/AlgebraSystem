@@ -323,10 +323,10 @@ namespace AtomTests
             Expression expression1 = Variable.X * 2;
 
             // ACT
-            Expression expression2 = expression1.PreMap(eq => eq is Product s ? Expression.Add(s.Arguments) : 4);
+            Expression expression2 = expression1.PostMap(eq => eq is Constant ? eq : Constant.From(4));
 
             // ASSERT
-            Assert.AreEqual(Constant.From(16), expression2);
+            Assert.AreEqual(Constant.From(8), expression2);
         }
 
         [Test]
@@ -337,7 +337,7 @@ namespace AtomTests
             Expression expression2 = Variable.X * 2;
 
             // ACT
-            expression2.PreMap(a => Variable.Y * 2);
+            expression2.PreMap(a => Variable.Y);
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);
@@ -412,10 +412,10 @@ namespace AtomTests
             Expression expression1 = Variable.X * 2;
 
             // ACT
-            Expression expression2 = expression1.PreMap(eq => eq is Product s ? Expression.Add(s.Arguments) : 4);
+            Expression expression2 = expression1.PreMap(eq => eq is Constant ? eq : Constant.From(4));
 
             // ASSERT
-            Assert.AreEqual(Constant.From(8), expression2);
+            Assert.AreEqual(Constant.From(4), expression2);
         }
 
         [Test]

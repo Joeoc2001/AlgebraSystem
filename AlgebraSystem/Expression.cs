@@ -70,33 +70,12 @@ namespace Algebra
 
         /// <summary>
         /// See <see cref="GetAtomicExpression"/>.
-        /// Functions should override this method
+        /// Non-atomic expressions should override this method
         /// </summary>
         /// <returns>An expression in atomic form</returns>
         protected virtual Expression GenAtomicExpression()
         {
-            bool primary = true;
-
-            // Replace types with themselves but with their children's atomic expressions
-            Expression atomicExpression = PreMap(new ExpressionMapping()
-            {
-                ShouldMapChildren = expression => primary,
-                ShouldMapThis = expression => true,
-                Map = expression =>
-                {
-                    if (primary)
-                    {
-                        primary = false;
-                        return expression;
-                    }
-                    else
-                    {
-                        return expression.GetAtomicExpression();
-                    }
-                }
-            });
-
-            return atomicExpression;
+            return MapChildren(child => child.GetAtomicExpression());
         }
 
         public ExpressionDelegate GetDerivitiveExpression(VariableInputSet set, Variable wrt)
@@ -157,7 +136,7 @@ namespace Algebra
                 currentThis = currentThis.MapChildren(child => child.PostMap(map));
             }
 
-            if (map.ShouldMapThis(currentThis))
+            if (map.ShouldMapThis(this))
             {
                 currentThis = map.Map(currentThis);
             }

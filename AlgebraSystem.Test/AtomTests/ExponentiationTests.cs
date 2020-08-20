@@ -102,10 +102,11 @@ namespace AtomTests
             Expression expected = (1 + Expression.LnOf(Variable.X)) * Expression.Pow(Variable.X, Variable.X);
 
             // ACT
-            Expression stomicDerivative = value.GetDerivative(Variable.X).GetAtomicExpression();
+            Expression derivative = value.GetDerivative(Variable.X);
+            Expression atomicDerivative = derivative.GetAtomicExpression();
 
             // ASSERT
-            Assert.AreEqual(expected, stomicDerivative);
+            Assert.AreEqual(expected, atomicDerivative);
         }
 
         [Test]
@@ -300,10 +301,10 @@ namespace AtomTests
             Expression expression1 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            Expression expression2 = expression1.PreMap(eq => eq is Exponent e ? Expression.LnOf(e.Base) : Constant.From(2));
+            Expression expression2 = expression1.PostMap(eq => eq is Constant ? eq : Constant.From(4));
 
             // ASSERT
-            Assert.AreEqual(4, expression2);
+            Assert.AreEqual(Constant.From(16), expression2);
         }
 
         [Test]
@@ -314,7 +315,7 @@ namespace AtomTests
             Expression expression2 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            expression2.PreMap(a => Expression.Pow(Variable.Y, 4));
+            expression2.PreMap(a => Variable.Y);
 
             // ASSERT
             Assert.AreEqual(expression1, expression2);
@@ -327,10 +328,10 @@ namespace AtomTests
             Expression expression1 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            Expression expression2 = expression1.PreMap(a => Expression.Pow(Variable.Y, 4));
+            Expression expression2 = expression1.PreMap(a => Variable.Y);
 
             // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Y, 4), expression2);
+            Assert.AreEqual(Variable.Y, expression2);
         }
 
         [Test]
@@ -389,10 +390,10 @@ namespace AtomTests
             Expression expression1 = Expression.Pow(Variable.X, 2);
 
             // ACT
-            Expression expression2 = expression1.PreMap(eq => eq is Exponent e ? Expression.LnOf(e.Base) : Constant.From(2));
+            Expression expression2 = expression1.PreMap(eq => eq is Constant ? eq : Constant.From(4));
 
             // ASSERT
-            Assert.AreEqual(Expression.LnOf(Variable.X), expression2);
+            Assert.AreEqual(Constant.From(4), expression2);
         }
 
         [Test]
