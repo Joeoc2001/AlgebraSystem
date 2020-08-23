@@ -10,12 +10,12 @@ namespace Algebra
     {
         T EvaluateConstant(Rational value);
         T EvaluateVariable(string name);
-        T EvaluateSum(ICollection<Expression> expressions);
-        T EvaluateProduct(ICollection<Expression> expressions);
-        T EvaluateExponent(Expression baseExpression, Expression powerExpression);
-        T EvaluateLn(Expression argumentExpression);
-        T EvaluateSign(Expression argumentExpression);
-        T EvaluateSin(Expression argumentExpression);
+        T EvaluateSum(ICollection<IExpression> expressions);
+        T EvaluateProduct(ICollection<IExpression> expressions);
+        T EvaluateExponent(IExpression baseExpression, IExpression powerExpression);
+        T EvaluateLn(IExpression argumentExpression);
+        T EvaluateSign(IExpression argumentExpression);
+        T EvaluateSin(IExpression argumentExpression);
         T EvaluateFunction(IFunction function);
     }
 }

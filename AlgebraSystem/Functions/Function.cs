@@ -1,4 +1,5 @@
 ﻿using Algebra.Atoms;
+using Algebra.Evaluators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,9 +13,9 @@ namespace Algebra
         internal class Function : Expression, IFunction
         {
             private readonly IFunctionIdentity identity;
-            private readonly ReadOnlyDictionary<string, Expression> parameters;
+            private readonly ReadOnlyDictionary<string, IExpression> parameters;
 
-            public Function(IFunctionIdentity identity, IDictionary<string, Expression> parameters)
+            public Function(IFunctionIdentity identity, IDictionary<string, IExpression> parameters)
             {
                 // Ensure that all required parameters are filled
                 if (!identity.AreParametersSatisfied(parameters))
@@ -23,17 +24,17 @@ namespace Algebra
                 }
 
                 this.identity = identity;
-                this.parameters = new ReadOnlyDictionary<string, Expression>(parameters);
+                this.parameters = new ReadOnlyDictionary<string, IExpression>(parameters);
             }
 
-            public ReadOnlyDictionary<string, Expression> GetParameters()
+            public ReadOnlyDictionary<string, IExpression> GetParameters()
             {
                 return parameters;
             }
 
-            public ReadOnlyCollection<Expression> GetParameterList()
+            public ReadOnlyCollection<IExpression> GetParameterList()
             {
-                List<Expression> parameterList = new List<Expression>();
+                List<IExpression> parameterList = new List<IExpression>();
 
                 foreach (string name in identity.GetRequiredParameters())
                 {
@@ -48,12 +49,12 @@ namespace Algebra
                 return identity;
             }
 
-            public override Expression GetDerivative(string wrt)
+            public override IExpression GetDerivative(string wrt)
             {
                 return GetAtomicExpression().GetDerivative(wrt);
             }
 
-            protected override bool ExactlyEquals(Expression expression)
+            protected override bool ExactlyEquals(IExpression expression)
             {
                 if (!(expression is Function function))
                 {
@@ -65,8 +66,8 @@ namespace Algebra
                     return false;
                 }
 
-                IDictionary<string, Expression> p1 = GetParameters();
-                IDictionary<string, Expression> p2 = function.GetParameters();
+                IDictionary<string, IExpression> p1 = GetParameters();
+                IDictionary<string, IExpression> p2 = function.GetParameters();
 
                 if (p1.Count != p2.Count)
                 {
@@ -75,11 +76,11 @@ namespace Algebra
 
                 foreach (string parameterName in p1.Keys)
                 {
-                    if (!p2.TryGetValue(parameterName, out Expression expression2))
+                    if (!p2.TryGetValue(parameterName, out IExpression expression2))
                     {
                         return false; // The parameter with given name doesn't exist in p2
                     }
-                    Expression expression1 = p1[parameterName];
+                    IExpression expression1 = p1[parameterName];
                     if (!expression1.Equals(expression2, EqualityLevel.Exactly))
                     {
                         return false;
@@ -93,7 +94,7 @@ namespace Algebra
             {
                 int value = identity.GetHashSeed();
 
-                IDictionary<string, Expression> parameters = GetParameters();
+                IDictionary<string, IExpression> parameters = GetParameters();
                 List<string> parameterNames = parameters.Keys.ToList();
                 parameterNames.Sort(StringComparer.CurrentCulture);
 
@@ -109,20 +110,6 @@ namespace Algebra
             public override int GetOrderIndex()
             {
                 return 0;
-            }
-
-            public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
-            {
-                IDictionary<string, Expression> parameters = GetParameters();
-
-                Dictionary<string, Expression> mappedParameters = new Dictionary<string, Expression>(parameters.Count);
-
-                foreach (string parameterName in parameters.Keys)
-                {
-                    mappedParameters.Add(parameterName, map(parameters[parameterName]));
-                }
-
-                return identity.CreateExpression(mappedParameters);
             }
 
             public override string ToString()
@@ -146,27 +133,19 @@ namespace Algebra
                 return builder.ToString();
             }
 
-            protected override Expression GenAtomicExpression()
+            protected override IAtomicExpression GenAtomicExpression()
             {
-                Expression atomicVariabledExpression = identity.GetBodyAsAtomicExpression();
+                IExpression atomicVariabledExpression = identity.GetBodyAsAtomicExpression();
 
                 // Replace variables with their expressions
-                Expression atomicExpression = atomicVariabledExpression.PostMap(new ExpressionMapping()
+                Dictionary<string, IExpression> atomicReplacements = new Dictionary<string, IExpression>();
+                foreach (var parameter in parameters)
                 {
-                    ShouldMapThis = eq => eq is Variable,
-                    Map = expression =>
-                    {
-                        switch (expression)
-                        {
-                            case Variable v:
-                                return parameters[v.Name].GetAtomicExpression();
-                            default:
-                                return expression;
-                        }
-                    }
-                });
+                    atomicReplacements.Add(parameter.Key, parameter.Value.GetAtomicExpression());
+                }
+                IExpression atomicExpression = atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(atomicReplacements));
 
-                return atomicExpression;
+                return AtomicExpression.GetAtomicExpression(atomicExpression);
             }
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)

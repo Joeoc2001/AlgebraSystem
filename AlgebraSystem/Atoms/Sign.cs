@@ -11,7 +11,7 @@ namespace Algebra
     {
         internal class Sign : AtomicMonad
         {
-            new public static Expression SignOf(Expression argument)
+            new public static IExpression SignOf(IExpression argument)
             {
                 if (argument is Sign s)
                 {
@@ -22,43 +22,43 @@ namespace Algebra
                 {
                     if (constant.GetValue().IsZero)
                     {
-                        return 0;
+                        return Zero;
                     }
                     if (constant.GetValue() > 0)
                     {
-                        return 1;
+                        return One;
                     }
                     if (constant.GetValue() < 0)
                     {
-                        return -1;
+                        return MinusOne;
                     }
                 }
 
                 return new Sign(argument);
             }
 
-            private Sign(Expression argument)
+            private Sign(IExpression argument)
                 : base(argument)
             {
 
             }
 
-            public override Expression GetDerivative(string wrt)
+            public override IExpression GetDerivative(string wrt)
             {
-                return 0; // Not always true, but true 100% of the time :P
+                return Zero; // Not always true, but true 100% of the time :P
             }
 
-            protected override bool ExactlyEquals(Expression expression)
+            protected override bool ExactlyEquals(IExpression expression)
             {
                 if (!(expression is Sign sign))
                 {
                     return false;
                 }
 
-                return Argument.Equals(sign.Argument, EqualityLevel.Exactly);
+                return argument.Equals(sign.argument, EqualityLevel.Exactly);
             }
 
-            public override Func<Expression, Expression> GetSimplifyingConstructor()
+            public override Func<IExpression, IExpression> GetSimplifyingConstructor()
             {
                 return SignOf;
             }
@@ -75,7 +75,7 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateSign(Argument);
+                return evaluator.EvaluateSign(argument);
             }
         }
     }

@@ -12,16 +12,16 @@ namespace Algebra
             public readonly Variable Parameter1;
             public readonly Variable Parameter2;
 
-            public DyadIdentity(string name, Variable parameter1, Variable parameter2, int hashSeed, Expression atomicExpression)
+            public DyadIdentity(string name, Variable parameter1, Variable parameter2, int hashSeed, IExpression atomicExpression)
                 : base(name, new List<string>() { parameter1.Name, parameter2.Name }, hashSeed, atomicExpression)
             {
                 Parameter1 = parameter1;
                 Parameter2 = parameter2;
             }
 
-            public Expression CreateExpression(Expression p1, Expression p2)
+            public IExpression CreateExpression(IExpression p1, IExpression p2)
             {
-                return CreateExpression(new Dictionary<string, Expression>()
+                return CreateExpression(new Dictionary<string, IExpression>()
                 {
                     { Parameter1.Name, p1 },
                     { Parameter2.Name, p2 },

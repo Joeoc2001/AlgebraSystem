@@ -9,8 +9,8 @@ namespace Algebra
     {
         string GetName();
         ReadOnlyCollection<string> GetRequiredParameters();
-        bool AreParametersSatisfied(IDictionary<string, Expression> parameters);
-        Expression CreateExpression(IList<Expression> nodes);
-        Expression CreateExpression(IDictionary<string, Expression> parameters);
+        bool AreParametersSatisfied(IDictionary<string, IExpression> parameters);
+        IExpression CreateExpression(IList<IExpression> nodes);
+        IExpression CreateExpression(IDictionary<string, IExpression> parameters);
     }
 }

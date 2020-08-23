@@ -15,7 +15,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void TrueFor_XPlus1_SingleInstance([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
-            Expression v1 = Expression.X + 1;
+            IExpression v1 = IExpression.X + 1;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v1, type, order);
@@ -28,8 +28,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void TrueFor_XPlus1_TwoInstances([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
-            Expression v1 = Expression.X + 1;
-            Expression v2 = Expression.X + 1;
+            IExpression v1 = IExpression.X + 1;
+            IExpression v2 = IExpression.X + 1;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);
@@ -42,8 +42,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void FalseFor_XPlus1_And_XPlus2([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
-            Expression v1 = Expression.X + 1;
-            Expression v2 = Expression.X + 2;
+            IExpression v1 = IExpression.X + 1;
+            IExpression v2 = IExpression.X + 2;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);
@@ -56,8 +56,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void TrueFor_YPlusZ_TwoInstances([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
-            Expression v1 = Expression.Y + Expression.Z;
-            Expression v2 = Expression.Y + Expression.Z;
+            IExpression v1 = IExpression.Y + IExpression.Z;
+            IExpression v2 = IExpression.Y + IExpression.Z;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);
@@ -70,8 +70,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void FalseFor_XPlusY_And_XPlusZ([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
-            Expression v1 = Expression.X + Expression.Y;
-            Expression v2 = Expression.X + Expression.Z;
+            IExpression v1 = IExpression.X + IExpression.Y;
+            IExpression v2 = IExpression.X + IExpression.Z;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);
@@ -84,8 +84,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void TrueFor_YPlusZ_Commuted([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
-            Expression v1 = Expression.Y + Expression.Z;
-            Expression v2 = Expression.Z + Expression.Y;
+            IExpression v1 = IExpression.Y + IExpression.Z;
+            IExpression v2 = IExpression.Z + IExpression.Y;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);
@@ -98,8 +98,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void TrueFor_YPlus5_Commuted([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
-            Expression v1 = Expression.Y + 5;
-            Expression v2 = 5 + Expression.Y;
+            IExpression v1 = IExpression.Y + 5;
+            IExpression v2 = 5 + IExpression.Y;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);

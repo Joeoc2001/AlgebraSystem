@@ -10,7 +10,7 @@ namespace Algebra
         internal static class SinhIdentity
         {
             private static readonly Variable param = new Variable("a");
-            private static readonly Expression atomicExpression = 0.5 * (Expression.Pow(Constant.E, param) - Expression.Pow(Constant.E, -param));
+            private static readonly IExpression atomicExpression = 0.5 * (Expression.Pow(Expression.E, param) - Expression.Pow(Expression.E, -param));
             private static readonly int hashSeed = 1411437579;
             private static readonly string name = "sinh";
 

@@ -10,7 +10,7 @@ namespace Algebra
         internal static class CoshIdentity
         {
             private static readonly Variable param = new Variable("a");
-            private static readonly Expression atomicExpression = 0.5 * (Expression.Pow(Expression.E, param) + Expression.Pow(Expression.E, -param));
+            private static readonly IExpression atomicExpression = 0.5 * (Expression.Pow(Expression.E, param) + Expression.Pow(Expression.E, -param));
             private static readonly int hashSeed = -1733178947;
             private static readonly string name = "cosh";
 

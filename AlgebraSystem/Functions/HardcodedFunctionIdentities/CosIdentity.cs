@@ -10,7 +10,7 @@ namespace Algebra
         internal static class CosIdentity
         {
             private static readonly Variable param = new Variable("a");
-            private static readonly Expression atomicExpression = Expression.SinOf(param + Expression.PI / 2);
+            private static readonly IExpression atomicExpression = Expression.SinOf(param + Expression.PI / 2);
             private static readonly int hashSeed = 794723056;
             private static readonly string name = "cos";
 

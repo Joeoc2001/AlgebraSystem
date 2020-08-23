@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace Algebra
 {
-    public class ExpressionDisplayComparer : IComparer<Expression>
+    public class ExpressionDisplayComparer : IComparer<IExpression>
     {
         public static readonly ExpressionDisplayComparer COMPARER = new ExpressionDisplayComparer();
 
@@ -16,7 +16,7 @@ namespace Algebra
 
         }
 
-        public static int GetExpressionOrdering(Expression e)
+        public static int GetExpressionOrdering(IExpression e)
         {
             switch (e)
             {
@@ -43,7 +43,7 @@ namespace Algebra
             };
         }
 
-        public int Compare(Expression x, Expression y)
+        public int Compare(IExpression x, IExpression y)
         {
             int cmp = GetExpressionOrdering(x).CompareTo(GetExpressionOrdering(y));
 
@@ -92,8 +92,8 @@ namespace Algebra
         private int CompareCommutative(CommutativeOperation a, CommutativeOperation b)
         {
             // Compare based on lowest component of each, break ties on later terms
-            List<Expression> aSorted = a.GetDisplaySortedArguments();
-            List<Expression> bSorted = b.GetDisplaySortedArguments();
+            List<IExpression> aSorted = a.GetDisplaySortedArguments();
+            List<IExpression> bSorted = b.GetDisplaySortedArguments();
 
             int i = 0;
             while (i < aSorted.Count && i < bSorted.Count)
@@ -112,17 +112,17 @@ namespace Algebra
         private int CompareExponents(Exponent a, Exponent b)
         {
             // Sort by base first, then exponent
-            int cmp1 = Compare(a.Base, b.Base);
+            int cmp1 = Compare(a.term, b.term);
             if (cmp1 != 0)
             {
                 return cmp1;
             }
-            return Compare(a.Power, b.Power);
+            return Compare(a.power, b.power);
         }
 
         private int CompareMonad(AtomicMonad a, AtomicMonad b)
         {
-            return Compare(a.Argument, b.Argument);
+            return Compare(a.argument, b.argument);
         }
 
         private int CompareFunctions(Function a, Function b)
@@ -154,12 +154,12 @@ namespace Algebra
             // ASSERT: Function types are the same
             // Therefore parameter keys are the same
             // Sort on parameter values
-            IDictionary<string, Expression> aParams = a.GetParameters();
-            IDictionary<string, Expression> bParams = b.GetParameters();
+            IDictionary<string, IExpression> aParams = a.GetParameters();
+            IDictionary<string, IExpression> bParams = b.GetParameters();
             foreach (string parameterName in aReq)
             {
-                Expression aExp = aParams[parameterName];
-                Expression bExp = bParams[parameterName];
+                IExpression aExp = aParams[parameterName];
+                IExpression bExp = bParams[parameterName];
                 int cmp3 = Compare(aExp, bExp);
                 if (cmp3 != 0)
                 {

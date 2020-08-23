@@ -10,16 +10,16 @@ namespace Algebra.Functions
     public class FunctionIdentity : FunctionGenerator, IFunctionIdentity
     {
         private readonly int hashSeed;
-        private readonly Expression atomicExpression;
+        private readonly IAtomicExpression atomicExpression;
 
-        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, Expression alternateExpression)
+        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, IExpression alternateExpression)
             : base(name, parameterNames)
         {
             this.hashSeed = hashSeed;
             this.atomicExpression = alternateExpression.GetAtomicExpression();
         }
 
-        protected override Expression CreateExpressionImpl(IDictionary<string, Expression> nodes)
+        protected override IExpression CreateExpressionImpl(IDictionary<string, IExpression> nodes)
         {
             return new Function(this, nodes);
         }
@@ -29,7 +29,7 @@ namespace Algebra.Functions
             return hashSeed;
         }
 
-        public Expression GetBodyAsAtomicExpression()
+        public IAtomicExpression GetBodyAsAtomicExpression()
         {
             return atomicExpression;
         }

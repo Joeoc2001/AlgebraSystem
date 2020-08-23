@@ -8,12 +8,12 @@ namespace Algebra.Equivalence
         public static readonly EquivalencePath EXPAND_BRACES = eq =>
         {
             int i = 0;
-            List<Expression> newEqs = new List<Expression>();
+            List<IExpression> newEqs = new List<IExpression>();
             while (true)
             {
                 ExpressionMapping expansionMapping = new BraceExpansionMapping(i);
 
-                Expression newEq = eq.PostMap(expansionMapping);
+                IExpression newEq = eq.PostMap(expansionMapping);
 
                 if (newEq.Equals(eq))
                 {

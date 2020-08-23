@@ -26,10 +26,10 @@ namespace AlgebraSystem.Test.Libs
             BA
         }
 
-        public static bool AreEqual(Expression first, Expression second, EqualityType type, Order order)
+        public static bool AreEqual(IExpression first, IExpression second, EqualityType type, Order order)
         {
-            Expression a;
-            Expression b;
+            IExpression a;
+            IExpression b;
             switch (order)
             {
                 case Order.AB:

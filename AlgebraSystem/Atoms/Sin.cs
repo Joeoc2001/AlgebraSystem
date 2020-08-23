@@ -11,34 +11,34 @@ namespace Algebra
     {
         internal class Sin : AtomicMonad
         {
-            new public static Expression SinOf(Expression argument)
+            new public static IExpression SinOf(IExpression argument)
             {
                 return new Sin(argument);
             }
 
-            public Sin(Expression argument)
+            public Sin(IExpression argument)
                 : base(argument)
             {
 
             }
 
-            public override Expression GetDerivative(string wrt)
+            public override IExpression GetDerivative(string wrt)
             {
-                Expression derivative = Argument.GetDerivative(wrt);
-                return derivative * CosOf(Argument);
+                IExpression derivative = argument.GetDerivative(wrt);
+                return derivative * CosOf(argument);
             }
 
-            protected override bool ExactlyEquals(Expression expression)
+            protected override bool ExactlyEquals(IExpression expression)
             {
                 if (!(expression is Sin sin))
                 {
                     return false;
                 }
 
-                return Argument.Equals(sin.Argument);
+                return argument.Equals(sin.argument);
             }
 
-            public override Func<Expression, Expression> GetSimplifyingConstructor()
+            public override Func<IExpression, IExpression> GetSimplifyingConstructor()
             {
                 return SinOf;
             }
@@ -55,7 +55,7 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateSin(Argument);
+                return evaluator.EvaluateSin(argument);
             }
         }
     }

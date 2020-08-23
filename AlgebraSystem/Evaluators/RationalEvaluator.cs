@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace Algebra.Evaluation
+namespace Algebra.Evaluators
 {
     public class RationalEvaluator : ValueEvaluator<Rational>
     {
@@ -50,7 +50,7 @@ namespace Algebra.Evaluation
             return value;
         }
 
-        protected override Rational Pow(Rational baseValue, Rational powerValue)
+        protected override Rational PowOf(Rational baseValue, Rational powerValue)
         {
             if (powerValue.Numerator > int.MaxValue || powerValue.Numerator < int.MinValue
                    || powerValue.Denominator > int.MaxValue || powerValue.Denominator < int.MinValue)
@@ -62,17 +62,17 @@ namespace Algebra.Evaluation
             return Rational.RationalRoot(finalValue, (int)powerValue.Denominator);
         }
 
-        protected override ValueEvaluator<Rational> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<Rational> variableInputs)
+        protected override TraversalEvaluator<Rational> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<Rational> variableInputs)
         {
             return new RationalEvaluator(variableInputs, functionEvaluators, maxSize);
         }
 
-        protected override Rational Ln(Rational v)
+        protected override Rational LnOf(Rational v)
         {
             return (Rational)Rational.Log(v);
         }
 
-        protected override Rational Product(ICollection<Rational> expressions)
+        protected override Rational ProductOf(ICollection<Rational> expressions)
         {
             Rational evaluated = 1;
             foreach (Rational expression in expressions)
@@ -82,17 +82,17 @@ namespace Algebra.Evaluation
             return evaluated;
         }
 
-        protected override Rational Sign(Rational v)
+        protected override Rational SignOf(Rational v)
         {
             return v.Sign;
         }
 
-        protected override Rational Sin(Rational v)
+        protected override Rational SinOf(Rational v)
         {
             return (Rational)Math.Sin((double)v);
         }
 
-        protected override Rational Sum(ICollection<Rational> expressions)
+        protected override Rational SumOf(ICollection<Rational> expressions)
         {
             Rational evaluated = 0;
             foreach (Rational expression in expressions)

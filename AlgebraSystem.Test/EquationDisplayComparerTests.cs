@@ -14,8 +14,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X;
-            Expression b = Expression.X;
+            IExpression a = IExpression.X;
+            IExpression b = IExpression.X;
             int checkInt = ExpressionDisplayComparer.COMPARER.Compare(a, b);
 
             // ASSERT
@@ -28,8 +28,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Y;
-            Expression b = Expression.Y;
+            IExpression a = IExpression.Y;
+            IExpression b = IExpression.Y;
             int checkInt = ExpressionDisplayComparer.COMPARER.Compare(a, b);
 
             // ASSERT
@@ -42,8 +42,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Z;
-            Expression b = Expression.Z;
+            IExpression a = IExpression.Z;
+            IExpression b = IExpression.Z;
             int checkInt = ExpressionDisplayComparer.COMPARER.Compare(a, b);
 
             // ASSERT
@@ -56,8 +56,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X;
-            Expression b = Expression.Y;
+            IExpression a = IExpression.X;
+            IExpression b = IExpression.Y;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -70,8 +70,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X;
-            Expression b = Expression.Z;
+            IExpression a = IExpression.X;
+            IExpression b = IExpression.Z;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -84,8 +84,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Y;
-            Expression b = Expression.Z;
+            IExpression a = IExpression.Y;
+            IExpression b = IExpression.Z;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -98,8 +98,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X;
-            Expression b = 1;
+            IExpression a = IExpression.X;
+            IExpression b = 1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -112,8 +112,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X;
-            Expression b = -1;
+            IExpression a = IExpression.X;
+            IExpression b = -1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -126,8 +126,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Y;
-            Expression b = Expression.X;
+            IExpression a = IExpression.Y;
+            IExpression b = IExpression.X;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -140,8 +140,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Z;
-            Expression b = Expression.X;
+            IExpression a = IExpression.Z;
+            IExpression b = IExpression.X;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -154,8 +154,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Z;
-            Expression b = Expression.Y;
+            IExpression a = IExpression.Z;
+            IExpression b = IExpression.Y;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -168,8 +168,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = 1;
-            Expression b = Expression.X;
+            IExpression a = 1;
+            IExpression b = IExpression.X;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -182,8 +182,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = -1;
-            Expression b = Expression.X;
+            IExpression a = -1;
+            IExpression b = IExpression.X;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -196,8 +196,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X + 1;
-            Expression b = Expression.Z + 1;
+            IExpression a = IExpression.X + 1;
+            IExpression b = IExpression.Z + 1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -210,8 +210,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X + 1;
-            Expression b = Expression.X - 1;
+            IExpression a = IExpression.X + 1;
+            IExpression b = IExpression.X - 1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -224,8 +224,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X;
-            Expression b = Expression.X + 1;
+            IExpression a = IExpression.X;
+            IExpression b = IExpression.X + 1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -238,8 +238,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X + Expression.Y;
-            Expression b = Expression.X + 1;
+            IExpression a = IExpression.X + IExpression.Y;
+            IExpression b = IExpression.X + 1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -252,8 +252,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Y;
-            Expression b = Expression.X + 1;
+            IExpression a = IExpression.Y;
+            IExpression b = IExpression.X + 1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -266,8 +266,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X + Expression.Y;
-            Expression b = Expression.Y + 1;
+            IExpression a = IExpression.X + IExpression.Y;
+            IExpression b = IExpression.Y + 1;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -280,8 +280,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Pow(Expression.X, 2);
-            Expression b = Expression.X;
+            IExpression a = IExpression.Pow(IExpression.X, 2);
+            IExpression b = IExpression.X;
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -294,8 +294,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Pow(Expression.X, 2);
-            Expression b = Expression.Pow(Expression.X, 2);
+            IExpression a = IExpression.Pow(IExpression.X, 2);
+            IExpression b = IExpression.Pow(IExpression.X, 2);
 
             // ASSERT
             Assert.AreEqual(0, ExpressionDisplayComparer.COMPARER.Compare(a, b));
@@ -307,8 +307,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Pow(Expression.X, 3);
-            Expression b = Expression.Pow(Expression.X, 2);
+            IExpression a = IExpression.Pow(IExpression.X, 3);
+            IExpression b = IExpression.Pow(IExpression.X, 2);
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) < 0;
 
             // ASSERT
@@ -321,8 +321,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.X;
-            Expression b = Expression.Pow(Expression.X, 2);
+            IExpression a = IExpression.X;
+            IExpression b = IExpression.Pow(IExpression.X, 2);
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT
@@ -335,8 +335,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression a = Expression.Pow(Expression.X, 2);
-            Expression b = Expression.Pow(Expression.X, 3);
+            IExpression a = IExpression.Pow(IExpression.X, 2);
+            IExpression b = IExpression.Pow(IExpression.X, 3);
             bool check = ExpressionDisplayComparer.COMPARER.Compare(a, b) > 0;
 
             // ASSERT

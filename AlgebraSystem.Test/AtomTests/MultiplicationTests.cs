@@ -15,8 +15,8 @@ namespace AtomTests
         public void Multiplication_IsEqual_WhenSame()
         {
             // ARANGE
-            Expression v1 = Expression.X * 2;
-            Expression v2 = Expression.X * 2;
+            IExpression v1 = IExpression.X * 2;
+            IExpression v2 = IExpression.X * 2;
 
             // ACT
 
@@ -35,8 +35,8 @@ namespace AtomTests
         public void Multiplication_IsEqual_Commutative()
         {
             // ARANGE
-            Expression v1 = Expression.X * 7;
-            Expression v2 = 7 * Expression.X;
+            IExpression v1 = IExpression.X * 7;
+            IExpression v2 = 7 * IExpression.X;
 
             // ACT
 
@@ -55,8 +55,8 @@ namespace AtomTests
         public void Multiplication_EqualReturnFalse_WhenDifferent()
         {
             // ARANGE
-            Expression v1 = Expression.X * 1;
-            Expression v2 = Expression.X * 2;
+            IExpression v1 = IExpression.X * 1;
+            IExpression v2 = IExpression.X * 2;
 
             // ACT
 
@@ -75,11 +75,11 @@ namespace AtomTests
         public void Multiplication_Derivative_IsTermsSum()
         {
             // ARANGE
-            Expression value = Expression.X * Expression.Y;
-            Expression expected = 1 * Expression.Y + Expression.X * 0;
+            IExpression value = IExpression.X * IExpression.Y;
+            IExpression expected = 1 * IExpression.Y + IExpression.X * 0;
 
             // ACT
-            Expression derivative = value.GetDerivative("x");
+            IExpression derivative = value.GetDerivative("x");
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -89,7 +89,7 @@ namespace AtomTests
         public void Multiplication_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(-10, 10)] int b)
         {
             // ARANGE
-            Expression expression = Expression.ConstantFrom(a) * Expression.ConstantFrom(b);
+            IExpression expression = IExpression.ConstantFrom(a) * IExpression.ConstantFrom(b);
 
             // ACT
             float value = expression.EvaluateOnce(new VariableInputSet<float>());
@@ -104,8 +104,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.ConstantFrom(54321) * Expression.Z * Expression.ConstantFrom(54321);
-            Expression expected = Expression.ConstantFrom(((Rational)54321) * 54321) * Expression.Z;
+            IExpression expression = IExpression.ConstantFrom(54321) * IExpression.Z * IExpression.ConstantFrom(54321);
+            IExpression expected = IExpression.ConstantFrom(((Rational)54321) * 54321) * IExpression.Z;
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -117,8 +117,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.Pow(Expression.Z, 2) * Expression.Pow(Expression.Z, Expression.Y) * Expression.Z;
-            Expression expected = Expression.Pow(Expression.Z, 3 + Expression.Y);
+            IExpression expression = IExpression.Pow(IExpression.Z, 2) * IExpression.Pow(IExpression.Z, IExpression.Y) * IExpression.Z;
+            IExpression expected = IExpression.Pow(IExpression.Z, 3 + IExpression.Y);
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -130,8 +130,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = 1 * 2 * Expression.Z * (Rational)0.5M;
-            Expression expected = Expression.Z;
+            IExpression expression = 1 * 2 * IExpression.Z * (Rational)0.5M;
+            IExpression expected = IExpression.Z;
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -143,8 +143,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.Z * Expression.Pow(Expression.Z, -1);
-            Expression expected = Expression.ConstantFrom(1);
+            IExpression expression = IExpression.Z * IExpression.Pow(IExpression.Z, -1);
+            IExpression expected = IExpression.ConstantFrom(1);
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -156,8 +156,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.ConstantFrom(2) * Expression.Z * Expression.Pow(Expression.Z, -1);
-            Expression expected = Expression.ConstantFrom(2);
+            IExpression expression = IExpression.ConstantFrom(2) * IExpression.Z * IExpression.Pow(IExpression.Z, -1);
+            IExpression expected = IExpression.ConstantFrom(2);
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -169,8 +169,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.Multiply(new List<Expression>() { Expression.Multiply(new List<Expression>() { Expression.X, Expression.Y }), Expression.Z });
-            Expression expected = Expression.Multiply(new List<Expression>() { Expression.X, Expression.Y, Expression.Z });
+            IExpression expression = IExpression.Multiply(new List<IExpression>() { IExpression.Multiply(new List<IExpression>() { IExpression.X, IExpression.Y }), IExpression.Z });
+            IExpression expected = IExpression.Multiply(new List<IExpression>() { IExpression.X, IExpression.Y, IExpression.Z });
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -182,8 +182,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = 0 * 2 * Expression.Z * (Rational)0.5M;
-            Expression expected = 0;
+            IExpression expression = 0 * 2 * IExpression.Z * (Rational)0.5M;
+            IExpression expected = 0;
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -195,8 +195,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = (Expression.X + 1) * (Expression.X - 1);
-            Expression expected = Expression.Pow(Expression.X, 2) - 1;
+            IExpression expression = (IExpression.X + 1) * (IExpression.X - 1);
+            IExpression expected = IExpression.Pow(IExpression.X, 2) - 1;
 
             // ASSERT
             Assert.AreNotEqual(expected, expression);
@@ -208,8 +208,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = (Expression.X + 1) * (Expression.X + 2);
-            Expression expected = Expression.Pow(Expression.X, 2) + 3 * Expression.X + 2;
+            IExpression expression = (IExpression.X + 1) * (IExpression.X + 2);
+            IExpression expected = IExpression.Pow(IExpression.X, 2) + 3 * IExpression.X + 2;
 
             // ASSERT
             Assert.AreNotEqual(expected, expression);
@@ -221,8 +221,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = 3 * (Expression.X + 1) - 3;
-            Expression expected = 3 * Expression.X;
+            IExpression expression = 3 * (IExpression.X + 1) - 3;
+            IExpression expected = 3 * IExpression.X;
 
             // ASSERT
             Assert.AreNotEqual(expected, expression);
@@ -234,7 +234,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = 3 * Expression.X;
+            IExpression expression = 3 * IExpression.X;
 
             // ASSERT
             Assert.AreEqual(20, expression.GetOrderIndex());
@@ -246,7 +246,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            Expression _ = dummy1 * 2;
+            IExpression _ = dummy1 * 2;
 
             // ASSERT
             Assert.IsFalse(dummy1.GenAtomicExpressionCalled);
@@ -259,7 +259,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            Expression _ = dummy1 * 2;
+            IExpression _ = dummy1 * 2;
 
             // ASSERT
             Assert.IsFalse(dummy1.ToStringCalled);
@@ -272,7 +272,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            Expression _ = dummy1 * 2;
+            IExpression _ = dummy1 * 2;
 
             // ASSERT
             Assert.IsFalse(dummy1.MapChildrenCalled);

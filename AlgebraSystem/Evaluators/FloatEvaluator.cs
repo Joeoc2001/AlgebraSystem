@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace Algebra.Evaluation
+namespace Algebra.Evaluators
 {
     public class FloatEvaluator : ValueEvaluator<float>
     {
@@ -23,22 +23,22 @@ namespace Algebra.Evaluation
             return (float)value;
         }
 
-        protected override float Pow(float baseValue, float powerValue)
+        protected override float PowOf(float baseValue, float powerValue)
         {
             return MathF.Pow(baseValue, powerValue);
         }
 
-        protected override ValueEvaluator<float> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<float> variableInputs)
+        protected override TraversalEvaluator<float> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<float> variableInputs)
         {
             return new FloatEvaluator(variableInputs, functionEvaluators);
         }
 
-        protected override float Ln(float v)
+        protected override float LnOf(float v)
         {
             return MathF.Log(v);
         }
 
-        protected override float Product(ICollection<float> expressions)
+        protected override float ProductOf(ICollection<float> expressions)
         {
             float evaluated = 1;
             foreach (float expression in expressions)
@@ -48,17 +48,17 @@ namespace Algebra.Evaluation
             return evaluated;
         }
 
-        protected override float Sign(float v)
+        protected override float SignOf(float v)
         {
             return MathF.Sign(v);
         }
 
-        protected override float Sin(float v)
+        protected override float SinOf(float v)
         {
             return MathF.Sin(v);
         }
 
-        protected override float Sum(ICollection<float> expressions)
+        protected override float SumOf(ICollection<float> expressions)
         {
             float evaluated = 0;
             foreach (float expression in expressions)

@@ -2,5 +2,5 @@
 
 namespace Algebra.Equivalence
 {
-    public delegate List<Expression> EquivalencePath(Expression eq);
+    public delegate List<IExpression> EquivalencePath(IExpression eq);
 }

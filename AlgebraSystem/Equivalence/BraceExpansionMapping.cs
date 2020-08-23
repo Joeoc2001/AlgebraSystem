@@ -20,7 +20,7 @@ namespace Algebra.Equivalence
             ShouldMapThis = BraceExpansionShouldMapThis;
         }
 
-        private Expression BraceExpansionMap(Expression e)
+        private IExpression BraceExpansionMap(IExpression e)
         {
             if (!(e is Product p))
             {
@@ -29,8 +29,8 @@ namespace Algebra.Equivalence
 
             // Extract all sum terms from the product
             List<Sum> sums = new List<Sum>();
-            List<Expression> others = new List<Expression>();
-            foreach (Expression arg in p.Arguments)
+            List<IExpression> others = new List<IExpression>();
+            foreach (IExpression arg in p.arguments)
             {
                 if (arg is Sum s)
                 {
@@ -56,7 +56,7 @@ namespace Algebra.Equivalence
                         sums.RemoveAt(j);
 
                         // Multiply them
-                        Expression newTerm = ExpandSums(s1, s2);
+                        IExpression newTerm = ExpandSums(s1, s2);
                         others.Add(newTerm);
 
                         // Create a new product
@@ -70,15 +70,15 @@ namespace Algebra.Equivalence
             return e;
         }
 
-        private bool BraceExpansionShouldMapThis(Expression e) => e is Product && index >= 0;
-        private bool BraceExpansionShouldMapChildren(Expression e) => index >= 0;
+        private bool BraceExpansionShouldMapThis(IExpression e) => e is Product && index >= 0;
+        private bool BraceExpansionShouldMapChildren(IExpression e) => index >= 0;
 
-        private static Expression ExpandSums(Sum s1, Sum s2)
+        private static IExpression ExpandSums(Sum s1, Sum s2)
         {
-            List<Expression> terms = new List<Expression>();
-            foreach (Expression t1 in s1.Arguments)
+            List<IExpression> terms = new List<IExpression>();
+            foreach (IExpression t1 in s1.arguments)
             {
-                foreach (Expression t2 in s2.Arguments)
+                foreach (IExpression t2 in s2.arguments)
                 {
                     terms.Add(t1 * t2);
                 }

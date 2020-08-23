@@ -11,7 +11,7 @@ namespace Algebra
         {
             private static readonly Variable param1 = new Variable("a");
             private static readonly Variable param2 = new Variable("b");
-            private static readonly Expression atomicExpression = 0.5 * (param1 + param2 - Expression.Abs(param1 - param2));
+            private static readonly IExpression atomicExpression = 0.5 * (param1 + param2 - Expression.Abs(param1 - param2));
             private static readonly int hashSeed = 1435958181;
             private static readonly string name = "min";
 

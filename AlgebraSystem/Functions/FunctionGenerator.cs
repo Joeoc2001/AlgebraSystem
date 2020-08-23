@@ -44,7 +44,7 @@ namespace Algebra.Functions
             this.parameterNames = parameterNames ?? throw new ArgumentNullException(nameof(parameterNames));
         }
 
-        protected abstract Expression CreateExpressionImpl(IDictionary<string, Expression> parameters);
+        protected abstract IExpression CreateExpressionImpl(IDictionary<string, IExpression> parameters);
 
         public ReadOnlyCollection<string> GetRequiredParameters()
         {
@@ -62,7 +62,7 @@ namespace Algebra.Functions
         /// </summary>
         /// <param name="nodes">The parameters to be given to the function</param>
         /// <returns>The new function node</returns>
-        public Expression CreateExpression(IList<Expression> nodes)
+        public IExpression CreateExpression(IList<IExpression> nodes)
         {
             IList<string> requiredParameters = GetRequiredParameters();
 
@@ -71,7 +71,7 @@ namespace Algebra.Functions
                 throw new ArgumentException("Incorrect number of parameters were provided");
             }
 
-            Dictionary<string, Expression> parameters = new Dictionary<string, Expression>();
+            Dictionary<string, IExpression> parameters = new Dictionary<string, IExpression>();
             for (int i = 0; i < requiredParameters.Count; i++)
             {
                 parameters.Add(requiredParameters[i], nodes[i]);
@@ -86,7 +86,7 @@ namespace Algebra.Functions
         /// </summary>
         /// <param name="nodes">The parameters to be given to the function</param>
         /// <returns>The new function node</returns>
-        public Expression CreateExpression(IDictionary<string, Expression> parameters)
+        public IExpression CreateExpression(IDictionary<string, IExpression> parameters)
         {
             if (!AreParametersSatisfied(parameters))
             {
@@ -95,7 +95,7 @@ namespace Algebra.Functions
             return CreateExpressionImpl(parameters);
         }
 
-        public bool AreParametersSatisfied(IDictionary<string, Expression> parameters)
+        public bool AreParametersSatisfied(IDictionary<string, IExpression> parameters)
         {
             // Ensure that all required parameters are filled
             IList<string> requiredParameters = GetRequiredParameters();

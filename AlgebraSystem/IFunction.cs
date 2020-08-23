@@ -5,11 +5,10 @@ using System.Text;
 
 namespace Algebra
 {
-    public interface IFunction
+    public interface IFunction : IExpression
     {
         IFunctionIdentity GetIdentity();
-        ReadOnlyCollection<Expression> GetParameterList();
-        ReadOnlyDictionary<string, Expression> GetParameters();
-        Expression GetAtomicExpression();
+        ReadOnlyCollection<IExpression> GetParameterList();
+        ReadOnlyDictionary<string, IExpression> GetParameters();
     }
 }

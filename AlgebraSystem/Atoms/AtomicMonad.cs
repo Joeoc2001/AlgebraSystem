@@ -7,26 +7,27 @@ namespace Algebra
     {
         internal abstract class AtomicMonad : Expression
         {
-            public readonly Expression Argument;
+            protected readonly IExpression argument;
 
-            protected AtomicMonad(Expression argument)
+            protected AtomicMonad(IExpression argument)
             {
-                this.Argument = argument;
+                this.argument = argument;
             }
 
-            public abstract Func<Expression, Expression> GetSimplifyingConstructor();
+            public abstract Func<IExpression, IExpression> GetSimplifyingConstructor();
             protected abstract int GetHashSeed();
             protected abstract string GetMonadFunctionName();
 
             protected override sealed int GenHashCode()
             {
-                return Argument.GetHashCode() ^ GetHashSeed();
+                return argument.GetHashCode() ^ GetHashSeed();
             }
 
-            protected override sealed Expression GenAtomicExpression()
+            protected override sealed IAtomicExpression GenAtomicExpression()
             {
-                Expression atomicArg = Argument.GetAtomicExpression();
-                return GetSimplifyingConstructor()(atomicArg);
+                IAtomicExpression atomicArg = argument.GetAtomicExpression();
+                IExpression expression = GetSimplifyingConstructor()(atomicArg);
+                return AtomicExpression.GetAtomicExpression(expression);
             }
 
             public override sealed string ToString()
@@ -35,7 +36,7 @@ namespace Algebra
 
                 builder.Append(GetMonadFunctionName());
                 builder.Append(" ");
-                builder.Append(ToParenthesisedString(Argument));
+                builder.Append(ToParenthesisedString(this, argument));
 
                 return builder.ToString();
             }
@@ -43,12 +44,6 @@ namespace Algebra
             public override sealed int GetOrderIndex()
             {
                 return 0;
-            }
-
-            public override sealed Expression MapChildren(ExpressionMapping.ExpressionMap map)
-            {
-                Expression mappedArg = map(Argument);
-                return GetSimplifyingConstructor()(mappedArg);
             }
         }
     }

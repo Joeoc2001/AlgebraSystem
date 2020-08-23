@@ -13,7 +13,7 @@ namespace Algebra
             public readonly Variable Parameter2;
             public readonly Variable Parameter3;
 
-            public TryadIdentity(string name, Variable parameter1, Variable parameter2, Variable parameter3, int hashSeed, Expression atomicExpression)
+            public TryadIdentity(string name, Variable parameter1, Variable parameter2, Variable parameter3, int hashSeed, IExpression atomicExpression)
                 : base(name, new List<string>() { parameter1.Name, parameter2.Name, parameter3.Name }, hashSeed, atomicExpression)
             {
                 Parameter1 = parameter1;
@@ -21,9 +21,9 @@ namespace Algebra
                 Parameter3 = parameter3;
             }
 
-            public Expression CreateExpression(Expression p1, Expression p2, Expression p3)
+            public IExpression CreateExpression(IExpression p1, IExpression p2, IExpression p3)
             {
-                return CreateExpression(new Dictionary<string, Expression>()
+                return CreateExpression(new Dictionary<string, IExpression>()
                 {
                     { Parameter1.Name, p1 },
                     { Parameter2.Name, p2 },

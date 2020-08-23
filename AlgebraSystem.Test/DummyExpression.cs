@@ -6,16 +6,13 @@ using System.Text;
 
 namespace AlgebraSystem.Test
 {
-    class DummyExpression : Expression
+    class DummyExpression : Expression, IAtomicExpression
     {
         public bool DerivativeGot { get => DerivativeGotCount > 0; }
         public int DerivativeGotCount { get; private set; } = 0;
 
         public bool OrderIndexGot { get => OrderIndexGotCount > 0; }
         public int OrderIndexGotCount { get; private set; } = 0;
-
-        public bool MapChildrenCalled { get => MapChildrenCalledCount > 0; }
-        public int MapChildrenCalledCount { get; private set; } = 0;
 
         public bool ExactlyEqualsCalled { get => ExactlyEqualsCalledCount > 0; }
         public int ExactlyEqualsCalledCount { get; private set; } = 0;
@@ -36,9 +33,9 @@ namespace AlgebraSystem.Test
         /// The expression used when <see cref="GetDerivative(Variable)"/> is called.
         /// If kept at default of null, a new dummy expression will be generated if <see cref="GetDerivative(Variable)"/> is called.
         /// </summary>
-        public Expression Derivative { get; set; } = null;
+        public IExpression Derivative { get; set; } = null;
 
-        public override Expression GetDerivative(string wrt)
+        public override IExpression GetDerivative(string wrt)
         {
             DerivativeGotCount += 1;
             if (Derivative is null)
@@ -54,13 +51,7 @@ namespace AlgebraSystem.Test
             return 0;
         }
 
-        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
-        {
-            MapChildrenCalledCount += 1;
-            return this;
-        }
-
-        protected override bool ExactlyEquals(Expression expression)
+        protected override bool ExactlyEquals(IExpression expression)
         {
             ExactlyEqualsCalledCount += 1;
             return ReferenceEquals(this, expression);
@@ -72,10 +63,10 @@ namespace AlgebraSystem.Test
             return 0;
         }
 
-        protected override Expression GenAtomicExpression()
+        protected override IAtomicExpression GenAtomicExpression()
         {
             GenAtomicExpressionCalledCount += 1;
-            return base.GenAtomicExpression();
+            return this;
         }
 
         public override string ToString()

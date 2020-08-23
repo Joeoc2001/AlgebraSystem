@@ -11,15 +11,15 @@ namespace Algebra
         {
             public readonly Variable Parameter;
 
-            public MonadIdentity(string name, Variable parameter, int hashSeed, Expression atomicExpression)
+            public MonadIdentity(string name, Variable parameter, int hashSeed, IExpression atomicExpression)
                 : base(name, new List<string>() { parameter.Name }, hashSeed, atomicExpression)
             {
                 Parameter = parameter;
             }
 
-            public Expression CreateExpression(Expression expression)
+            public IExpression CreateExpression(IExpression expression)
             {
-                return CreateExpression(new Dictionary<string, Expression>()
+                return CreateExpression(new Dictionary<string, IExpression>()
                 {
                     { Parameter.Name, expression },
                 });

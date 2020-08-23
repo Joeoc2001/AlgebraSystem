@@ -10,15 +10,15 @@ namespace Algebra
     {
         internal class Sum : CommutativeOperation
         {
-            new public static Expression Add<T>(IEnumerable<T> eqs) where T : Expression
+            new public static IExpression Add<T>(IEnumerable<T> eqs) where T : IExpression
             {
                 // Loop and find all other addition nodes and put them into this one
-                List<Expression> collatedEqs = new List<Expression>();
-                foreach (Expression eq in eqs)
+                List<IExpression> collatedEqs = new List<IExpression>();
+                foreach (IExpression eq in eqs)
                 {
                     if (eq is Sum addeq)
                     {
-                        collatedEqs.AddRange(addeq.Arguments);
+                        collatedEqs.AddRange(addeq.arguments);
                     }
                     else
                     {
@@ -27,11 +27,11 @@ namespace Algebra
                 }
 
                 // Put all of the constants together, and other generic commutative operations
-                List<Expression> newEqs = SimplifyArguments(collatedEqs, 0, (x, y) => x + y);
+                List<IExpression> newEqs = SimplifyArguments(collatedEqs, 0, (x, y) => x + y);
 
                 if (newEqs.Count() == 0)
                 {
-                    return 0;
+                    return Zero;
                 }
                 if (newEqs.Count() == 1)
                 {
@@ -39,10 +39,10 @@ namespace Algebra
                 }
 
                 // Collate Multiplication terms
-                Dictionary<Expression, Constant> terms = new Dictionary<Expression, Constant>();
-                foreach (Expression eq in newEqs)
+                Dictionary<IExpression, Constant> terms = new Dictionary<IExpression, Constant>();
+                foreach (IExpression eq in newEqs)
                 {
-                    Expression baseEq;
+                    IExpression baseEq;
                     Constant newCoefficient;
                     if (eq is Product multeq)
                     {
@@ -63,11 +63,11 @@ namespace Algebra
                 }
                 // Put back into exponent form
                 newEqs.Clear();
-                foreach (Expression eq in terms.Keys)
+                foreach (IExpression eq in terms.Keys)
                 {
-                    Expression newEq = eq * terms[eq];
+                    IExpression newEq = eq * terms[eq];
 
-                    if (newEq.Equals(Constant.ZERO))
+                    if (newEq.Equals(Constant.Zero))
                     {
                         continue;
                     }
@@ -77,7 +77,7 @@ namespace Algebra
 
                 if (newEqs.Count() == 0)
                 {
-                    return 0;
+                    return Zero;
                 }
                 if (newEqs.Count() == 1)
                 {
@@ -87,23 +87,23 @@ namespace Algebra
                 return new Sum(newEqs);
             }
 
-            private Sum(IList<Expression> eqs)
+            private Sum(IList<IExpression> eqs)
                 : base(eqs)
             {
 
             }
 
-            public override Expression GetDerivative(string wrt)
+            public override IExpression GetDerivative(string wrt)
             {
-                List<Expression> derivatives = new List<Expression>();
-                foreach (Expression e in Arguments)
+                List<IExpression> derivatives = new List<IExpression>();
+                foreach (IExpression e in arguments)
                 {
                     derivatives.Add(e.GetDerivative(wrt));
                 }
                 return Add(derivatives);
             }
 
-            protected override bool ExactlyEquals(Expression expression)
+            protected override bool ExactlyEquals(IExpression expression)
             {
                 if (!(expression is Sum sum))
                 {
@@ -111,7 +111,7 @@ namespace Algebra
                 }
 
                 // Check for commutativity
-                return OperandsExactlyEquals(sum.Arguments);
+                return OperandsExactlyEquals(sum.arguments);
             }
 
             public override int IdentityValue()
@@ -139,14 +139,14 @@ namespace Algebra
                 return 30;
             }
 
-            public override Func<List<Expression>, Expression> GetSimplifyingConstructor()
+            public override Func<List<IExpression>, IExpression> GetSimplifyingConstructor()
             {
                 return Add;
             }
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateSum(Arguments);
+                return evaluator.EvaluateSum(arguments);
             }
         }
     }

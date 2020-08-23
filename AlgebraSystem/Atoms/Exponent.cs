@@ -11,18 +11,18 @@ namespace Algebra
     {
         internal class Exponent : Expression
         {
-            public readonly Expression Base;
-            public readonly Expression Power;
+            private readonly IExpression term;
+            private readonly IExpression power;
 
-            new public static Expression Pow(Expression term, Expression power)
+            new public static IExpression Pow(IExpression term, IExpression power)
             {
-                if (power.Equals(ONE))
+                if (power.Equals(One))
                 {
                     return term;
                 }
-                if (power.Equals(ZERO))
+                if (power.Equals(Zero))
                 {
-                    return ONE;
+                    return One;
                 }
 
                 if (term is Constant termConstant && power is Constant exponentConstant)
@@ -43,56 +43,56 @@ namespace Algebra
                 return new Exponent(term, power);
             }
 
-            public Exponent(Expression term, Expression power)
+            public Exponent(IExpression term, IExpression power)
             {
-                this.Base = term;
-                this.Power = power;
+                this.term = term;
+                this.power = power;
             }
 
-            public override Expression GetDerivative(string wrt)
+            public override IExpression GetDerivative(string wrt)
             {
                 // Check for common cases
-                if (Power is Constant powerConst)
+                if (power is Constant powerConst)
                 {
-                    Expression baseDerivative = Base.GetDerivative(wrt);
-                    return Power * baseDerivative * Pow(Base, ConstantFrom(powerConst.GetValue() - 1));
+                    IExpression baseDerivative = term.GetDerivative(wrt);
+                    return power * baseDerivative * Pow(term, ConstantFrom(powerConst.GetValue() - 1));
                 }
 
-                if (Base is Constant)
+                if (term is Constant)
                 {
-                    Expression exponentDerivative = Power.GetDerivative(wrt);
-                    return LnOf(Base) * exponentDerivative * this;
+                    IExpression exponentDerivative = power.GetDerivative(wrt);
+                    return LnOf(term) * exponentDerivative * this;
                 }
 
                 // Big derivative (u^v)'=(u^v)(vu'/u + v'ln(u))
                 // Alternatively  (u^v)'=(u^(v-1))(vu' + uv'ln(u)) but I find the first form simplifies faster
-                Expression baseDeriv = Base.GetDerivative(wrt);
-                Expression expDeriv = Power.GetDerivative(wrt);
-                return this * ((Power * baseDeriv / Base) + (expDeriv * LnOf(Base)));
+                IExpression baseDeriv = term.GetDerivative(wrt);
+                IExpression expDeriv = power.GetDerivative(wrt);
+                return this * ((power * baseDeriv / term) + (expDeriv * LnOf(term)));
             }
 
-            protected override bool ExactlyEquals(Expression expression)
+            protected override bool ExactlyEquals(IExpression expression)
             {
                 if (!(expression is Exponent exponent))
                 {
                     return false;
                 }
 
-                return Base.Equals(exponent.Base) && Power.Equals(exponent.Power);
+                return term.Equals(exponent.term) && power.Equals(exponent.power);
             }
 
             protected override int GenHashCode()
             {
-                return (65 * Base.GetHashCode() - Power.GetHashCode()) ^ 642859777;
+                return (65 * term.GetHashCode() - power.GetHashCode()) ^ 642859777;
             }
 
             public override string ToString()
             {
                 StringBuilder builder = new StringBuilder();
 
-                builder.Append(ToParenthesisedString(Base));
+                builder.Append(ToParenthesisedString(this, term));
                 builder.Append("^");
-                builder.Append(ToParenthesisedString(Power));
+                builder.Append(ToParenthesisedString(this, power));
 
                 return builder.ToString();
             }
@@ -102,17 +102,16 @@ namespace Algebra
                 return 10;
             }
 
-            public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
-            {
-                Expression mappedBase = map(Base);
-                Expression mappedPower = map(Power);
-
-                return Pow(mappedBase, mappedPower);
-            }
-
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateExponent(Base, Power);
+                return evaluator.EvaluateExponent(term, power);
+            }
+
+            protected override IAtomicExpression GenAtomicExpression()
+            {
+                IAtomicExpression baseAtomic = term.GetAtomicExpression();
+                IAtomicExpression powerAtomic = term.GetAtomicExpression();
+                return AtomicExpression.GetAtomicExpression(Expression.Pow(baseAtomic, powerAtomic));
             }
         }
     }

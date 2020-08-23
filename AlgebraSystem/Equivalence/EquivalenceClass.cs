@@ -13,9 +13,9 @@ namespace Algebra.Equivalence
             EquivalencePaths.EXPAND_BRACES
         };
 
-        private readonly Expression anchorExpression; // The expression used to define the equivalence class
+        private readonly IExpression anchorExpression; // The expression used to define the equivalence class
 
-        public EquivalenceClass(Expression anchorExpression)
+        public EquivalenceClass(IExpression anchorExpression)
         {
             this.anchorExpression = anchorExpression;
         }
@@ -27,7 +27,7 @@ namespace Algebra.Equivalence
         /// <param name="queryExpression">The equation to check if present</param>
         /// <param name="searchDepth">The depth to search to. Default is search everywhere</param>
         /// <returns>True if it can be proven that these expressions are equal, false otherwise</returns>
-        public bool IsInClass(Expression queryExpression, int searchDepth = -1, List<EquivalencePath> paths = null)
+        public bool IsInClass(IExpression queryExpression, int searchDepth = -1, List<EquivalencePath> paths = null)
         {
             // Check trivial case
             if (anchorExpression.Equals(queryExpression, EqualityLevel.Atomic))
@@ -38,22 +38,22 @@ namespace Algebra.Equivalence
             paths = paths ?? DEFAULT_PATHS;
 
             // Which expressions are not equivalent and have been checked
-            HashSet<Expression> checkedExpressions = new HashSet<Expression>() { anchorExpression };
+            HashSet<IExpression> checkedExpressions = new HashSet<IExpression>() { anchorExpression };
             // Which equations still have paths from to be explored
-            HashSet<Expression> frontierExpressions = new HashSet<Expression>(checkedExpressions);
+            HashSet<IExpression> frontierExpressions = new HashSet<IExpression>(checkedExpressions);
 
             int cycles = 0; // Keep track of how many times we have tried already
             while (frontierExpressions.Count != 0 && cycles != searchDepth)
             {
-                HashSet<Expression> newFrontier = new HashSet<Expression>();
+                HashSet<IExpression> newFrontier = new HashSet<IExpression>();
 
                 // Loop over all paths and apply them to all frontier expressions
-                foreach (Expression frontier in frontierExpressions)
+                foreach (IExpression frontier in frontierExpressions)
                 {
                     foreach (EquivalencePath path in paths)
                     {
-                        List<Expression> newExpressions = path(frontier);
-                        foreach (Expression newExpression in newExpressions)
+                        List<IExpression> newExpressions = path(frontier);
+                        foreach (IExpression newExpression in newExpressions)
                         {
                             if (checkedExpressions.Contains(newExpression))
                             {
