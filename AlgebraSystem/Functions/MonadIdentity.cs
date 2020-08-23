@@ -3,29 +3,27 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Functions
+namespace Algebra
 {
-    public class MonadIdentity : FunctionIdentity
+    namespace Functions
     {
-        public readonly Variable Parameter;
-
-        public delegate Expression.ExpressionDelegate GetMonadDelegateDelegate(Expression.ExpressionDelegate delegate1);
-        public delegate Expression GetMonadDerivativeDelegate(Expression parameter1, Variable wrt);
-
-        public MonadIdentity(string name, Variable parameter, int hashSeed, Expression atomicExpression, GetMonadDelegateDelegate getDelegate, GetMonadDerivativeDelegate getDerivative)
-            : base(name, new List<string>() { parameter.Name }, hashSeed, atomicExpression,
-                  dels => getDelegate(dels[parameter.Name]),
-                  (exprs, wrt) => getDerivative(exprs[parameter.Name], wrt))
+        internal class MonadIdentity : FunctionIdentity
         {
-            Parameter = parameter;
-        }
+            public readonly Variable Parameter;
 
-        public Expression CreateExpression(Expression expression)
-        {
-            return CreateExpression(new Dictionary<string, Expression>()
+            public MonadIdentity(string name, Variable parameter, int hashSeed, Expression atomicExpression)
+                : base(name, new List<string>() { parameter.Name }, hashSeed, atomicExpression)
             {
-                { Parameter.Name, expression },
-            });
+                Parameter = parameter;
+            }
+
+            public Expression CreateExpression(Expression expression)
+            {
+                return CreateExpression(new Dictionary<string, Expression>()
+                {
+                    { Parameter.Name, expression },
+                });
+            }
         }
     }
 }

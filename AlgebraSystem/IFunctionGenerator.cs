@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Algebra.Functions
+namespace Algebra
 {
     public interface IFunctionGenerator
     {
         string GetName();
-        Expression CreateExpression(Dictionary<string, Expression> parameters);
         ReadOnlyCollection<string> GetRequiredParameters();
-        Expression CreateExpression(List<Expression> nodes);
+        bool AreParametersSatisfied(IDictionary<string, Expression> parameters);
+        Expression CreateExpression(IList<Expression> nodes);
+        Expression CreateExpression(IDictionary<string, Expression> parameters);
     }
 }

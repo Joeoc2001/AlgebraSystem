@@ -5,58 +5,58 @@ using System.Text;
 using System;
 
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    public class Sin : AtomicMonad
+    namespace Atoms
     {
-        new public static Expression SinOf(Expression argument)
+        internal class Sin : AtomicMonad
         {
-            return new Sin(argument);
-        }
-
-        public Sin(Expression argument)
-            : base(argument)
-        {
-
-        }
-
-        public override ExpressionDelegate GetDelegate(VariableInputSet set)
-        {
-            ExpressionDelegate expression = Argument.GetDelegate(set);
-
-            // TODO: This can be better
-            return () => (float)Math.Sin(expression());
-        }
-
-        public override Expression GetDerivative(Variable wrt)
-        {
-            Expression derivative = Argument.GetDerivative(wrt);
-            return derivative * CosOf(Argument);
-        }
-
-        protected override bool ExactlyEquals(Expression expression)
-        {
-            if (!(expression is Sin sin))
+            new public static Expression SinOf(Expression argument)
             {
-                return false;
+                return new Sin(argument);
             }
 
-            return Argument.Equals(sin.Argument);
-        }
+            public Sin(Expression argument)
+                : base(argument)
+            {
 
-        public override Func<Expression, Expression> GetSimplifyingConstructor()
-        {
-            return SinOf;
-        }
+            }
 
-        protected override int GetHashSeed()
-        {
-            return 507056861;
-        }
+            public override Expression GetDerivative(string wrt)
+            {
+                Expression derivative = Argument.GetDerivative(wrt);
+                return derivative * CosOf(Argument);
+            }
 
-        protected override string GetMonadFunctionName()
-        {
-            return "sin";
+            protected override bool ExactlyEquals(Expression expression)
+            {
+                if (!(expression is Sin sin))
+                {
+                    return false;
+                }
+
+                return Argument.Equals(sin.Argument);
+            }
+
+            public override Func<Expression, Expression> GetSimplifyingConstructor()
+            {
+                return SinOf;
+            }
+
+            protected override int GetHashSeed()
+            {
+                return 507056861;
+            }
+
+            protected override string GetMonadFunctionName()
+            {
+                return "sin";
+            }
+
+            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateSin(Argument);
+            }
         }
     }
 }

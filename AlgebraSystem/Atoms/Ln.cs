@@ -5,64 +5,58 @@ using System.Text;
 using System;
 
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    public class Ln : AtomicMonad
+    namespace Atoms
     {
-        new public static Expression LnOf(Expression argument)
+        internal class Ln : AtomicMonad
         {
-            return new Ln(argument);
-        }
-
-        public Ln(Expression argument)
-            : base(argument)
-        {
-
-        }
-
-        public override ExpressionDelegate GetDelegate(VariableInputSet set)
-        {
-            if (Argument is Constant constant)
+            new public static Expression LnOf(Expression argument)
             {
-                float value = (float)Rational.Log(constant.GetValue());
-                return () => value;
+                return new Ln(argument);
             }
 
-            ExpressionDelegate expression = Argument.GetDelegate(set);
-
-            // TODO: This can be better
-            return () => (float)Math.Log(expression());
-        }
-
-        public override Expression GetDerivative(Variable wrt)
-        {
-            Expression derivative = Argument.GetDerivative(wrt);
-            return derivative / Argument;
-        }
-
-        protected override bool ExactlyEquals(Expression expression)
-        {
-            if (!(expression is Ln ln))
+            public Ln(Expression argument)
+                : base(argument)
             {
-                return false;
+
             }
 
-            return Argument.Equals(ln.Argument);
-        }
+            public override Expression GetDerivative(string wrt)
+            {
+                Expression derivative = Argument.GetDerivative(wrt);
+                return derivative / Argument;
+            }
 
-        public override Func<Expression, Expression> GetSimplifyingConstructor()
-        {
-            return LnOf;
-        }
+            protected override bool ExactlyEquals(Expression expression)
+            {
+                if (!(expression is Ln ln))
+                {
+                    return false;
+                }
 
-        protected override int GetHashSeed()
-        {
-            return -1043105826;
-        }
+                return Argument.Equals(ln.Argument);
+            }
 
-        protected override string GetMonadFunctionName()
-        {
-            return "ln";
+            public override Func<Expression, Expression> GetSimplifyingConstructor()
+            {
+                return LnOf;
+            }
+
+            protected override int GetHashSeed()
+            {
+                return -1043105826;
+            }
+
+            protected override string GetMonadFunctionName()
+            {
+                return "ln";
+            }
+
+            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateLn(Argument);
+            }
         }
     }
 }

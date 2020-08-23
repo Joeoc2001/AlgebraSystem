@@ -2,79 +2,75 @@
 using System;
 
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    public class Constant : Expression
+    namespace Atoms
     {
-        public static readonly Constant ZERO = 0;
-        public static readonly Constant ONE = 1;
-        public static readonly Constant MINUS_ONE = -1;
-        public static readonly Constant PI = Math.PI;
-        public static readonly Constant E = Math.E;
-
-        public static implicit operator Constant(int r) => Constant.From(r);
-        public static implicit operator Constant(long r) => Constant.From(r);
-        public static implicit operator Constant(float r) => Rational.Approximate(r);
-        public static implicit operator Constant(double r) => Rational.Approximate(r);
-        public static implicit operator Constant(decimal r) => Rational.Approximate(r);
-        public static implicit operator Constant(Rational r) => Constant.From(r);
-
-        private readonly Rational value;
-
-        public static Constant From(Rational value)
+        internal class Constant : Expression
         {
-            return new Constant(value.CanonicalForm);
-        }
+            public static implicit operator Constant(int r) => Constant.FromValue(r);
+            public static implicit operator Constant(long r) => Constant.FromValue(r);
+            public static implicit operator Constant(float r) => Rational.Approximate(r);
+            public static implicit operator Constant(double r) => Rational.Approximate(r);
+            public static implicit operator Constant(decimal r) => Rational.Approximate(r);
+            public static implicit operator Constant(Rational r) => Constant.FromValue(r);
 
-        private Constant(Rational value)
-        {
-            this.value = value;
-        }
+            private readonly Rational value;
 
-        public override ExpressionDelegate GetDelegate(VariableInputSet set)
-        {
-            float approximation = (float)value;
-            return () => approximation;
-        }
-
-        public override Expression GetDerivative(Variable wrt)
-        {
-            return 0;
-        }
-
-        protected override bool ExactlyEquals(Expression expression)
-        {
-            if (!(expression is Constant constant))
+            public static Constant FromValue(Rational value)
             {
-                return false;
+                return new Constant(value.CanonicalForm);
             }
 
-            return value.Equals(constant.value);
-        }
+            private Constant(Rational value)
+            {
+                this.value = value;
+            }
 
-        protected override int GenHashCode()
-        {
-            return value.GetHashCode();
-        }
+            public override Expression GetDerivative(string wrt)
+            {
+                return 0;
+            }
 
-        public Rational GetValue()
-        {
-            return value;
-        }
+            protected override bool ExactlyEquals(Expression expression)
+            {
+                if (!(expression is Constant constant))
+                {
+                    return false;
+                }
 
-        public override string ToString()
-        {
-            return $"{value}";
-        }
+                return value.Equals(constant.value);
+            }
 
-        public override int GetOrderIndex()
-        {
-            return 0;
-        }
+            protected override int GenHashCode()
+            {
+                return value.GetHashCode();
+            }
 
-        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
-        {
-            return this;
+            public Rational GetValue()
+            {
+                return value;
+            }
+
+            public override string ToString()
+            {
+                return $"{value}";
+            }
+
+            public override int GetOrderIndex()
+            {
+                return 0;
+            }
+
+            public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
+            {
+                return this;
+            }
+
+            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateConstant(value);
+            }
         }
     }
 }

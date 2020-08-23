@@ -5,76 +5,78 @@ using System.Linq;
 using System.Text;
 
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    public class Sign : AtomicMonad
+    namespace Atoms
     {
-        new public static Expression SignOf(Expression argument)
+        internal class Sign : AtomicMonad
         {
-            if (argument is Sign)
+            new public static Expression SignOf(Expression argument)
             {
-                return argument;
+                if (argument is Sign s)
+                {
+                    return s;
+                }
+
+                if (argument is Constant constant)
+                {
+                    if (constant.GetValue().IsZero)
+                    {
+                        return 0;
+                    }
+                    if (constant.GetValue() > 0)
+                    {
+                        return 1;
+                    }
+                    if (constant.GetValue() < 0)
+                    {
+                        return -1;
+                    }
+                }
+
+                return new Sign(argument);
             }
 
-            if (argument is Constant constant)
+            private Sign(Expression argument)
+                : base(argument)
             {
-                if (constant.GetValue().IsZero)
-                {
-                    return 0;
-                }
-                if (constant.GetValue() > 0)
-                {
-                    return 1;
-                }
-                if (constant.GetValue() < 0)
-                {
-                    return -1;
-                }
+
             }
 
-            return new Sign(argument);
-        }
-
-        private Sign(Expression argument)
-            : base(argument)
-        {
-
-        }
-
-        public override Expression GetDerivative(Variable wrt)
-        {
-            return 0; // Not always true, but true 100% of the time :P
-        }
-
-        public override ExpressionDelegate GetDelegate(VariableInputSet set)
-        {
-            ExpressionDelegate eqExpression = Argument.GetDelegate(set);
-            return () => Math.Sign(eqExpression());
-        }
-
-        protected override bool ExactlyEquals(Expression expression)
-        {
-            if (!(expression is Sign sign))
+            public override Expression GetDerivative(string wrt)
             {
-                return false;
+                return 0; // Not always true, but true 100% of the time :P
             }
 
-            return Argument.Equals(sign.Argument);
-        }
+            protected override bool ExactlyEquals(Expression expression)
+            {
+                if (!(expression is Sign sign))
+                {
+                    return false;
+                }
 
-        public override Func<Expression, Expression> GetSimplifyingConstructor()
-        {
-            return SignOf;
-        }
+                return Argument.Equals(sign.Argument, EqualityLevel.Exactly);
+            }
 
-        protected override int GetHashSeed()
-        {
-            return -322660314;
-        }
+            public override Func<Expression, Expression> GetSimplifyingConstructor()
+            {
+                return SignOf;
+            }
 
-        protected override string GetMonadFunctionName()
-        {
-            return "sign";
+            protected override int GetHashSeed()
+            {
+                return -322660314;
+            }
+
+            protected override string GetMonadFunctionName()
+            {
+                return "sign";
+            }
+
+            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateSign(Argument);
+            }
         }
     }
 }

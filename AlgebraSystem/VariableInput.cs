@@ -4,8 +4,13 @@ using System.Text;
 
 namespace Algebra
 {
-    public class VariableInput
+    public class VariableInput<T>
     {
-        public float Value { get; set; }
+        public T Value { get; set; }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Value);
+        }
     }
 }

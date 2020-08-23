@@ -7,30 +7,19 @@ using System.Text;
 
 namespace Algebra.Functions
 {
-    public class FunctionIdentity : FunctionGenerator
+    public class FunctionIdentity : FunctionGenerator, IFunctionIdentity
     {
         private readonly int hashSeed;
+        private readonly Expression atomicExpression;
 
-        public readonly Expression AtomicExpression;
-
-        public delegate Expression.ExpressionDelegate GetDelegateDelegate(Dictionary<string, Expression.ExpressionDelegate> parameterDelegates);
-        public delegate Expression GetDerivativeDelegate(Dictionary<string, Expression> parameterExpressions, Variable wrt);
-
-        private readonly GetDelegateDelegate getDelegate;
-        private readonly GetDerivativeDelegate getDerivative;
-
-        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, Expression alternateExpression, GetDelegateDelegate getDelegate, GetDerivativeDelegate getDerivative)
+        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, Expression alternateExpression)
             : base(name, parameterNames)
         {
             this.hashSeed = hashSeed;
-
-            this.AtomicExpression = alternateExpression.GetAtomicExpression();
-
-            this.getDelegate = getDelegate;
-            this.getDerivative = getDerivative;
+            this.atomicExpression = alternateExpression.GetAtomicExpression();
         }
 
-        protected override Expression CreateExpressionImpl(Dictionary<string, Expression> nodes)
+        protected override Expression CreateExpressionImpl(IDictionary<string, Expression> nodes)
         {
             return new Function(this, nodes);
         }
@@ -40,20 +29,9 @@ namespace Algebra.Functions
             return hashSeed;
         }
 
-        public Expression.ExpressionDelegate GetDelegate(Dictionary<string, Expression.ExpressionDelegate> parameterDelegates)
+        public Expression GetBodyAsAtomicExpression()
         {
-            return getDelegate(parameterDelegates);
-        }
-
-        public Expression GetDerivative(Function function, Variable wrt)
-        {
-            if (!function.GetIdentity().Equals(this))
-            {
-                throw new ArgumentException("Function is not of this identity");
-            }
-
-            Dictionary<string, Expression> parameterExpressions = function.GetParameters();
-            return getDerivative(parameterExpressions, wrt);
+            return atomicExpression;
         }
     }
 }

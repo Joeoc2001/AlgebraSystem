@@ -1,5 +1,6 @@
 ﻿using Algebra.Atoms;
 using Algebra.Equivalence;
+using Algebra.Evaluation;
 using Algebra.Functions;
 using Algebra.Functions.HardcodedFunctionIdentities;
 using Rationals;
@@ -18,16 +19,21 @@ namespace Algebra
         public static implicit operator Expression(decimal r) => (Constant)r;
         public static implicit operator Expression(Rational r) => (Constant)r;
 
-        public delegate float ExpressionDelegate();
-        public delegate Vector2 Vector2ExpressionDelegate();
-        public delegate Vector3 Vector3ExpressionDelegate();
-        public delegate Vector4 Vector4ExpressionDelegate();
+        public static readonly Expression X = VariableFrom("x");
+        public static readonly Expression Y = VariableFrom("y");
+        public static readonly Expression Z = VariableFrom("z");
 
-        public abstract ExpressionDelegate GetDelegate(VariableInputSet set);
-        public abstract Expression GetDerivative(Variable wrt);
+        public static readonly Expression ZERO = 0;
+        public static readonly Expression ONE = 1;
+        public static readonly Expression MINUS_ONE = -1;
+        public static readonly Expression PI = Math.PI;
+        public static readonly Expression E = Math.E;
+
+        public abstract Expression GetDerivative(string wrt);
         public abstract Expression MapChildren(ExpressionMapping.ExpressionMap map);
         protected abstract int GenHashCode();
         protected abstract bool ExactlyEquals(Expression expression);
+        public abstract T Evaluate<T>(IEvaluator<T> evaluator);
 
         /* Used for displaying braces when printing a human-readable string
          * Should be:
@@ -79,79 +85,65 @@ namespace Algebra
             return MapChildren(child => child.GetAtomicExpression());
         }
 
-        public ExpressionDelegate GetDerivitiveExpression(VariableInputSet set, Variable wrt)
+        public Expression PreMap(ExpressionMapping.ExpressionMap map) => PreMap(this, map);
+        public Expression PostMap(ExpressionMapping.ExpressionMap map) => PostMap(this, map);
+        public Expression PreMap(ExpressionMapping map) => PreMap(this, map);
+        public Expression PostMap(ExpressionMapping map) => PostMap(this, map);
+
+        public static Expression PreMap(Expression expression, ExpressionMapping.ExpressionMap map) => PreMap(expression, (ExpressionMapping)map);
+        public static Expression PostMap(Expression expression, ExpressionMapping.ExpressionMap map) => PostMap(expression, (ExpressionMapping)map);
+
+        public static Expression PreMap(Expression expression, ExpressionMapping map)
         {
-            return GetDerivative(wrt).GetDelegate(set);
-        }
+            Expression currentExpression = expression;
 
-        public Vector2ExpressionDelegate GetDerivitiveExpressionWrtXY(VariableInputSet set)
-        {
-            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetDelegate(set);
-            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetDelegate(set);
-            return () => new Vector2(dxFunc(), dyFunc());
-        }
-
-        public Vector3ExpressionDelegate GetDerivitiveExpressionWrtXYZ(VariableInputSet set)
-        {
-            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetDelegate(set);
-            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetDelegate(set);
-            ExpressionDelegate dzFunc = GetDerivative(Variable.Z).GetDelegate(set);
-            return () => new Vector3(dxFunc(), dyFunc(), dzFunc());
-        }
-
-        public Vector4ExpressionDelegate GetDerivitiveExpressionWrtXYZW(VariableInputSet set)
-        {
-            ExpressionDelegate dxFunc = GetDerivative(Variable.X).GetDelegate(set);
-            ExpressionDelegate dyFunc = GetDerivative(Variable.Y).GetDelegate(set);
-            ExpressionDelegate dzFunc = GetDerivative(Variable.Z).GetDelegate(set);
-            ExpressionDelegate dwFunc = GetDerivative(Variable.W).GetDelegate(set);
-            return () => new Vector4(dxFunc(), dyFunc(), dzFunc(), dwFunc());
-        }
-
-        public Expression PreMap(ExpressionMapping.ExpressionMap map) => PreMap((ExpressionMapping)map);
-        public Expression PostMap(ExpressionMapping.ExpressionMap map) => PostMap((ExpressionMapping)map);
-
-        public Expression PreMap(ExpressionMapping map)
-        {
-            Expression currentThis = this;
-
-            if (map.ShouldMapThis(this))
+            if (map.ShouldMapThis(expression))
             {
-                currentThis = map.Map(currentThis);
+                currentExpression = map.Map(currentExpression);
             }
 
-            if (map.ShouldMapChildren(this))
+            if (map.ShouldMapChildren(expression))
             {
-                currentThis = currentThis.MapChildren(child => child.PreMap(map));
+                currentExpression = currentExpression.MapChildren(child => PreMap(child, map));
             }
 
-            return currentThis;
+            return currentExpression;
         }
 
-        public Expression PostMap(ExpressionMapping map)
+        public static Expression PostMap(Expression expression, ExpressionMapping map)
         {
-            Expression currentThis = this;
+            Expression currentExpression = expression;
 
-            if (map.ShouldMapChildren(this))
+            if (map.ShouldMapChildren(expression))
             {
-                currentThis = currentThis.MapChildren(child => child.PostMap(map));
+                currentExpression = currentExpression.MapChildren(child => PostMap(expression, map));
             }
 
-            if (map.ShouldMapThis(this))
+            if (map.ShouldMapThis(expression))
             {
-                currentThis = map.Map(currentThis);
+                currentExpression = map.Map(currentExpression);
             }
 
-            return currentThis;
+            return currentExpression;
         }
 
         /// <summary>
         /// Creates a new Equivalence Class used for proving equivalence and for finding alternate forms of an equation.
         /// </summary>
         /// <returns>A queriable equivalence class for this expression</returns>
-        public EquivalenceClass GetEquivalenceClass()
+        public IEquivalenceClass GetEquivalenceClass()
         {
             return new EquivalenceClass(this);
+        }
+
+        public static Expression ConstantFrom(Rational value)
+        {
+            return Constant.FromValue(value);
+        }
+
+        public static Expression VariableFrom(string name)
+        {
+            return new Variable(name);
         }
 
         public static Expression operator +(Expression left, Expression right)
@@ -161,17 +153,12 @@ namespace Algebra
 
         public static Expression operator -(Expression left, Expression right)
         {
-            return Add(new List<Expression>() { left, -1 * right });
+            return Add(new List<Expression>() { left, -right });
         }
 
         public static Expression operator -(Expression a)
         {
-            return -1 * a;
-        }
-
-        public static Expression Add<T>(IEnumerable<T> eqs) where T : Expression
-        {
-            return Sum.Add(eqs);
+            return MINUS_ONE * a;
         }
 
         public static Expression operator *(Expression left, Expression right)
@@ -182,6 +169,11 @@ namespace Algebra
         public static Expression operator /(Expression left, Expression right)
         {
             return DivIdentity.Instance.CreateExpression(left, right);
+        }
+
+        public static Expression Add<T>(IEnumerable<T> eqs) where T : Expression
+        {
+            return Sum.Add(eqs);
         }
 
         public static Expression Multiply<T>(IEnumerable<T> eqs) where T : Expression
@@ -263,6 +255,7 @@ namespace Algebra
         {
             return this.GetOrderIndex() <= other.GetOrderIndex();
         }
+
         protected string ToParenthesisedString(Expression child)
         {
             if (ShouldParenthesise(child))

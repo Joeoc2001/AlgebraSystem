@@ -128,8 +128,8 @@ namespace Algebra
         private int CompareFunctions(Function a, Function b)
         {
             // Sort by name first, then each parameter
-            FunctionIdentity aId = a.GetIdentity();
-            FunctionIdentity bId = b.GetIdentity();
+            IFunctionIdentity aId = a.GetIdentity();
+            IFunctionIdentity bId = b.GetIdentity();
             ReadOnlyCollection<string> aReq = aId.GetRequiredParameters();
             ReadOnlyCollection<string> bReq = bId.GetRequiredParameters();
             if (aId != bId)
@@ -154,8 +154,8 @@ namespace Algebra
             // ASSERT: Function types are the same
             // Therefore parameter keys are the same
             // Sort on parameter values
-            Dictionary<string, Expression> aParams = a.GetParameters();
-            Dictionary<string, Expression> bParams = b.GetParameters();
+            IDictionary<string, Expression> aParams = a.GetParameters();
+            IDictionary<string, Expression> bParams = b.GetParameters();
             foreach (string parameterName in aReq)
             {
                 Expression aExp = aParams[parameterName];

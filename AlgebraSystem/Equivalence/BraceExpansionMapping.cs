@@ -15,12 +15,12 @@ namespace Algebra.Equivalence
         {
             this.index = i;
 
-            Map = map;
-            ShouldMapChildren = shouldMapChildren;
-            ShouldMapThis = shouldMapThis;
+            Map = BraceExpansionMap;
+            ShouldMapChildren = BraceExpansionShouldMapChildren;
+            ShouldMapThis = BraceExpansionShouldMapThis;
         }
 
-        private Expression map(Expression e)
+        private Expression BraceExpansionMap(Expression e)
         {
             if (!(e is Product p))
             {
@@ -70,8 +70,8 @@ namespace Algebra.Equivalence
             return e;
         }
 
-        private bool shouldMapThis(Expression e) => e is Product && index >= 0;
-        private bool shouldMapChildren(Expression e) => index >= 0;
+        private bool BraceExpansionShouldMapThis(Expression e) => e is Product && index >= 0;
+        private bool BraceExpansionShouldMapChildren(Expression e) => index >= 0;
 
         private static Expression ExpandSums(Sum s1, Sum s2)
         {

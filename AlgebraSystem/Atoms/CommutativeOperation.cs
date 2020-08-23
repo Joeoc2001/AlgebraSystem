@@ -6,173 +6,155 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    public abstract class CommutativeOperation : Expression
+    namespace Atoms
     {
-        public readonly ReadOnlyCollection<Expression> Arguments;
-
-        public CommutativeOperation(IList<Expression> eqs)
+        internal abstract class CommutativeOperation : Expression
         {
-            this.Arguments = new ReadOnlyCollection<Expression>(eqs);
-        }
+            public readonly ReadOnlyCollection<Expression> Arguments;
 
-        public abstract int IdentityValue();
-        public abstract float Perform(float a, float b);
-        public delegate Rational Operation(Rational a, Rational b);
-        public abstract string EmptyName();
-        public abstract string OperationSymbol();
-        public abstract Func<List<Expression>, Expression> GetSimplifyingConstructor();
-
-        public override sealed ExpressionDelegate GetDelegate(VariableInputSet set)
-        {
-            List<ExpressionDelegate> expressions = new List<ExpressionDelegate>(Arguments.Count());
-            foreach (Expression e in Arguments)
+            public CommutativeOperation(IList<Expression> eqs)
             {
-                expressions.Add(e.GetDelegate(set));
+                this.Arguments = new ReadOnlyCollection<Expression>(eqs);
             }
 
-            float identityValue = IdentityValue();
+            public abstract int IdentityValue();
+            public abstract float Perform(float a, float b);
+            public delegate Rational Operation(Rational a, Rational b);
+            public abstract string EmptyName();
+            public abstract string OperationSymbol();
+            public abstract Func<List<Expression>, Expression> GetSimplifyingConstructor();
 
-            return () =>
+            protected bool OperandsExactlyEquals(IList<Expression> otherArgs)
             {
-                float value = identityValue;
-                foreach (ExpressionDelegate f in expressions)
+                // Check for commutativity
+                // Add all parameters to dict by hash
+                Dictionary<int, List<Expression>> expressionsByHashes = new Dictionary<int, List<Expression>>();
+                foreach (Expression otherArg in otherArgs)
                 {
-                    value = Perform(value, f());
-                }
-                return value;
-            };
-        }
-
-        protected bool OperandsExactlyEquals(IList<Expression> otherArgs)
-        {
-            // Check for commutativity
-            // Add all parameters to dict by hash
-            Dictionary<int, List<Expression>> expressionsByHashes = new Dictionary<int, List<Expression>>();
-            foreach (Expression otherArg in otherArgs)
-            {
-                int hash = otherArg.GetHashCode();
-                if (!expressionsByHashes.TryGetValue(hash, out List<Expression> expressions))
-                {
-                    expressions = new List<Expression>();
-                    expressionsByHashes.Add(hash, expressions);
-                }
-                expressions.Add(otherArg);
-            }
-
-            // Check all parameters in this are present
-            IList<Expression> thisArgs = Arguments;
-            foreach (Expression thisArg in thisArgs)
-            {
-                int hash = thisArg.GetHashCode();
-                if (!expressionsByHashes.TryGetValue(hash, out List<Expression> expressions))
-                {
-                    return false;
-                }
-
-                // Perform linear search on all equations with same hash
-                bool found = false;
-                foreach (Expression otherArg in expressions)
-                {
-                    if (otherArg.Equals(thisArg, EqualityLevel.Exactly))
+                    int hash = otherArg.GetHashCode();
+                    if (!expressionsByHashes.TryGetValue(hash, out List<Expression> expressions))
                     {
-                        found = true;
-                        expressions.Remove(otherArg);
-                        break;
+                        expressions = new List<Expression>();
+                        expressionsByHashes.Add(hash, expressions);
+                    }
+                    expressions.Add(otherArg);
+                }
+
+                // Check all parameters in this are present
+                IList<Expression> thisArgs = Arguments;
+                foreach (Expression thisArg in thisArgs)
+                {
+                    int hash = thisArg.GetHashCode();
+                    if (!expressionsByHashes.TryGetValue(hash, out List<Expression> expressions))
+                    {
+                        return false;
+                    }
+
+                    // Perform linear search on all equations with same hash
+                    bool found = false;
+                    foreach (Expression otherArg in expressions)
+                    {
+                        if (otherArg.Equals(thisArg, EqualityLevel.Exactly))
+                        {
+                            found = true;
+                            expressions.Remove(otherArg);
+                            break;
+                        }
+                    }
+
+                    // If linear search failed then args are different
+                    if (!found)
+                    {
+                        return false;
                     }
                 }
 
-                // If linear search failed then args are different
-                if (!found)
+                return true;
+            }
+
+            public List<Expression> GetDisplaySortedArguments()
+            {
+                return GetDisplaySortedArguments(Arguments);
+            }
+
+            private static List<Expression> GetDisplaySortedArguments(IList<Expression> eqs)
+            {
+                List<Expression> sortedEqs = new List<Expression>(eqs);
+                sortedEqs.Sort(ExpressionDisplayComparer.COMPARER);
+                return sortedEqs;
+            }
+
+            protected override int GenHashCode()
+            {
+                int value = -1906136416 * OperationSymbol().GetHashCode();
+                foreach (Expression eq in GetDisplaySortedArguments())
                 {
-                    return false;
+                    value *= 33;
+                    value ^= eq.GetHashCode();
                 }
+                return value;
             }
 
-            return true;
-        }
-
-        public List<Expression> GetDisplaySortedArguments()
-        {
-            return GetDisplaySortedArguments(Arguments);
-        }
-
-        private static List<Expression> GetDisplaySortedArguments(IList<Expression> eqs)
-        {
-            List<Expression> sortedEqs = new List<Expression>(eqs);
-            sortedEqs.Sort(ExpressionDisplayComparer.COMPARER);
-            return sortedEqs;
-        }
-
-        protected override int GenHashCode()
-        {
-            int value = -1906136416 * OperationSymbol().GetHashCode();
-            foreach (Expression eq in GetDisplaySortedArguments())
+            protected static List<Expression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : Expression
             {
-                value *= 33;
-                value ^= eq.GetHashCode();
-            }
-            return value;
-        }
+                List<Expression> newEqs = new List<Expression>(eqs.Count);
 
-        protected static List<Expression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : Expression
-        {
-            List<Expression> newEqs = new List<Expression>(eqs.Count);
+                Rational collectedConstants = identity;
 
-            Rational collectedConstants = identity;
-
-            // Loop & simplify
-            foreach (Expression eq in eqs)
-            {
-                if (eq is Constant constEq)
+                // Loop & simplify
+                foreach (Expression eq in eqs)
                 {
-                    collectedConstants = operation(collectedConstants, constEq.GetValue());
-                    continue;
+                    if (eq is Constant constEq)
+                    {
+                        collectedConstants = operation(collectedConstants, constEq.GetValue());
+                        continue;
+                    }
+
+                    newEqs.Add(eq);
                 }
 
-                newEqs.Add(eq);
+                if (!collectedConstants.Equals(identity))
+                {
+                    newEqs.Add(ConstantFrom(collectedConstants));
+                }
+
+                return newEqs;
             }
 
-            if (!collectedConstants.Equals(identity))
+            public override string ToString()
             {
-                newEqs.Add(Constant.From(collectedConstants));
+                if (Arguments.Count == 0)
+                {
+                    return "()";
+                }
+
+                StringBuilder builder = new StringBuilder();
+
+                builder.Append(ToParenthesisedString(Arguments[0]));
+                for (int i = 1; i < Arguments.Count; i++)
+                {
+                    builder.Append(" ");
+                    builder.Append(OperationSymbol());
+                    builder.Append(" ");
+                    builder.Append(ToParenthesisedString(Arguments[i]));
+                }
+
+                return builder.ToString();
             }
 
-            return newEqs;
-        }
-
-        public override string ToString()
-        {
-            if (Arguments.Count == 0)
+            public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
             {
-                return "()";
+                List<Expression> mappedEqs = new List<Expression>(Arguments.Count);
+
+                foreach (Expression eq in Arguments)
+                {
+                    mappedEqs.Add(map(eq));
+                }
+
+                return GetSimplifyingConstructor()(mappedEqs);
             }
-
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append(ToParenthesisedString(Arguments[0]));
-            for (int i = 1; i < Arguments.Count; i++)
-            {
-                builder.Append(" ");
-                builder.Append(OperationSymbol());
-                builder.Append(" ");
-                builder.Append(ToParenthesisedString(Arguments[i]));
-            }
-
-            return builder.ToString();
-        }
-
-        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
-        {
-            List<Expression> mappedEqs = new List<Expression>(Arguments.Count);
-
-            foreach (Expression eq in Arguments)
-            {
-                mappedEqs.Add(map(eq));
-            }
-
-            return GetSimplifyingConstructor()(mappedEqs);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Algebra.Functions
             this.parameterNames = parameterNames ?? throw new ArgumentNullException(nameof(parameterNames));
         }
 
-        protected abstract Expression CreateExpressionImpl(Dictionary<string, Expression> parameters);
+        protected abstract Expression CreateExpressionImpl(IDictionary<string, Expression> parameters);
 
         public ReadOnlyCollection<string> GetRequiredParameters()
         {
@@ -62,9 +62,9 @@ namespace Algebra.Functions
         /// </summary>
         /// <param name="nodes">The parameters to be given to the function</param>
         /// <returns>The new function node</returns>
-        public Expression CreateExpression(List<Expression> nodes)
+        public Expression CreateExpression(IList<Expression> nodes)
         {
-            ReadOnlyCollection<string> requiredParameters = GetRequiredParameters();
+            IList<string> requiredParameters = GetRequiredParameters();
 
             if (nodes.Count != requiredParameters.Count)
             {
@@ -86,7 +86,7 @@ namespace Algebra.Functions
         /// </summary>
         /// <param name="nodes">The parameters to be given to the function</param>
         /// <returns>The new function node</returns>
-        public Expression CreateExpression(Dictionary<string, Expression> parameters)
+        public Expression CreateExpression(IDictionary<string, Expression> parameters)
         {
             if (!AreParametersSatisfied(parameters))
             {
@@ -95,10 +95,10 @@ namespace Algebra.Functions
             return CreateExpressionImpl(parameters);
         }
 
-        public bool AreParametersSatisfied(Dictionary<string, Expression> parameters)
+        public bool AreParametersSatisfied(IDictionary<string, Expression> parameters)
         {
             // Ensure that all required parameters are filled
-            ReadOnlyCollection<string> requiredParameters = GetRequiredParameters();
+            IList<string> requiredParameters = GetRequiredParameters();
             if (parameters.Count != requiredParameters.Count)
             {
                 return false;

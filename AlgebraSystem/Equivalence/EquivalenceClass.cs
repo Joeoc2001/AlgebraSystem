@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Algebra.Equivalence
 {
-    public class EquivalenceClass
+    internal class EquivalenceClass : IEquivalenceClass
     {
         public static readonly List<EquivalencePath> DEFAULT_PATHS = new List<EquivalencePath> {
             EquivalencePaths.EXPAND_BRACES

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Linq;
 
 
 namespace Algebra
@@ -12,45 +13,16 @@ namespace Algebra
     /// Used at function compilation time to assign all of the variables
     /// in an expression to a cell where the value can be inputted
     /// </summary>
-    public class VariableInputSet : IEquatable<VariableInputSet>, IEnumerable<VariableInput>
+    public class VariableInputSet<T> : IEquatable<VariableInputSet<T>>, IEnumerable<VariableInput<T>>
     {
-        private readonly Dictionary<string, VariableInput> values = new Dictionary<string, VariableInput>();
-
-        public static implicit operator VariableInputSet(float x) => new VariableInputSet(x);
-        public static implicit operator VariableInputSet(Vector2 v2) => new VariableInputSet(v2);
-        public static implicit operator VariableInputSet(Vector3 v3) => new VariableInputSet(v3);
-        public static implicit operator VariableInputSet(Vector4 v4) => new VariableInputSet(v4);
+        private readonly Dictionary<string, VariableInput<T>> values = new Dictionary<string, VariableInput<T>>();
 
         public VariableInputSet()
         {
 
         }
 
-        public VariableInputSet(float x)
-            : this()
-        {
-            Set("X", x);
-        }
-
-        public VariableInputSet(Vector2 v2)
-            : this()
-        {
-            Set(v2);
-        }
-
-        public VariableInputSet(Vector3 v3)
-            : this()
-        {
-            Set(v3);
-        }
-
-        public VariableInputSet(Vector4 v4)
-            : this()
-        {
-            Set(v4);
-        }
-
-        public VariableInput this[string v]
+        public VariableInput<T> this[string v]
         {
             get => values[v.ToLower()];
         }
@@ -61,24 +33,24 @@ namespace Algebra
         }
 
         /// <summary>
-        /// Adds a variable input with the given name and value 0 to the variable input set.
+        /// Adds a variable input with the given name and value default to the variable input set.
         /// This method throws if the given string is already present
         /// </summary>
         /// <param name="name">The name of the variable to add</param>
         /// <exception cref="ArgumentException">Thrown if a variable input with the given name is already present</exception>
         public void Add(string name)
         {
-            Add(name, 0);
+            Add(name, default);
         }
 
         /// <summary>
-        /// Adds a variable input with the given name and value to the variable input set.
+        /// Adds a variable input with the given name and value to this variable input set.
         /// This method throws if the given string is already present
         /// </summary>
         /// <param name="name">The name of the variable to add</param>
         /// <param name="value">The value to set the variable to initially</param>
         /// <exception cref="ArgumentException">Thrown if a variable input with the given name is already present</exception>
-        public void Add(string name, float value)
+        public void Add(string name, T value)
         {
             string lowerName = name.ToLower();
             if (values.ContainsKey(lowerName))
@@ -86,41 +58,61 @@ namespace Algebra
                 throw new ArgumentException("A variable with the same name has already been added");
             }
 
-            VariableInput variableInput = new VariableInput();
+            VariableInput<T> variableInput = new VariableInput<T>();
             values.Add(lowerName, variableInput);
             variableInput.Value = value;
         }
 
-        public void Set(string name, float value)
+        /// <summary>
+        /// Sets a variable input with the given name and value in this variable input set.
+        /// This method throws if the given string is not present
+        /// </summary>
+        /// <param name="name">The name of the variable to set</param>
+        /// <param name="value">The value to set the variable to</param>
+        /// <exception cref="ArgumentException">Thrown if a variable input with the given name is not present</exception>
+        public void Set(string name, T value)
         {
             string lowerName = name.ToLower();
-            if (!values.TryGetValue(lowerName, out VariableInput variableInput))
+            if (!values.TryGetValue(lowerName, out VariableInput<T> variableInput))
             {
-                variableInput = new VariableInput();
+                throw new ArgumentException($"No variable exists in this set with name {lowerName}");
+            }
+            variableInput.Value = value;
+        }
+
+        /// <summary>
+        /// Sets a variable input with the given name and value in this variable input set, or adds it if a variable is not already present with the given name
+        /// </summary>
+        /// <param name="name">The name of the variable to set</param>
+        /// <param name="value">The value to set the variable to</param>
+        public void AddOrSet(string name, T value)
+        {
+            string lowerName = name.ToLower();
+            if (!values.TryGetValue(lowerName, out VariableInput<T> variableInput))
+            {
+                variableInput = new VariableInput<T>();
                 values.Add(lowerName, variableInput);
             }
             variableInput.Value = value;
         }
 
-        public void Set(Vector2 v2)
+        /// <summary>
+        /// Gets a variable input with the given name in this variable input set.
+        /// This method throws if the given string is not present
+        /// </summary>
+        /// <param name="name">The name of the variable to get</param>
+        /// <exception cref="ArgumentException">Thrown if a variable input with the given name is not present</exception>
+        public VariableInput<T> Get(string name)
         {
-            Set(Variable.X.Name, v2.X);
-            Set(Variable.Y.Name, v2.Y);
+            string lowerName = name.ToLower();
+            if (!values.TryGetValue(lowerName, out VariableInput<T> variableInput))
+            {
+                throw new ArgumentException($"No variable exists in this set with name {lowerName}");
+            }
+            return variableInput;
         }
 
-        public void Set(Vector3 v3)
-        {
-            Set(new Vector2(v3.X, v3.Y));
-            Set(Variable.Z.Name, v3.Z);
-        }
-
-        public void Set(Vector4 v4)
-        {
-            Set(new Vector3(v4.X, v4.Y, v4.Z));
-            Set(Variable.W.Name, v4.W);
-        }
-
-        public bool Equals(VariableInputSet o)
+        public bool Equals(VariableInputSet<T> o)
         {
             if (o.values.Count != values.Count)
             {
@@ -129,13 +121,18 @@ namespace Algebra
 
             foreach (string name in values.Keys)
             {
-                if (!o.values.TryGetValue(name, out VariableInput otherVariableInput))
+                if (!o.values.TryGetValue(name, out VariableInput<T> otherVariableInput))
                 {
                     return false;
                 }
 
-                VariableInput thisVariableInput = values[name];
-                if (!ReferenceEquals(thisVariableInput, otherVariableInput))
+                VariableInput<T> thisVariableInput = values[name];
+                if (ReferenceEquals(thisVariableInput, otherVariableInput))
+                {
+                    continue;
+                }
+
+                if (!thisVariableInput.Value.Equals(otherVariableInput.Value))
                 {
                     return false;
                 }
@@ -145,20 +142,35 @@ namespace Algebra
 
         public override bool Equals(object obj)
         {
-            if (obj is null || !(obj is VariableInputSet))
+            if (obj is null || !(obj is VariableInputSet<T>))
             {
                 return false;
             }
 
-            return this.Equals((VariableInputSet)obj);
+            return this.Equals((VariableInputSet<T>)obj);
         }
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException("Variable sets cannot be hashed"); // No hash function can exist for this due to floating point accuracy
+            unchecked
+            {
+                int hash = 17;
+
+                List<string> valueNames = values.Keys.ToList();
+                valueNames.Sort(StringComparer.CurrentCulture);
+
+                foreach (string name in valueNames)
+                {
+                    hash *= 33;
+                    hash ^= name.GetHashCode();
+                    hash *= 17;
+                    hash ^= values[name].GetHashCode();
+                }
+                return hash;
+            }
         }
 
-        public IEnumerator<VariableInput> GetEnumerator()
+        public IEnumerator<VariableInput<T>> GetEnumerator()
         {
             return values.Values.GetEnumerator();
         }
@@ -168,7 +180,7 @@ namespace Algebra
             return values.Values.GetEnumerator();
         }
 
-        public static bool operator ==(VariableInputSet left, VariableInputSet right)
+        public static bool operator ==(VariableInputSet<T> left, VariableInputSet<T> right)
         {
             if (ReferenceEquals(left, right))
             {
@@ -178,7 +190,7 @@ namespace Algebra
             return left.Equals(right);
         }
 
-        public static bool operator !=(VariableInputSet left, VariableInputSet right)
+        public static bool operator !=(VariableInputSet<T> left, VariableInputSet<T> right)
         {
             return !(left == right);
         }

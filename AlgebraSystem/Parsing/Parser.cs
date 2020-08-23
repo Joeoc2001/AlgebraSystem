@@ -98,7 +98,7 @@ namespace Algebra.Parsing
                 {
                     if (rhs is Constant constant)
                     {
-                        rhs = Constant.From(-constant.GetValue());
+                        rhs = Constant.ConstantFrom(-constant.GetValue());
                     }
                     else
                     {
@@ -187,7 +187,7 @@ namespace Algebra.Parsing
 
             if (tokenizer.Token == Token.Decimal)
             {
-                Expression node = Constant.From(tokenizer.Number);
+                Expression node = Constant.ConstantFrom(tokenizer.Number);
                 tokenizer.NextToken();
                 return node;
             }

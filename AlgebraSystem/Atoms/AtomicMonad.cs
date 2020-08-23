@@ -1,52 +1,55 @@
 ﻿using System;
 using System.Text;
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    public abstract class AtomicMonad : Expression
+    namespace Atoms
     {
-        public readonly Expression Argument;
-
-        protected AtomicMonad(Expression argument)
+        internal abstract class AtomicMonad : Expression
         {
-            this.Argument = argument;
-        }
+            public readonly Expression Argument;
 
-        public abstract Func<Expression, Expression> GetSimplifyingConstructor();
-        protected abstract int GetHashSeed();
-        protected abstract string GetMonadFunctionName();
+            protected AtomicMonad(Expression argument)
+            {
+                this.Argument = argument;
+            }
 
-        protected override sealed int GenHashCode()
-        {
-            return Argument.GetHashCode() ^ GetHashSeed();
-        }
+            public abstract Func<Expression, Expression> GetSimplifyingConstructor();
+            protected abstract int GetHashSeed();
+            protected abstract string GetMonadFunctionName();
 
-        protected override sealed Expression GenAtomicExpression()
-        {
-            Expression atomicArg = Argument.GetAtomicExpression();
-            return GetSimplifyingConstructor()(atomicArg);
-        }
+            protected override sealed int GenHashCode()
+            {
+                return Argument.GetHashCode() ^ GetHashSeed();
+            }
 
-        public override sealed string ToString()
-        {
-            StringBuilder builder = new StringBuilder();
+            protected override sealed Expression GenAtomicExpression()
+            {
+                Expression atomicArg = Argument.GetAtomicExpression();
+                return GetSimplifyingConstructor()(atomicArg);
+            }
 
-            builder.Append(GetMonadFunctionName());
-            builder.Append(" ");
-            builder.Append(ToParenthesisedString(Argument));
+            public override sealed string ToString()
+            {
+                StringBuilder builder = new StringBuilder();
 
-            return builder.ToString();
-        }
+                builder.Append(GetMonadFunctionName());
+                builder.Append(" ");
+                builder.Append(ToParenthesisedString(Argument));
 
-        public override sealed int GetOrderIndex()
-        {
-            return 0;
-        }
+                return builder.ToString();
+            }
 
-        public override sealed Expression MapChildren(ExpressionMapping.ExpressionMap map)
-        {
-            Expression mappedArg = map(Argument);
-            return GetSimplifyingConstructor()(mappedArg);
+            public override sealed int GetOrderIndex()
+            {
+                return 0;
+            }
+
+            public override sealed Expression MapChildren(ExpressionMapping.ExpressionMap map)
+            {
+                Expression mappedArg = map(Argument);
+                return GetSimplifyingConstructor()(mappedArg);
+            }
         }
     }
 }

@@ -2,77 +2,69 @@
 using System.Collections.Generic;
 
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    public class Variable : Expression
+    namespace Atoms
     {
-        public class NotPresentException : ArgumentException
+        internal class Variable : Expression
         {
-            public NotPresentException(string message) : base(message)
+            public class NotPresentException : ArgumentException
             {
-            }
-        }
-
-        public static readonly Variable X = new Variable("X");
-        public static readonly Variable Y = new Variable("Y");
-        public static readonly Variable Z = new Variable("Z");
-        public static readonly Variable W = new Variable("W");
-
-        public readonly string Name;
-
-        public Variable(string name)
-        {
-            this.Name = name.ToLower();
-        }
-
-        public override ExpressionDelegate GetDelegate(VariableInputSet set)
-        {
-            if (!set.Contains(Name))
-            {
-                throw new NotPresentException($"The variable {Name} is not present in the variable set");
+                public NotPresentException(string message) : base(message)
+                {
+                }
             }
 
-            VariableInput input = set[Name];
-            return () => input.Value;
-        }
+            public readonly string Name;
 
-        public override Expression GetDerivative(Variable wrt)
-        {
-            if (wrt == this)
+            public Variable(string name)
             {
-                return 1;
-            }
-            return 0;
-        }
-
-        protected override bool ExactlyEquals(Expression expression)
-        {
-            if (!(expression is Variable variable))
-            {
-                return false;
+                this.Name = name.ToLower();
             }
 
-            return Name.Equals(variable.Name);
-        }
+            public override Expression GetDerivative(string wrt)
+            {
+                if (wrt == Name)
+                {
+                    return 1;
+                }
+                return 0;
+            }
 
-        protected override int GenHashCode()
-        {
-            return Name.GetHashCode() * 1513357220;
-        }
+            protected override bool ExactlyEquals(Expression expression)
+            {
+                if (!(expression is Variable variable))
+                {
+                    return false;
+                }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+                return Name.Equals(variable.Name);
+            }
 
-        public override int GetOrderIndex()
-        {
-            return 0;
-        }
+            protected override int GenHashCode()
+            {
+                return Name.GetHashCode() * 1513357220;
+            }
 
-        public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
-        {
-            return this;
+            public override string ToString()
+            {
+                return Name;
+            }
+
+            public override int GetOrderIndex()
+            {
+                return 0;
+            }
+
+            public override Expression MapChildren(ExpressionMapping.ExpressionMap map)
+            {
+                return this;
+            }
+
+            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateVariable(Name);
+            }
         }
     }
 }
