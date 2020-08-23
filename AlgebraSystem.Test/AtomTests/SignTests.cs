@@ -16,13 +16,12 @@ namespace AtomTests
         public void Sign_Simplifies_WhenConstantParameter()
         {
             // ARANGE
-            Constant c = Constant.ONE;
+            Expression c = Expression.ConstantFrom(1);
 
             // ACT
             Expression e = Expression.SignOf(10);
 
             // ASSERT
-            Assert.IsTrue(e is Constant);
             Assert.AreEqual(c, e);
         }
 
@@ -30,13 +29,12 @@ namespace AtomTests
         public void Sign_ReturnsZero_WhenZero()
         {
             // ARANGE
-            Constant c = Constant.ZERO;
+            Expression c = Expression.ConstantFrom(0);
 
             // ACT
             Expression e = Expression.SignOf(0);
 
             // ASSERT
-            Assert.IsTrue(e is Constant);
             Assert.AreEqual(c, e);
         }
 
@@ -46,7 +44,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            float e = Expression.SignOf(Variable.X).GetDelegate(new VariableInputSet(0))();
+            float e = Expression.SignOf(Expression.X).EvaluateOnce(0);
 
             // ASSERT
             Assert.AreEqual(0, e);
@@ -58,7 +56,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            float e = Expression.SignOf(Variable.X).GetDelegate(new VariableInputSet(145))();
+            float e = Expression.SignOf(Expression.X).EvaluateOnce(145);
 
             // ASSERT
             Assert.AreEqual(1, e);
@@ -70,7 +68,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            float e = Expression.SignOf(Variable.X).GetDelegate(new VariableInputSet(-14335))();
+            float e = Expression.SignOf(Expression.X).EvaluateOnce(-14335);
 
             // ASSERT
             Assert.AreEqual(-1, e);
@@ -83,7 +81,7 @@ namespace AtomTests
             Expression expression = Expression.SignOf(a);
 
             // ACT
-            float value = expression.GetDelegate(new VariableInputSet())();
+            float value = expression.EvaluateOnce(new VariableInputSet<float>());
             int expected = Math.Sign(a);
 
             // ASSERT
@@ -96,7 +94,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.SignOf(Variable.X);
+            Expression expression = Expression.SignOf(Expression.X);
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());
@@ -108,7 +106,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression argument = Variable.Y;
+            Expression argument = Expression.Y;
             Expression expression = Expression.SignOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
@@ -138,89 +136,13 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression argument = Variable.X + 1;
+            Expression argument = Expression.X + 1;
             Expression expression = Expression.SignOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
-        }
-
-        [Test]
-        public void Sign_Map_DoesntChangeOriginal()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SignOf(Variable.X);
-            Expression expression2 = Expression.SignOf(Variable.X);
-
-            // ACT
-            expression2.PostMap(a => Expression.SignOf(Variable.Y));
-
-            // ASSERT
-            Assert.AreEqual(expression1, expression2);
-        }
-
-        [Test]
-        public void Sign_Map_ReturnsAlternative()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SignOf(Variable.X);
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => Expression.SignOf(Variable.Y));
-
-            // ASSERT
-            Assert.AreEqual(Expression.SignOf(Variable.Y), expression2);
-        }
-
-        [Test]
-        public void Sign_Map_MapsChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SignOf(Variable.X);
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => a is Variable ? Variable.Z : a);
-
-            // ASSERT
-            Assert.AreEqual(Expression.SignOf(Variable.Z), expression2);
-        }
-
-        [Test]
-        public void Sign_Map_CanSkipSelf()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SignOf(Variable.X);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => Variable.Z,
-                ShouldMapThis = a => !(a is Sign)
-            };
-
-            // ACT
-            Expression expression2 = expression1.PostMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.SignOf(Variable.Z), expression2);
-        }
-
-        [Test]
-        public void Sign_Map_CanSkipChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SignOf(Variable.X);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => a is Variable ? Variable.Z : a,
-                ShouldMapChildren = a => false
-            };
-
-            // ACT
-            Expression expression2 = expression1.PostMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.SignOf(Variable.X), expression2);
         }
 
         [Test]

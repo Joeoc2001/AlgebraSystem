@@ -14,8 +14,8 @@ namespace AtomTests
         public void Constant_Zero_IsSelfEqual()
         {
             // ARANGE
-            Constant zero1 = 0;
-            Constant zero2 = 0;
+            Expression zero1 = 0;
+            Expression zero2 = 0;
 
             // ACT
 
@@ -34,8 +34,8 @@ namespace AtomTests
         public void Constant_ZeroAndOne_AreNotEqual()
         {
             // ARANGE
-            Constant zero = 0;
-            Constant one = 1;
+            Expression zero = 0;
+            Expression one = 1;
 
             // ACT
 
@@ -54,38 +54,26 @@ namespace AtomTests
         public void Constant_Derivative_IsZero([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            Constant value = Constant.From(v);
+            Expression value = Expression.ConstantFrom(v);
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative("x");
 
             // ASSERT
-            Assert.AreEqual(Constant.From(0), derivative);
+            Assert.AreEqual(Expression.ConstantFrom(0), derivative);
         }
 
         [Test]
         public void Constant_EvaluatesCorrectly([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            Constant expression = Constant.From(v);
+            Expression expression = Expression.ConstantFrom(v);
 
             // ACT
-            float value = expression.GetDelegate(new VariableInputSet())();
+            float value = expression.EvaluateOnce(new VariableInputSet<float>());
 
             // ASSERT
             Assert.AreEqual(v, value);
-        }
-
-        [Test]
-        public void Constant_ParsesCorrectly([Range(-100, 100, 10)] int v)
-        {
-            // ARANGE
-
-            // ACT
-            Constant expression = Constant.From(v);
-
-            // ASSERT
-            Assert.AreEqual((Rational)v, expression.GetValue());
         }
 
         [Test]
@@ -98,60 +86,6 @@ namespace AtomTests
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());
-        }
-
-        [Test]
-        public void Constant_PostMap_DoesntChangeOriginal()
-        {
-            // ARANGE
-            Expression expression1 = 5;
-            Expression expression2 = 5;
-
-            // ACT
-            expression2.PostMap(a => 2);
-
-            // ASSERT
-            Assert.AreEqual(expression1, expression2);
-        }
-
-        [Test]
-        public void Constant_PostMap_ReturnsAlternative()
-        {
-            // ARANGE
-            Expression expression1 = 5;
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => 2);
-
-            // ASSERT
-            Assert.AreEqual((Expression)2, expression2);
-        }
-
-        [Test]
-        public void Constant_PreMap_DoesntChangeOriginal()
-        {
-            // ARANGE
-            Expression expression1 = 5;
-            Expression expression2 = 5;
-
-            // ACT
-            expression2.PreMap(a => 2);
-
-            // ASSERT
-            Assert.AreEqual(expression1, expression2);
-        }
-
-        [Test]
-        public void Constant_PreMap_ReturnsAlternative()
-        {
-            // ARANGE
-            Expression expression1 = 5;
-
-            // ACT
-            Expression expression2 = expression1.PreMap(a => 2);
-
-            // ASSERT
-            Assert.AreEqual((Expression)2, expression2);
         }
     }
 }

@@ -16,8 +16,8 @@ namespace AtomTests
         public void Exponentiation_IsEqual_WhenSame()
         {
             // ARANGE
-            Expression v1 = Expression.Pow(Variable.X, 2);
-            Expression v2 = Expression.Pow(Variable.X, 2);
+            Expression v1 = Expression.Pow(Expression.X, 2);
+            Expression v2 = Expression.Pow(Expression.X, 2);
 
             // ACT
 
@@ -36,8 +36,8 @@ namespace AtomTests
         public void Exponentiation_EqualReturnFalse_WhenDifferent()
         {
             // ARANGE
-            Expression v1 = Expression.Pow(Variable.X, 6);
-            Expression v2 = Expression.Pow(6, Variable.X);
+            Expression v1 = Expression.Pow(Expression.X, 6);
+            Expression v2 = Expression.Pow(6, Expression.X);
 
             // ACT
 
@@ -56,11 +56,11 @@ namespace AtomTests
         public void Exponentiation_1stPowerDerivative_IsCorrect()
         {
             // ARANGE
-            Expression value = Expression.Pow(Variable.X, 1);
+            Expression value = Expression.Pow(Expression.X, 1);
             Expression expected = 1;
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative("x");
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -70,11 +70,11 @@ namespace AtomTests
         public void Exponentiation_ConstantPowerDerivative_IsCorrect()
         {
             // ARANGE
-            Expression value = Expression.Pow(Variable.X, 5);
-            Expression expected = 5 * Expression.Pow(Variable.X, 4);
+            Expression value = Expression.Pow(Expression.X, 5);
+            Expression expected = 5 * Expression.Pow(Expression.X, 4);
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative("x");
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -84,11 +84,11 @@ namespace AtomTests
         public void Exponentiation_ConstantBaseDerivative_IsCorrect()
         {
             // ARANGE
-            Expression value = Expression.Pow(5, Variable.X);
-            Expression expected = Expression.LnOf(5) * Expression.Pow(5, Variable.X);
+            Expression value = Expression.Pow(5, Expression.X);
+            Expression expected = Expression.LnOf(5) * Expression.Pow(5, Expression.X);
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative("x");
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -98,11 +98,11 @@ namespace AtomTests
         public void Exponentiation_BothVariableDerivative_IsAtomicallyCorrect()
         {
             // ARANGE
-            Expression value = Expression.Pow(Variable.X, Variable.X);
-            Expression expected = (1 + Expression.LnOf(Variable.X)) * Expression.Pow(Variable.X, Variable.X);
+            Expression value = Expression.Pow(Expression.X, Expression.X);
+            Expression expected = (1 + Expression.LnOf(Expression.X)) * Expression.Pow(Expression.X, Expression.X);
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative("x");
             Expression atomicDerivative = derivative.GetAtomicExpression();
 
             // ASSERT
@@ -116,7 +116,7 @@ namespace AtomTests
             Expression expression = Expression.Pow(a, b);
 
             // ACT
-            float value = expression.GetDelegate(new VariableInputSet())();
+            float value = expression.EvaluateOnce(new VariableInputSet<float>());
 
             // ASSERT
             Assert.AreEqual((float)Math.Pow(a, b), value);
@@ -128,8 +128,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.Pow(5, Constant.From(2));
-            Expression expected = Constant.From(25);
+            Expression expression = Expression.Pow(5, Expression.ConstantFrom(2));
+            Expression expected = Expression.ConstantFrom(25);
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -141,8 +141,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.Pow(Variable.Z, 1);
-            Expression expected = Variable.Z;
+            Expression expression = Expression.Pow(Expression.Z, 1);
+            Expression expected = Expression.Z;
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -154,7 +154,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.Pow(Variable.Y, 0);
+            Expression expression = Expression.Pow(Expression.Y, 0);
             Expression expected = 1;
 
             // ASSERT
@@ -167,7 +167,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.Pow(Variable.Y, 3);
+            Expression expression = Expression.Pow(Expression.Y, 3);
 
             // ASSERT
             Assert.AreEqual(10, expression.GetOrderIndex());
@@ -179,8 +179,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression1 = Expression.Pow(Variable.Y, 3);
-            Expression expression2 = Expression.Pow(3, Variable.Y);
+            Expression expression1 = Expression.Pow(Expression.Y, 3);
+            Expression expression2 = Expression.Pow(3, Expression.Y);
             int hash1 = expression1.GetHashCode();
             int hash2 = expression2.GetHashCode();
 
@@ -194,8 +194,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression1 = Expression.Pow(Variable.Y, Variable.X);
-            Expression expression2 = Expression.Pow(Variable.X, Variable.Y);
+            Expression expression1 = Expression.Pow(Expression.Y, Expression.X);
+            Expression expression2 = Expression.Pow(Expression.X, Expression.Y);
             int hash1 = expression1.GetHashCode();
             int hash2 = expression2.GetHashCode();
 
@@ -209,191 +209,13 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression1 = Expression.Pow(Variable.Y, Variable.X + 1);
-            Expression expression2 = Expression.Pow(Variable.X + 1, Variable.Y);
+            Expression expression1 = Expression.Pow(Expression.Y, Expression.X + 1);
+            Expression expression2 = Expression.Pow(Expression.X + 1, Expression.Y);
             int hash1 = expression1.GetHashCode();
             int hash2 = expression2.GetHashCode();
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
-        }
-
-        [Test]
-        public void Exponentiation_PostMap_DoesntChangeOriginal()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 2);
-            Expression expression2 = Expression.Pow(Variable.X, 2);
-
-            // ACT
-            expression2.PostMap(a => Expression.Pow(Variable.Y, 4));
-
-            // ASSERT
-            Assert.AreEqual(expression1, expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PostMap_ReturnsAlternative()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 2);
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => Expression.Pow(Variable.Y, 4));
-
-            // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Y, 4), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PostMap_MapsChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 5);
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => a is Variable ? Variable.Z : a);
-
-            // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Z, 5), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PostMap_CanSkipSelf()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, Variable.Y);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => Variable.Z,
-                ShouldMapThis = a => !(a is Exponent)
-            };
-
-            // ACT
-            Expression expression2 = expression1.PostMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Z, Variable.Z), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PostMap_CanSkipChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 5);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => a is Variable ? Variable.Z : a,
-                ShouldMapChildren = a => false
-            };
-
-            // ACT
-            Expression expression2 = expression1.PostMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.X, 5), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PostMap_MapsChildrenFirst()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 2);
-
-            // ACT
-            Expression expression2 = expression1.PostMap(eq => eq is Constant ? eq : Constant.From(4));
-
-            // ASSERT
-            Assert.AreEqual(Constant.From(16), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PreMap_DoesntChangeOriginal()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 2);
-            Expression expression2 = Expression.Pow(Variable.X, 2);
-
-            // ACT
-            expression2.PreMap(a => Variable.Y);
-
-            // ASSERT
-            Assert.AreEqual(expression1, expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PreMap_ReturnsAlternative()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 2);
-
-            // ACT
-            Expression expression2 = expression1.PreMap(a => Variable.Y);
-
-            // ASSERT
-            Assert.AreEqual(Variable.Y, expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PreMap_MapsChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 5);
-
-            // ACT
-            Expression expression2 = expression1.PreMap(a => a is Variable ? Variable.Z : a);
-
-            // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Z, 5), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PreMap_CanSkipSelf()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, Variable.Y);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => Variable.Z,
-                ShouldMapThis = a => !(a is Exponent)
-            };
-
-            // ACT
-            Expression expression2 = expression1.PreMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.Z, Variable.Z), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PreMap_CanSkipChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 5);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => a is Variable ? Variable.Z : a,
-                ShouldMapChildren = a => false
-            };
-
-            // ACT
-            Expression expression2 = expression1.PreMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.Pow(Variable.X, 5), expression2);
-        }
-
-        [Test]
-        public void Exponentiation_PreMap_MapsParentFirst()
-        {
-            // ARANGE
-            Expression expression1 = Expression.Pow(Variable.X, 2);
-
-            // ACT
-            Expression expression2 = expression1.PreMap(eq => eq is Constant ? eq : Constant.From(4));
-
-            // ASSERT
-            Assert.AreEqual(Constant.From(4), expression2);
         }
 
         [Test]

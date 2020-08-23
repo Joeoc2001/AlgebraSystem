@@ -15,7 +15,7 @@ namespace AlgebraTests
         public void VariableSet_EmptyConstructor_HasNoVariables([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
             // ARANGE
-            VariableInputSet set = new VariableInputSet();
+            VariableInputSet<float> set = new VariableInputSet<float>();
 
             // ACT
 
@@ -24,103 +24,13 @@ namespace AlgebraTests
         }
 
         [Test]
-        public void VariableSet_SetVector2_SetsXY([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
-        {
-            // ARANGE
-            VariableInputSet set = new VariableInputSet();
-            set.Set(new Vector2(27f, -17f));
-
-            // ACT
-
-            // ASSERT
-            switch (name)
-            {
-                case "X":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(27f, set[name].Value);
-                    break;
-                case "Y":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(-17f, set[name].Value);
-                    break;
-                default:
-                    Assert.IsFalse(set.Contains(name));
-                    break;
-            }
-        }
-
-        [Test]
-        public void VariableSet_SetVector3_SetsXYZ([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
-        {
-            // ARANGE
-            VariableInputSet set = new VariableInputSet();
-            set.Set(new Vector3(163f, 27f, -17f));
-
-            // ACT
-
-            // ASSERT
-            switch (name)
-            {
-                case "X":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(163f, set[name].Value);
-                    break;
-                case "Y":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(27f, set[name].Value);
-                    break;
-                case "Z":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(-17f, set[name].Value);
-                    break;
-                default:
-                    Assert.IsFalse(set.Contains(name));
-                    break;
-            }
-        }
-
-        [Test]
-        public void VariableSet_SetVector4_SetsXYZW([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
-        {
-            // ARANGE
-            VariableInputSet set = new VariableInputSet();
-            set.Set(new Vector4(163f, -0.5f, 27f, -17f));
-
-            // ACT
-
-            // ASSERT
-            switch (name)
-            {
-                case "X":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(163f, set[name].Value);
-                    break;
-                case "Y":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(-0.5f, set[name].Value);
-                    break;
-                case "Z":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(27f, set[name].Value);
-                    break;
-                case "W":
-                    Assert.IsTrue(set.Contains(name));
-                    Assert.AreEqual(-17f, set[name].Value);
-                    break;
-                default:
-                    Assert.IsFalse(set.Contains(name));
-                    break;
-            }
-        }
-
-        [Test]
         public void VariableSet_EmptySets_AreEqual()
         {
             // ARANGE
 
             // ACT
-            VariableInputSet set1 = new VariableInputSet();
-            VariableInputSet set2 = new VariableInputSet();
+            VariableInputSet<float> set1 = new VariableInputSet<float>();
+            VariableInputSet<float> set2 = new VariableInputSet<float>();
 
             // ASSERT
             Assert.IsTrue(set1.Equals(set2));
@@ -139,10 +49,10 @@ namespace AlgebraTests
             // ARANGE
 
             // ACT
-            VariableInputSet set1 = new VariableInputSet();
-            set1.Set(new Vector3(5, 2, 1));
-            VariableInputSet set2 = new VariableInputSet();
-            set2.Set(new Vector3(5, 2, 1.00001f));
+            VariableInputSet<float> set1 = new VariableInputSet<float>();
+            set1.AddOrSet("x", 1);
+            VariableInputSet<float> set2 = new VariableInputSet<float>();
+            set2.AddOrSet("x", 1.00001f);
 
             // ASSERT
             Assert.IsFalse(set1.Equals(set2));
@@ -159,7 +69,7 @@ namespace AlgebraTests
         public void VariableSet_CollectionInitilizationNotation_SetsValuesTo0()
         {
             // ARANGE
-            VariableInputSet set = new VariableInputSet()
+            VariableInputSet<float> set = new VariableInputSet<float>()
             {
                 "X",
                 "Y"

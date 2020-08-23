@@ -16,8 +16,8 @@ namespace AtomTests
         public void Sin_IsEqual_WhenSame()
         {
             // ARANGE
-            Expression v1 = Expression.SinOf(Variable.X);
-            Expression v2 = Expression.SinOf(Variable.X);
+            Expression v1 = Expression.SinOf(Expression.X);
+            Expression v2 = Expression.SinOf(Expression.X);
 
             // ACT
 
@@ -36,8 +36,8 @@ namespace AtomTests
         public void Sin_EqualReturnFalse_WhenDifferent()
         {
             // ARANGE
-            Expression v1 = Expression.SinOf(Variable.X);
-            Expression v2 = Expression.SinOf(Variable.Y);
+            Expression v1 = Expression.SinOf(Expression.X);
+            Expression v2 = Expression.SinOf(Expression.Y);
 
             // ACT
 
@@ -56,11 +56,11 @@ namespace AtomTests
         public void Sin_XDerivative_IsCorrect()
         {
             // ARANGE
-            Expression value = Expression.SinOf(Variable.X);
-            Expression expected = Expression.CosOf(Variable.X);
+            Expression value = Expression.SinOf(Expression.X);
+            Expression expected = Expression.CosOf(Expression.X);
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative("x");
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -70,11 +70,11 @@ namespace AtomTests
         public void Sin_XSquaredDerivative_IsCorrect()
         {
             // ARANGE
-            Expression value = Expression.SinOf(Expression.Pow(Variable.X, 2));
-            Expression expected = 2 * Variable.X * Expression.CosOf(Expression.Pow(Variable.X, 2));
+            Expression value = Expression.SinOf(Expression.Pow(Expression.X, 2));
+            Expression expected = 2 * Expression.X * Expression.CosOf(Expression.Pow(Expression.X, 2));
 
             // ACT
-            Expression derivative = value.GetDerivative(Variable.X);
+            Expression derivative = value.GetDerivative("x");
 
             // ASSERT
             Assert.AreEqual(expected, derivative);
@@ -87,23 +87,11 @@ namespace AtomTests
             Expression expression = Expression.SinOf(v);
 
             // ACT
-            float value = expression.GetDelegate(new VariableInputSet())();
+            float value = expression.EvaluateOnce(new VariableInputSet<float>());
             double expected = Math.Sin(v);
 
             // ASSERT
             Assert.That(value, Is.EqualTo(expected).Within(0.00001f));
-        }
-
-        [Test]
-        public void Sin_DoesntSimplify_WhenConstantParameter()
-        {
-            // ARANGE
-
-            // ACT
-            Expression e = Expression.SinOf(10);
-
-            // ASSERT
-            Assert.IsFalse(e is Constant);
         }
 
         [Test]
@@ -112,7 +100,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Expression.SinOf(Variable.X);
+            Expression expression = Expression.SinOf(Expression.X);
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());
@@ -124,7 +112,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression argument = Variable.Y;
+            Expression argument = Expression.Y;
             Expression expression = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
@@ -154,7 +142,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression argument = Variable.X + 1;
+            Expression argument = Expression.X + 1;
             Expression expression = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
@@ -169,7 +157,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression argument = Variable.X;
+            Expression argument = Expression.X;
             Expression ln = Expression.SinOf(argument);
             Expression sign = Expression.SignOf(argument);
             int hash1 = ln.GetHashCode();
@@ -177,82 +165,6 @@ namespace AtomTests
 
             // ASSERT
             Assert.AreNotEqual(hash1, hash2);
-        }
-
-        [Test]
-        public void Sin_Map_DoesntChangeOriginal()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SinOf(Variable.X);
-            Expression expression2 = Expression.SinOf(Variable.X);
-
-            // ACT
-            expression2.PostMap(a => Expression.SinOf(Variable.Y));
-
-            // ASSERT
-            Assert.AreEqual(expression1, expression2);
-        }
-
-        [Test]
-        public void Sin_Map_ReturnsAlternative()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SinOf(Variable.X);
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => Expression.SinOf(Variable.Y));
-
-            // ASSERT
-            Assert.AreEqual(Expression.SinOf(Variable.Y), expression2);
-        }
-
-        [Test]
-        public void Sin_Map_MapsChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SinOf(Variable.X);
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => a is Variable ? Variable.Z : a);
-
-            // ASSERT
-            Assert.AreEqual(Expression.SinOf(Variable.Z), expression2);
-        }
-
-        [Test]
-        public void Sin_Map_CanSkipSelf()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SinOf(Variable.X);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => Variable.Z,
-                ShouldMapThis = a => !(a is Sin)
-            };
-
-            // ACT
-            Expression expression2 = expression1.PostMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.SinOf(Variable.Z), expression2);
-        }
-
-        [Test]
-        public void Sin_Map_CanSkipChildren()
-        {
-            // ARANGE
-            Expression expression1 = Expression.SinOf(Variable.X);
-            ExpressionMapping mapping = new ExpressionMapping()
-            {
-                Map = a => a is Variable ? Variable.Z : a,
-                ShouldMapChildren = a => false
-            };
-
-            // ACT
-            Expression expression2 = expression1.PostMap(mapping);
-
-            // ASSERT
-            Assert.AreEqual(Expression.SinOf(Variable.X), expression2);
         }
 
         [Test]

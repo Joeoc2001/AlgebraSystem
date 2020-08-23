@@ -8,12 +8,6 @@ namespace Algebra
     {
         internal class Variable : Expression
         {
-            public class NotPresentException : ArgumentException
-            {
-                public NotPresentException(string message) : base(message)
-                {
-                }
-            }
 
             public readonly string Name;
 

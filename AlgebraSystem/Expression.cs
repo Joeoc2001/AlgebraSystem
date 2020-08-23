@@ -1,7 +1,6 @@
 ﻿using Algebra.Atoms;
 using Algebra.Equivalence;
 using Algebra.Evaluation;
-using Algebra.Functions;
 using Algebra.Functions.HardcodedFunctionIdentities;
 using Rationals;
 using System;
@@ -85,15 +84,15 @@ namespace Algebra
             return MapChildren(child => child.GetAtomicExpression());
         }
 
-        public Expression PreMap(ExpressionMapping.ExpressionMap map) => PreMap(this, map);
-        public Expression PostMap(ExpressionMapping.ExpressionMap map) => PostMap(this, map);
-        public Expression PreMap(ExpressionMapping map) => PreMap(this, map);
-        public Expression PostMap(ExpressionMapping map) => PostMap(this, map);
+        internal Expression PreMap(ExpressionMapping.ExpressionMap map) => PreMap(this, map);
+        internal Expression PostMap(ExpressionMapping.ExpressionMap map) => PostMap(this, map);
+        internal Expression PreMap(ExpressionMapping map) => PreMap(this, map);
+        internal Expression PostMap(ExpressionMapping map) => PostMap(this, map);
 
-        public static Expression PreMap(Expression expression, ExpressionMapping.ExpressionMap map) => PreMap(expression, (ExpressionMapping)map);
-        public static Expression PostMap(Expression expression, ExpressionMapping.ExpressionMap map) => PostMap(expression, (ExpressionMapping)map);
+        internal static Expression PreMap(Expression expression, ExpressionMapping.ExpressionMap map) => PreMap(expression, (ExpressionMapping)map);
+        internal static Expression PostMap(Expression expression, ExpressionMapping.ExpressionMap map) => PostMap(expression, (ExpressionMapping)map);
 
-        public static Expression PreMap(Expression expression, ExpressionMapping map)
+        internal static Expression PreMap(Expression expression, ExpressionMapping map)
         {
             Expression currentExpression = expression;
 
@@ -110,7 +109,7 @@ namespace Algebra
             return currentExpression;
         }
 
-        public static Expression PostMap(Expression expression, ExpressionMapping map)
+        internal static Expression PostMap(Expression expression, ExpressionMapping map)
         {
             Expression currentExpression = expression;
 
@@ -127,6 +126,19 @@ namespace Algebra
             return currentExpression;
         }
 
+        public Rational EvaluateOnce(VariableInputSet<Rational> variables)
+        {
+            return Evaluate(new RationalEvaluator(variables));
+        }
+
+        public float EvaluateOnce(float variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable } });
+        public float EvaluateOnce(Vector2 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y } });
+        public float EvaluateOnce(Vector3 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y }, { "z", variable.Z } });
+        public float EvaluateOnce(VariableInputSet<float> variables)
+        {
+            return Evaluate(new FloatEvaluator(variables));
+        }
+
         /// <summary>
         /// Creates a new Equivalence Class used for proving equivalence and for finding alternate forms of an equation.
         /// </summary>
@@ -140,6 +152,13 @@ namespace Algebra
         {
             return Constant.FromValue(value);
         }
+
+        public static Expression ConstantFrom(float value) => ConstantFrom((Rational)value);
+        public static Expression ConstantFrom(int value) => ConstantFrom((Rational)value);
+        public static Expression ConstantFrom(double value) => ConstantFrom((Rational)value);
+        public static Expression ConstantFrom(decimal value) => ConstantFrom((Rational)value);
+        public static Expression ConstantFrom(long value) => ConstantFrom((Rational)value);
+        public static Expression ConstantFrom(BigInteger value) => ConstantFrom((Rational)value);
 
         public static Expression VariableFrom(string name)
         {

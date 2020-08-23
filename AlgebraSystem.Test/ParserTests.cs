@@ -16,7 +16,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = name;
-            Variable expected = new Variable(name);
+            Expression expected = Expression.VariableFrom(name);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -30,7 +30,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "987654321.5";
-            Constant expected = Constant.From((Rational)987654321.5M);
+            Expression expected = Expression.ConstantFrom((Rational)987654321.5M);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -44,7 +44,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "98765/24";
-            Constant expected = Constant.From((Rational)98765 / 24);
+            Expression expected = Expression.ConstantFrom((Rational)98765 / 24);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -58,7 +58,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "x + 1";
-            Expression expected = Variable.X + 1;
+            Expression expected = Expression.X + 1;
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -72,7 +72,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "x * y";
-            Expression expected = Variable.X * Variable.Y;
+            Expression expected = Expression.X * Expression.Y;
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -86,7 +86,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "x - 50";
-            Expression expected = Variable.X + (-50);
+            Expression expected = Expression.X + (-50);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -100,7 +100,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "x / y";
-            Expression expected = Variable.X / Variable.Y;
+            Expression expected = Expression.X / Expression.Y;
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -114,7 +114,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "x ^ y";
-            Expression expected = Expression.Pow(Variable.X, Variable.Y);
+            Expression expected = Expression.Pow(Expression.X, Expression.Y);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -128,7 +128,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "(x + y) * 5";
-            Expression expected = (Variable.X + Variable.Y) * 5;
+            Expression expected = (Expression.X + Expression.Y) * 5;
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -170,7 +170,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "ln 5";
-            Expression expected = Expression.LnOf(Constant.From(5));
+            Expression expected = Expression.LnOf(Expression.ConstantFrom(5));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -184,7 +184,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "ln(52)";
-            Expression expected = Expression.LnOf(Constant.From(52));
+            Expression expected = Expression.LnOf(Expression.ConstantFrom(52));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -198,7 +198,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "Log (y, x) ";
-            Expression expected = Expression.LogOf(Variable.Y, Variable.X);
+            Expression expected = Expression.LogOf(Expression.Y, Expression.X);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -212,7 +212,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "LOG (152, x) ";
-            Expression expected = Expression.LogOf(Constant.From(152), Variable.X);
+            Expression expected = Expression.LogOf(Expression.ConstantFrom(152), Expression.X);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -226,7 +226,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "ln ln 15";
-            Expression expected = Expression.LnOf(Expression.LnOf(Constant.From(15)));
+            Expression expected = Expression.LnOf(Expression.LnOf(Expression.ConstantFrom(15)));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -240,7 +240,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "y * ln 5 * x + 3";
-            Expression expected = (Variable.Y * Expression.LnOf(5) * Variable.X) + 3;
+            Expression expected = (Expression.Y * Expression.LnOf(5) * Expression.X) + 3;
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -254,7 +254,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "sign 5";
-            Expression expected = Expression.SignOf(Constant.From(5));
+            Expression expected = Expression.SignOf(Expression.ConstantFrom(5));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -268,7 +268,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "sign(529)";
-            Expression expected = Expression.SignOf(Constant.From(529));
+            Expression expected = Expression.SignOf(Expression.ConstantFrom(529));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -282,7 +282,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "sign sign 145";
-            Expression expected = Expression.SignOf(Expression.SignOf(Constant.From(145)));
+            Expression expected = Expression.SignOf(Expression.SignOf(Expression.ConstantFrom(145)));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -296,7 +296,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "sign(sign(1555))";
-            Expression expected = Expression.SignOf(Expression.SignOf(Constant.From(1555)));
+            Expression expected = Expression.SignOf(Expression.SignOf(Expression.ConstantFrom(1555)));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -324,7 +324,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "min(x, y)";
-            Expression expected = Expression.Min(Variable.X, Variable.Y);
+            Expression expected = Expression.Min(Expression.X, Expression.Y);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -338,7 +338,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "min(x + y, y)";
-            Expression expected = Expression.Min(Variable.X + Variable.Y, Variable.Y);
+            Expression expected = Expression.Min(Expression.X + Expression.Y, Expression.Y);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -352,7 +352,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "min(x * y, y * z)";
-            Expression expected = Expression.Min(Variable.X * Variable.Y, Variable.Y * Variable.Z);
+            Expression expected = Expression.Min(Expression.X * Expression.Y, Expression.Y * Expression.Z);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -380,7 +380,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "max(x, y)";
-            Expression expected = Expression.Max(Variable.X, Variable.Y);
+            Expression expected = Expression.Max(Expression.X, Expression.Y);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -394,7 +394,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "max(x + y, y)";
-            Expression expected = Expression.Max(Variable.X + Variable.Y, Variable.Y);
+            Expression expected = Expression.Max(Expression.X + Expression.Y, Expression.Y);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -408,7 +408,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "max(x * y, y * z)";
-            Expression expected = Expression.Max(Variable.X * Variable.Y, Variable.Y * Variable.Z);
+            Expression expected = Expression.Max(Expression.X * Expression.Y, Expression.Y * Expression.Z);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -422,7 +422,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "min (1, x) * max(x * y, y * z)";
-            Expression expected = Expression.Min(1, Variable.X) * Expression.Max(Variable.X * Variable.Y, Variable.Y * Variable.Z);
+            Expression expected = Expression.Min(1, Expression.X) * Expression.Max(Expression.X * Expression.Y, Expression.Y * Expression.Z);
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -672,7 +672,7 @@ namespace AlgebraTests
         {
             // ARANGE
             string expression = "sign(ln 3883)";
-            Expression expected = Expression.SignOf(Expression.LnOf(Constant.From(3883)));
+            Expression expected = Expression.SignOf(Expression.LnOf(Expression.ConstantFrom(3883)));
 
             // ACT
             Expression result = Parser.Parse(expression);
@@ -685,7 +685,7 @@ namespace AlgebraTests
         public void Parser_FuzzerGeneratedFailure1()
         {
             // ARANGE
-            Expression expected = Expression.Pow(Variable.Y, (Rational)3971 / 9748);
+            Expression expected = Expression.Pow(Expression.Y, (Rational)3971 / 9748);
             string expression = "((y ^ 3971/9748))";
 
             // ACT
@@ -699,7 +699,7 @@ namespace AlgebraTests
         public void Parser_FuzzerGeneratedFailure2()
         {
             // ARANGE
-            Expression expected = (Expression.Pow(((Variable.X + Variable.Z + Constant.From((Rational)(18162171) / (22852115))) * Constant.From((Rational)(310824508140) / (806613624271)) * Expression.Pow(Expression.Pow(Expression.Pow(Constant.From((Rational)(3271) / (5692)), Expression.Pow(Constant.From((Rational)(3875) / (6319)), Variable.Z)), Expression.LnOf((Variable.Y * Variable.Z * Constant.From((Rational)(7876848) / (551214185))))), Constant.From((Rational)(7481) / (15820))) * Constant.From((Rational)(1077) / (2105)) * Expression.LnOf(Expression.Pow(Constant.From((Rational)(-31938485) / (179632821)), Constant.From((Rational)(3719) / (3898)))) * Expression.Pow(Constant.From((Rational)(34060164457463332) / (84917266513976971)), Constant.From((Rational)(7170) / (8081)))), Constant.From((Rational)(3757) / (7268))) + Constant.From((Rational)(2704) / (8117)) + Expression.Pow((Expression.Pow(Variable.Z, Expression.Pow(((Variable.Y * Constant.From((Rational)(281756499029) / (4278581823008))) + Variable.X + Expression.LnOf(Expression.Pow(Constant.From((Rational)(107) / (91937)), Constant.From((Rational)(23485) / (60351)))) + Constant.From((Rational)(241903) / (1023370))), Expression.Pow(Constant.From((Rational)(-84694382) / (48380467)), Constant.From((Rational)(132483) / (137719))))) + Expression.Pow(Expression.Pow((Expression.Pow(Constant.From((Rational)(3445) / (5332)), Constant.From((Rational)(2774) / (27105))) * Constant.From((Rational)(1990944) / (93080449))), (Variable.X + Variable.Y + Constant.From((Rational)(9777) / (10613)) + (Expression.Pow(Constant.From((Rational)(17643) / (49516)), (Variable.Y * Constant.From((Rational)(1172263) / (22515807)))) * Expression.Pow(Variable.Z, Constant.From((Rational)(1262) / (8407))) * Constant.From((Rational)(3121) / (3977))))), Constant.From((Rational)(-56263742) / (634120667))) + Expression.Pow(Expression.Pow(Expression.Pow(Variable.X, Expression.Pow(Constant.From((Rational)(6957) / (15283)), Variable.Y)), Constant.From((Rational)(2435) / (4603))), Constant.From((Rational)(90859500) / (183100176133))) + Expression.Pow(Expression.Pow(Expression.Pow(Expression.LnOf(((Variable.X + Constant.From((Rational)(1684097) / (2595208))) * Expression.Pow(Constant.From((Rational)(3541) / (4870)), Variable.Z) * Constant.From((Rational)(-351601137) / (516062869)))), Expression.LnOf((Constant.From((Rational)(520875825076) / (626696076699)) + Expression.Pow(Constant.From((Rational)(493) / (7544)), Constant.From((Rational)(4035) / (4984)))))), (Expression.Pow(Variable.Y, Variable.Y) * Expression.Pow(Expression.LnOf(Expression.Pow(Constant.From((Rational)(1845) / (4184)), Constant.From((Rational)(4390) / (5839)))), Constant.From((Rational)(529) / (9484))))), Constant.From((Rational)(35351) / (78776))) + Expression.Pow(Variable.X, Variable.Z) + Constant.From((Rational)(9241) / (17113)) + Expression.Pow(Constant.From((Rational)(4733) / (11013)), Variable.Y) + Expression.Pow(Expression.LnOf(Expression.Pow(Variable.Y, Variable.Z)), Expression.Pow(Constant.From((Rational)(8413) / (10191)), Expression.LnOf(Expression.Pow(Constant.From((Rational)(1784) / (7051)), Expression.Pow(Variable.X, Variable.Y))))) + Constant.From((Rational)(3572896512839) / (32129243331984))), Constant.From((Rational)(4071) / (4378))));
+            Expression expected = (Expression.Pow(((Expression.X + Expression.Z + Expression.ConstantFrom((Rational)(18162171) / (22852115))) * Expression.ConstantFrom((Rational)(310824508140) / (806613624271)) * Expression.Pow(Expression.Pow(Expression.Pow(Expression.ConstantFrom((Rational)(3271) / (5692)), Expression.Pow(Expression.ConstantFrom((Rational)(3875) / (6319)), Expression.Z)), Expression.LnOf((Expression.Y * Expression.Z * Expression.ConstantFrom((Rational)(7876848) / (551214185))))), Expression.ConstantFrom((Rational)(7481) / (15820))) * Expression.ConstantFrom((Rational)(1077) / (2105)) * Expression.LnOf(Expression.Pow(Expression.ConstantFrom((Rational)(-31938485) / (179632821)), Expression.ConstantFrom((Rational)(3719) / (3898)))) * Expression.Pow(Expression.ConstantFrom((Rational)(34060164457463332) / (84917266513976971)), Expression.ConstantFrom((Rational)(7170) / (8081)))), Expression.ConstantFrom((Rational)(3757) / (7268))) + Expression.ConstantFrom((Rational)(2704) / (8117)) + Expression.Pow((Expression.Pow(Expression.Z, Expression.Pow(((Expression.Y * Expression.ConstantFrom((Rational)(281756499029) / (4278581823008))) + Expression.X + Expression.LnOf(Expression.Pow(Expression.ConstantFrom((Rational)(107) / (91937)), Expression.ConstantFrom((Rational)(23485) / (60351)))) + Expression.ConstantFrom((Rational)(241903) / (1023370))), Expression.Pow(Expression.ConstantFrom((Rational)(-84694382) / (48380467)), Expression.ConstantFrom((Rational)(132483) / (137719))))) + Expression.Pow(Expression.Pow((Expression.Pow(Expression.ConstantFrom((Rational)(3445) / (5332)), Expression.ConstantFrom((Rational)(2774) / (27105))) * Expression.ConstantFrom((Rational)(1990944) / (93080449))), (Expression.X + Expression.Y + Expression.ConstantFrom((Rational)(9777) / (10613)) + (Expression.Pow(Expression.ConstantFrom((Rational)(17643) / (49516)), (Expression.Y * Expression.ConstantFrom((Rational)(1172263) / (22515807)))) * Expression.Pow(Expression.Z, Expression.ConstantFrom((Rational)(1262) / (8407))) * Expression.ConstantFrom((Rational)(3121) / (3977))))), Expression.ConstantFrom((Rational)(-56263742) / (634120667))) + Expression.Pow(Expression.Pow(Expression.Pow(Expression.X, Expression.Pow(Expression.ConstantFrom((Rational)(6957) / (15283)), Expression.Y)), Expression.ConstantFrom((Rational)(2435) / (4603))), Expression.ConstantFrom((Rational)(90859500) / (183100176133))) + Expression.Pow(Expression.Pow(Expression.Pow(Expression.LnOf(((Expression.X + Expression.ConstantFrom((Rational)(1684097) / (2595208))) * Expression.Pow(Expression.ConstantFrom((Rational)(3541) / (4870)), Expression.Z) * Expression.ConstantFrom((Rational)(-351601137) / (516062869)))), Expression.LnOf((Expression.ConstantFrom((Rational)(520875825076) / (626696076699)) + Expression.Pow(Expression.ConstantFrom((Rational)(493) / (7544)), Expression.ConstantFrom((Rational)(4035) / (4984)))))), (Expression.Pow(Expression.Y, Expression.Y) * Expression.Pow(Expression.LnOf(Expression.Pow(Expression.ConstantFrom((Rational)(1845) / (4184)), Expression.ConstantFrom((Rational)(4390) / (5839)))), Expression.ConstantFrom((Rational)(529) / (9484))))), Expression.ConstantFrom((Rational)(35351) / (78776))) + Expression.Pow(Expression.X, Expression.Z) + Expression.ConstantFrom((Rational)(9241) / (17113)) + Expression.Pow(Expression.ConstantFrom((Rational)(4733) / (11013)), Expression.Y) + Expression.Pow(Expression.LnOf(Expression.Pow(Expression.Y, Expression.Z)), Expression.Pow(Expression.ConstantFrom((Rational)(8413) / (10191)), Expression.LnOf(Expression.Pow(Expression.ConstantFrom((Rational)(1784) / (7051)), Expression.Pow(Expression.X, Expression.Y))))) + Expression.ConstantFrom((Rational)(3572896512839) / (32129243331984))), Expression.ConstantFrom((Rational)(4071) / (4378))));
             string expression = "((((x + z + 18162171/22852115) * 310824508140/806613624271 * (((3271/5692 ^ (3875/6319 ^ z)) ^ ln (y * z * 7876848/551214185)) ^ 7481/15820) * 1077/2105 * ln (-31938485/179632821 ^ 3719/3898) * (34060164457463332/84917266513976971 ^ 7170/8081)) ^ 3757/7268) + 2704/8117 + (((z ^ (((y * 281756499029/4278581823008) + x + ln (107/91937 ^ 23485/60351) + 241903/1023370) ^ (-84694382/48380467 ^ 132483/137719))) + ((((3445/5332 ^ 2774/27105) * 1990944/93080449) ^ (x + y + 9777/10613 + ((17643/49516 ^ (y * 1172263/22515807)) * (z ^ 1262/8407) * 3121/3977))) ^ -56263742/634120667) + (((x ^ (6957/15283 ^ y)) ^ 2435/4603) ^ 90859500/183100176133) + (((ln ((x + 1684097/2595208) * (3541/4870 ^ z) * -351601137/516062869) ^ ln (520875825076/626696076699 + (493/7544 ^ 4035/4984))) ^ ((y ^ y) * (ln (1845/4184 ^ 4390/5839) ^ 529/9484))) ^ 35351/78776) + (x ^ z) + 9241/17113 + (4733/11013 ^ y) + (ln (y ^ z) ^ (8413/10191 ^ ln (1784/7051 ^ (x ^ y)))) + 3572896512839/32129243331984) ^ 4071/4378))";
 
             // ACT
@@ -713,7 +713,7 @@ namespace AlgebraTests
         public void Parser_FuzzerGeneratedFailure3()
         {
             // ARANGE
-            Expression expected = (Variable.Z * Expression.Pow(Variable.Y, Constant.From((Rational)(2) / (1))) * Expression.SignOf((Expression.LnOf(Constant.From((Rational)(4971) / (5138))) + Constant.From((Rational)(3996) / (4441)) + Expression.Pow(Variable.X, Expression.Pow(Constant.From((Rational)(2401) / (4209)), Expression.SignOf(Expression.Pow(Expression.LnOf(Expression.Pow(Constant.From((Rational)(39449) / (47989)), Expression.SignOf(Variable.Z))), Expression.Pow(((Variable.Z + Constant.From((Rational)(815) / (6387)) + Variable.Y) * Constant.From((Rational)(1894) / (5563))), Constant.From((Rational)(13524) / (15523))))))) + Expression.LnOf(Expression.SignOf(Constant.From((Rational)(1368) / (19661)))))));
+            Expression expected = (Expression.Z * Expression.Pow(Expression.Y, Expression.ConstantFrom((Rational)(2) / (1))) * Expression.SignOf((Expression.LnOf(Expression.ConstantFrom((Rational)(4971) / (5138))) + Expression.ConstantFrom((Rational)(3996) / (4441)) + Expression.Pow(Expression.X, Expression.Pow(Expression.ConstantFrom((Rational)(2401) / (4209)), Expression.SignOf(Expression.Pow(Expression.LnOf(Expression.Pow(Expression.ConstantFrom((Rational)(39449) / (47989)), Expression.SignOf(Expression.Z))), Expression.Pow(((Expression.Z + Expression.ConstantFrom((Rational)(815) / (6387)) + Expression.Y) * Expression.ConstantFrom((Rational)(1894) / (5563))), Expression.ConstantFrom((Rational)(13524) / (15523))))))) + Expression.LnOf(Expression.SignOf(Expression.ConstantFrom((Rational)(1368) / (19661)))))));
             string expression = "(z * (y ^ 2) * sign (ln 4971/5138 + 3996/4441 + (x ^ (2401/4209 ^ sign (ln (39449/47989 ^ sign z) ^ (((z + 815/6387 + y) * 1894/5563) ^ 13524/15523)))) + ln sign 1368/19661))";
 
             // ACT

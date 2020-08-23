@@ -1,113 +1,105 @@
 ﻿using Rationals;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace Algebra.Evaluation
 {
-    public class RationalEvaluator : IEvaluator<Rational>
+    public class RationalEvaluator : ValueEvaluator<Rational>
     {
-        public delegate Rational RationalFunctionEvaluator(ICollection<Rational> argumentExpressions);
+        private readonly BigInteger? maxSize;
 
-        private readonly IDictionary<IFunctionIdentity, RationalFunctionEvaluator> functionEvaluators;
-        private readonly VariableInputSet<Rational> variableInputs;
+        public RationalEvaluator(VariableInputSet<Rational> variableInputs)
+            : this(variableInputs, null, null)
+        { }
 
-        public RationalEvaluator(IDictionary<IFunctionIdentity, RationalFunctionEvaluator> functionEvaluators, VariableInputSet<Rational> variableInputs)
+        public RationalEvaluator(VariableInputSet<Rational> variableInputs, BigInteger maxSize)
+            : this(variableInputs, null, maxSize)
+        { }
+
+        public RationalEvaluator(VariableInputSet<Rational> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators)
+            : this(variableInputs, functionEvaluators, null)
+        { }
+
+        public RationalEvaluator(VariableInputSet<Rational> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, BigInteger? maxSize)
+            : base(variableInputs, functionEvaluators)
         {
-            this.functionEvaluators = functionEvaluators;
-            this.variableInputs = variableInputs;
+            this.maxSize = maxSize;
         }
 
-        public Rational EvaluateConstant(Rational value)
+        protected override Rational Map(Rational value)
+        {
+            value = value.CanonicalForm;
+            if (maxSize.HasValue)
+            {
+                BigInteger division = BigInteger.Abs(value.Numerator / maxSize.Value);
+                division = BigInteger.Max(division, BigInteger.Abs(value.Denominator / maxSize.Value));
+                division = BigInteger.Min(division, BigInteger.Abs(value.Numerator));
+                division = BigInteger.Min(division, BigInteger.Abs(value.Denominator));
+                if (division > 1)
+                {
+                    value = new Rational(value.Numerator / division, value.Denominator / division);
+                }
+            }
+            return value;
+        }
+
+        protected override Rational GetFromRational(Rational value)
         {
             return value;
         }
 
-        public Rational EvaluateExponent(Expression baseExpression, Expression powerExpression)
+        protected override Rational Pow(Rational baseValue, Rational powerValue)
         {
-            Rational baseValue = baseExpression.Evaluate(this);
-            Rational powerValue = powerExpression.Evaluate(this);
-
             if (powerValue.Numerator > int.MaxValue || powerValue.Numerator < int.MinValue
-                || powerValue.Denominator > int.MaxValue || powerValue.Denominator < int.MinValue)
+                   || powerValue.Denominator > int.MaxValue || powerValue.Denominator < int.MinValue)
             {
                 throw new ArgumentOutOfRangeException("Power is outside of int range. Try running again as an approximation");
             }
-
-            // TODO: The output of this is not always rational (eg root 2)
 
             Rational finalValue = Rational.Pow(baseValue, (int)powerValue.Numerator);
             return Rational.RationalRoot(finalValue, (int)powerValue.Denominator);
         }
 
-        public Rational EvaluateFunction(IFunction function)
+        protected override ValueEvaluator<Rational> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<Rational> variableInputs)
         {
-            IFunctionIdentity identity = function.GetIdentity();
-
-            // Evaluate parameters
-            IList<Expression> parameters = function.GetParameterList();
-            List<Rational> evaluated = new List<Rational>();
-            foreach (Expression expression in parameters)
-            {
-                evaluated.Add(expression.Evaluate(this));
-            }
-
-            // Check for a faster method
-            if (functionEvaluators.TryGetValue(identity, out RationalFunctionEvaluator evaluator))
-            {
-                return evaluator(evaluated);
-            }
-
-            // Evaluate fully
-            VariableInputSet<Rational> variableInputs = new VariableInputSet<Rational>();
-            var evaluatedEnumerator = evaluated.GetEnumerator();
-            foreach (string variableName in identity.GetRequiredParameters())
-            {
-                evaluatedEnumerator.MoveNext();
-                variableInputs.Add(variableName, evaluatedEnumerator.Current);
-            }
-            RationalEvaluator rationalEvaluator = new RationalEvaluator(functionEvaluators, variableInputs);
-            return function.GetAtomicExpression().Evaluate(rationalEvaluator);
+            return new RationalEvaluator(variableInputs, functionEvaluators, maxSize);
         }
 
-        public Rational EvaluateLn(Expression argumentExpression)
+        protected override Rational Ln(Rational v)
         {
-            return (Rational)Rational.Log(argumentExpression.Evaluate(this));
+            return (Rational)Rational.Log(v);
         }
 
-        public Rational EvaluateProduct(ICollection<Expression> expressions)
+        protected override Rational Product(ICollection<Rational> expressions)
         {
             Rational evaluated = 1;
-            foreach (Expression expression in expressions)
+            foreach (Rational expression in expressions)
             {
-                evaluated *= expression.Evaluate(this);
+                evaluated *= expression;
             }
             return evaluated;
         }
 
-        public Rational EvaluateSign(Expression argumentExpression)
+        protected override Rational Sign(Rational v)
         {
-            return argumentExpression.Evaluate(this).Sign;
+            return v.Sign;
         }
 
-        public Rational EvaluateSin(Expression argumentExpression)
+        protected override Rational Sin(Rational v)
         {
-            return (Rational)Math.Sin((double)argumentExpression.Evaluate(this));
+            return (Rational)Math.Sin((double)v);
         }
 
-        public Rational EvaluateSum(ICollection<Expression> expressions)
+        protected override Rational Sum(ICollection<Rational> expressions)
         {
             Rational evaluated = 0;
-            foreach (Expression expression in expressions)
+            foreach (Rational expression in expressions)
             {
-                evaluated += expression.Evaluate(this);
+                evaluated += expression;
             }
             return evaluated;
-        }
-
-        public Rational EvaluateVariable(string name)
-        {
-            return variableInputs.Get(name).Value;
         }
     }
 }

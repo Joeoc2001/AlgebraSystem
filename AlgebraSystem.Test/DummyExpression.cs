@@ -8,9 +8,6 @@ namespace AlgebraSystem.Test
 {
     class DummyExpression : Expression
     {
-        public bool DelegateGot { get => DelegateGotCount > 0; }
-        public int DelegateGotCount { get; private set; } = 0;
-
         public bool DerivativeGot { get => DerivativeGotCount > 0; }
         public int DerivativeGotCount { get; private set; } = 0;
 
@@ -32,19 +29,16 @@ namespace AlgebraSystem.Test
         public bool ToStringCalled { get => ToStringCalledCount > 0; }
         public int ToStringCalledCount { get; private set; } = 0;
 
+        public bool EvaluateCalled { get => EvaluateCalledCount > 0; }
+        public int EvaluateCalledCount { get; private set; } = 0;
+
         /// <summary>
         /// The expression used when <see cref="GetDerivative(Variable)"/> is called.
         /// If kept at default of null, a new dummy expression will be generated if <see cref="GetDerivative(Variable)"/> is called.
         /// </summary>
         public Expression Derivative { get; set; } = null;
 
-        public override ExpressionDelegate GetDelegate(VariableInputSet set)
-        {
-            DelegateGotCount += 1;
-            return () => 0;
-        }
-
-        public override Expression GetDerivative(Variable wrt)
+        public override Expression GetDerivative(string wrt)
         {
             DerivativeGotCount += 1;
             if (Derivative is null)
@@ -88,6 +82,12 @@ namespace AlgebraSystem.Test
         {
             ToStringCalledCount += 1;
             return base.ToString();
+        }
+
+        public override T Evaluate<T>(IEvaluator<T> evaluator)
+        {
+            EvaluateCalledCount += 1;
+            return default;
         }
     }
 }

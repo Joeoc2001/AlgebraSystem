@@ -13,8 +13,8 @@ namespace AtomTests
         public void Variable_IsSelfEqual([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
             // ARANGE
-            Variable v1 = new Variable(name);
-            Variable v2 = new Variable(name);
+            Expression v1 = Expression.VariableFrom(name);
+            Expression v2 = Expression.VariableFrom(name);
 
             // ACT
 
@@ -38,8 +38,8 @@ namespace AtomTests
             }
 
             // ARANGE
-            Variable v1 = new Variable(name1);
-            Variable v2 = new Variable(name2);
+            Expression v1 = Expression.VariableFrom(name1);
+            Expression v2 = Expression.VariableFrom(name2);
 
             // ACT
 
@@ -58,13 +58,13 @@ namespace AtomTests
         public void Variable_Derivative_IsOne_WRTSelf([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
             // ARANGE
-            Variable v1 = new Variable(name);
+            Expression v1 = Expression.VariableFrom(name);
 
             // ACT
-            Expression derivative = v1.GetDerivative(v1);
+            Expression derivative = v1.GetDerivative(name);
 
             // ASSERT
-            Assert.AreEqual(Constant.From(1), derivative);
+            Assert.AreEqual(Expression.ConstantFrom(1), derivative);
         }
 
         [Test]
@@ -76,26 +76,25 @@ namespace AtomTests
             }
 
             // ARANGE
-            Variable v1 = new Variable(name1);
-            Variable v2 = new Variable(name2);
+            Expression v1 = Expression.VariableFrom(name1);
 
             // ACT
-            Expression derivative = v1.GetDerivative(v2);
+            Expression derivative = v1.GetDerivative(name2);
 
             // ASSERT
-            Assert.AreEqual(Constant.From(0), derivative);
+            Assert.AreEqual(Expression.ConstantFrom(0), derivative);
         }
 
         [Test]
         public void Variable_EvaluatesCorrectly([Values("X", "Y", "Z", "W", "V", "val", "t")] string name, [Range(-100, 100)] int expected)
         {
             // ARANGE
-            Variable v = new Variable(name);
-            VariableInputSet inputSet = new VariableInputSet();
+            Expression v = Expression.VariableFrom(name);
+            VariableInputSet<float> inputSet = new VariableInputSet<float>();
             inputSet.Set(name, expected);
 
             // ACT
-            float value = v.GetDelegate(inputSet)();
+            float value = v.EvaluateOnce(inputSet);
 
             // ASSERT
             Assert.AreEqual(expected, value);
@@ -105,14 +104,14 @@ namespace AtomTests
         public void Variable_ThrowsIfNotPresent([Values("X", "Y", "Z", "W", "V", "val", "t")] string name, [Range(-10, 10)] int falseValue)
         {
             // ARANGE
-            Variable v = new Variable(name);
-            VariableInputSet inputSet = new VariableInputSet();
+            Expression v = Expression.VariableFrom(name);
+            VariableInputSet<float> inputSet = new VariableInputSet<float>();
             inputSet.Set("q", falseValue);
 
             // ACT
 
             // ASSERT
-            Assert.That(() => v.GetDelegate(inputSet), Throws.TypeOf<Variable.NotPresentException>());
+            Assert.That(() => v.EvaluateOnce(inputSet), Throws.TypeOf<VariableNotPresentException>());
         }
 
         [Test]
@@ -121,37 +120,10 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            Expression expression = Variable.X;
+            Expression expression = Expression.X;
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());
-        }
-
-        [Test]
-        public void Variable_Map_DoesntChangeOriginal()
-        {
-            // ARANGE
-            Expression expression1 = Variable.X;
-            Expression expression2 = Variable.X;
-
-            // ACT
-            expression2.PostMap(a => Variable.Y);
-
-            // ASSERT
-            Assert.AreEqual(expression1, expression2);
-        }
-
-        [Test]
-        public void Variable_Map_ReturnsAlternative()
-        {
-            // ARANGE
-            Expression expression1 = Variable.X;
-
-            // ACT
-            Expression expression2 = expression1.PostMap(a => Variable.Z);
-
-            // ASSERT
-            Assert.AreEqual(Variable.Z, expression2);
         }
     }
 }
