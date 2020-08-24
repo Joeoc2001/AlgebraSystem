@@ -7,11 +7,6 @@ namespace Algebra.Evaluators
 {
     public abstract class TraversalEvaluator<T> : IEvaluator<T>
     {
-        public TraversalEvaluator()
-        {
-
-        }
-
         public abstract T EvaluateConstant(Rational value);
 
         protected abstract T Pow(T b, T e);
@@ -39,7 +34,7 @@ namespace Algebra.Evaluators
             return EvaluateFunction(function, evaluated);
         }
 
-        protected abstract T Ln(T v);
+        protected abstract T Ln(T expression);
 
         public T EvaluateLn(IExpression argumentExpression)
         {
@@ -58,14 +53,14 @@ namespace Algebra.Evaluators
             return Product(evaluated);
         }
 
-        protected abstract T Sign(T v);
+        protected abstract T Sign(T expression);
 
         public T EvaluateSign(IExpression argumentExpression)
         {
             return Sign(argumentExpression.Evaluate(this));
         }
 
-        protected abstract T Sin(T v);
+        protected abstract T Sin(T expression);
 
         public T EvaluateSin(IExpression argumentExpression)
         {

@@ -57,6 +57,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateArctan(argument);
             }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Arctan other)
+                {
+                    return evaluator.EvaluateArctans(this.argument, other.argument);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
         }
     }
 }

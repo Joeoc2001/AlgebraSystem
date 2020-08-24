@@ -57,6 +57,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateLn(argument);
             }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Ln other)
+                {
+                    return evaluator.EvaluateLns(this.argument, other.argument);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
         }
     }
 }

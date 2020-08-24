@@ -9,12 +9,11 @@ namespace Algebra
     {
         internal static class ArccosIdentity
         {
-            private static readonly Variable param = new Variable("a");
-            private static readonly IExpression atomicExpression = (Expression.PI / 2) - Expression.ArcsinOf(param);
+            private static readonly IExpression atomicExpression = (Expression.PI / 2) - Expression.ArcsinOf(Expression.VarA);
             private static readonly int hashSeed = -1731053180;
             private static readonly string name = "arccos";
 
-            public static readonly MonadIdentity Instance = new MonadIdentity(name, param, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
         }
     }
 }

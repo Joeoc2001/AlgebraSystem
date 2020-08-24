@@ -211,6 +211,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateProduct(arguments);
             }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Product other)
+                {
+                    return evaluator.EvaluateProducts(this.arguments, other.arguments);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
         }
     }
 }

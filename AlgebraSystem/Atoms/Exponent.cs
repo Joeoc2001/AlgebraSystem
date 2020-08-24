@@ -107,6 +107,15 @@ namespace Algebra
                 return evaluator.EvaluateExponent(term, power);
             }
 
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Exponent other)
+                {
+                    return evaluator.EvaluateExponents(this.term, this.power, other.term, other.power);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
+
             protected override IAtomicExpression GenAtomicExpression()
             {
                 IAtomicExpression baseAtomic = term.GetAtomicExpression();

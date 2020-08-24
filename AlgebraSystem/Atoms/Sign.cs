@@ -77,6 +77,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateSign(argument);
             }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Sign other)
+                {
+                    return evaluator.EvaluateSigns(this.argument, other.argument);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
         }
     }
 }

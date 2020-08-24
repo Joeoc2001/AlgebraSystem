@@ -9,10 +9,16 @@ using System.Numerics;
 
 namespace Algebra
 {
-    public interface IExpression
+    public interface IExpression : IComparable<IExpression>
     {
         IExpression GetDerivative(string wrt);
         T Evaluate<T>(IEvaluator<T> evaluator);
+        T DualEvaluate<T>(IExpression secondary, IDualEvaluator<T> evaluator);
+
+        public HashSet<string> GetVariables()
+        {
+            return Evaluate(GetVariablesEvaluator.Instance);
+        }
 
         /* Used for displaying braces when printing a human-readable string
          * Should be:

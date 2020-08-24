@@ -19,9 +19,12 @@ namespace Algebra
         public static implicit operator Expression(decimal r) => (Constant)r;
         public static implicit operator Expression(Rational r) => (Constant)r;
 
-        public static readonly Expression X = VariableFrom("x");
-        public static readonly Expression Y = VariableFrom("y");
-        public static readonly Expression Z = VariableFrom("z");
+        public static readonly Expression VarA = VariableFrom("a");
+        public static readonly Expression VarB = VariableFrom("b");
+        public static readonly Expression VarC = VariableFrom("c");
+        public static readonly Expression VarX = VariableFrom("x");
+        public static readonly Expression VarY = VariableFrom("y");
+        public static readonly Expression VarZ = VariableFrom("z");
 
         public static readonly Expression Zero = 0;
         public static readonly Expression One = 1;
@@ -50,6 +53,7 @@ namespace Algebra
         protected abstract int GenHashCode();
         protected abstract bool ExactlyEquals(IExpression expression);
         public abstract T Evaluate<T>(IEvaluator<T> evaluator);
+        public abstract T DualEvaluate<T>(IExpression other, IDualEvaluator<T> evaluator);
         public abstract int GetOrderIndex();
 
         private int? hashCode = null;
@@ -125,7 +129,12 @@ namespace Algebra
 
         public bool IsAtomic()
         {
-            return Evaluate(new IsAtomicEvaluator());
+            return Evaluate(IsAtomicEvaluator.Instance);
+        }
+
+        public int CompareTo(IExpression other)
+        {
+            return DualEvaluate(other, GetOrderingDualEvaluator.Instance);
         }
 
         public override bool Equals(object obj)

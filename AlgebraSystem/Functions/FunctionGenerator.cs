@@ -6,13 +6,13 @@ using System.Text;
 
 namespace Algebra.Functions
 {
-    internal abstract class FunctionGenerator : IFunctionGenerator
+    public abstract class FunctionGenerator : IFunctionGenerator
     {
         private readonly string name;
         private readonly ReadOnlyCollection<string> parameterNames;
 
-        protected FunctionGenerator(string name, List<string> parameterNames)
-            : this(name, parameterNames.AsReadOnly())
+        protected FunctionGenerator(string name, IEnumerable<string> parameterNames)
+            : this(name, new List<string>(parameterNames).AsReadOnly())
         {
 
         }
@@ -33,6 +33,17 @@ namespace Algebra.Functions
         public string GetName()
         {
             return name;
+        }
+
+        /// <summary>
+        /// Return a new function node from the given parameters.
+        /// This constructor matches the parameter positions with the parameter names internally
+        /// </summary>
+        /// <param name="nodes">The parameters to be given to the function</param>
+        /// <returns>The new function node</returns>
+        public IExpression CreateExpression(params IExpression[] nodes)
+        {
+            return CreateExpression(new List<IExpression>(nodes));
         }
 
         /// <summary>

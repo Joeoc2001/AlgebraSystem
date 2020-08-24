@@ -82,7 +82,7 @@ namespace Algebra
             private static List<IExpression> GetDisplaySortedArguments(IList<IExpression> eqs)
             {
                 List<IExpression> sortedEqs = new List<IExpression>(eqs);
-                sortedEqs.Sort(ExpressionDisplayComparer.COMPARER);
+                sortedEqs.Sort(ExpressionComparer.COMPARER);
                 return sortedEqs;
             }
 

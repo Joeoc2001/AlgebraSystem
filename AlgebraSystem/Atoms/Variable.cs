@@ -8,16 +8,16 @@ namespace Algebra
     {
         internal class Variable : Expression, IAtomicExpression
         {
-            public readonly string Name;
+            private readonly string name;
 
             public Variable(string name)
             {
-                this.Name = name.ToLower();
+                this.name = name.ToLower();
             }
 
             public override IExpression GetDerivative(string wrt)
             {
-                if (wrt == Name)
+                if (wrt == name)
                 {
                     return One;
                 }
@@ -31,17 +31,17 @@ namespace Algebra
                     return false;
                 }
 
-                return Name.Equals(variable.Name);
+                return name.Equals(variable.name);
             }
 
             protected override int GenHashCode()
             {
-                return Name.GetHashCode() * 1513357220;
+                return name.GetHashCode() * 1513357220;
             }
 
             public override string ToString()
             {
-                return Name;
+                return name;
             }
 
             public override int GetOrderIndex()
@@ -51,12 +51,21 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateVariable(Name);
+                return evaluator.EvaluateVariable(name);
             }
 
             protected override IAtomicExpression GenAtomicExpression()
             {
                 return this;
+            }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Variable other)
+                {
+                    return evaluator.EvaluateVariables(this.name, other.name);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
             }
         }
     }

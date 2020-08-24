@@ -12,8 +12,8 @@ namespace Algebra.Functions
         private readonly int hashSeed;
         private readonly IAtomicExpression atomicExpression;
 
-        public FunctionIdentity(string name, List<string> parameterNames, int hashSeed, IExpression alternateExpression)
-            : base(name, parameterNames)
+        public FunctionIdentity(string name, int hashSeed, IExpression alternateExpression)
+            : base(name, alternateExpression.GetVariables())
         {
             this.hashSeed = hashSeed;
             this.atomicExpression = alternateExpression.GetAtomicExpression();

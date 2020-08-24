@@ -148,6 +148,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateSum(arguments);
             }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Sum other)
+                {
+                    return evaluator.EvaluateSums(this.arguments, other.arguments);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
         }
     }
 }

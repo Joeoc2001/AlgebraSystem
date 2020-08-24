@@ -57,6 +57,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateArcsin(argument);
             }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Arcsin other)
+                {
+                    return evaluator.EvaluateArcsins(this.argument, other.argument);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
         }
     }
 }

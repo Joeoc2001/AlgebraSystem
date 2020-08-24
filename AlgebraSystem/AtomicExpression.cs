@@ -67,5 +67,20 @@ namespace Algebra
         {
             return true;
         }
+
+        public T DualEvaluate<T>(IExpression secondary, IDualEvaluator<T> evaluator)
+        {
+            return atomicExpression.DualEvaluate(secondary, evaluator);
+        }
+
+        public IEnumerable<string> GetVariables()
+        {
+            return atomicExpression.GetVariables();
+        }
+
+        public int CompareTo(IExpression other)
+        {
+            return atomicExpression.CompareTo(other);
+        }
     }
 }

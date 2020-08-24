@@ -9,12 +9,11 @@ namespace Algebra
     {
         internal static class ArtanhIdentity
         {
-            private static readonly Variable param = new Variable("a");
-            private static readonly IExpression atomicExpression = Expression.LnOf((param + 1) / (param - 1)) / 2;
+            private static readonly IExpression atomicExpression = Expression.LnOf((Expression.VarA + 1) / (Expression.VarA - 1)) / 2;
             private static readonly int hashSeed = 1823411889;
             private static readonly string name = "artanh";
 
-            public static readonly MonadIdentity Instance = new MonadIdentity(name, param, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
         }
     }
 }

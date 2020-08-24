@@ -152,6 +152,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateFunction(this);
             }
+
+            public override T DualEvaluate<T>(IExpression other, IDualEvaluator<T> evaluator)
+            {
+                if (other is Function function)
+                {
+                    return evaluator.EvaluateFunctions(this, function);
+                }
+                return evaluator.EvaluateOthers(this, other);
+            }
         }
     }
 }

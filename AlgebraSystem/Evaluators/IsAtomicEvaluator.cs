@@ -7,7 +7,9 @@ namespace Algebra.Evaluators
 {
     public class IsAtomicEvaluator : IEvaluator<bool>
     {
-        public IsAtomicEvaluator()
+        public static readonly IsAtomicEvaluator Instance = new IsAtomicEvaluator();
+
+        protected IsAtomicEvaluator()
         {
         }
 

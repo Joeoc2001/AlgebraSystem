@@ -67,6 +67,15 @@ namespace Algebra
                 return evaluator.EvaluateConstant(value);
             }
 
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Constant other)
+                {
+                    return evaluator.EvaluateConstants(this.value, other.value);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
+
             protected override IAtomicExpression GenAtomicExpression()
             {
                 return this;

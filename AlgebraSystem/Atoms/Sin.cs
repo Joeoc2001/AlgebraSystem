@@ -57,6 +57,15 @@ namespace Algebra
             {
                 return evaluator.EvaluateSin(argument);
             }
+
+            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is Sin other)
+                {
+                    return evaluator.EvaluateSins(this.argument, other.argument);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
         }
     }
 }

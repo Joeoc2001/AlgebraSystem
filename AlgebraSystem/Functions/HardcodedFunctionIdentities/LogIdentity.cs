@@ -9,13 +9,11 @@ namespace Algebra
     {
         internal static class LogIdentity
         {
-            private static readonly Variable argParam = new Variable("arg");
-            private static readonly Variable baseParam = new Variable("base");
-            private static readonly IExpression atomicExpression = Expression.LnOf(argParam) / Expression.LnOf(baseParam);
+            private static readonly IExpression atomicExpression = Expression.LnOf(Expression.VarA) / Expression.LnOf(Expression.VarB);
             private static readonly int hashSeed = 1441075845;
             private static readonly string name = "log";
 
-            public static readonly DyadIdentity Instance = new DyadIdentity(name, argParam, baseParam, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
         }
     }
 }
