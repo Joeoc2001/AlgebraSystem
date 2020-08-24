@@ -193,6 +193,11 @@ namespace Algebra
             return Exponent.Pow(left, right);
         }
 
+        public static IExpression Sqrt(IExpression expression)
+        {
+            return SqrtIdentity.Instance.CreateExpression(expression);
+        }
+
         public static IExpression LnOf(IExpression eq)
         {
             return Ln.LnOf(eq);
@@ -271,6 +276,21 @@ namespace Algebra
         public static IExpression TanhOf(IExpression a)
         {
             return TanhIdentity.Instance.CreateExpression(a);
+        }
+
+        public static IExpression ArsinhOf(IExpression a)
+        {
+            return ArsinhIdentity.Instance.CreateExpression(a);
+        }
+
+        public static IExpression ArcoshOf(IExpression a)
+        {
+            return ArcoshIdentity.Instance.CreateExpression(a);
+        }
+
+        public static IExpression ArtanhOf(IExpression a)
+        {
+            return ArtanhIdentity.Instance.CreateExpression(a);
         }
     }
 }

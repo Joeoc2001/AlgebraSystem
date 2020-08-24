@@ -1,8 +1,8 @@
-﻿using Algebra.Functions.HardcodedFunctionIdentities;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Algebra.Functions.HardcodedFunctionIdentities;
 
 namespace Algebra.Functions
 {
@@ -32,6 +32,10 @@ namespace Algebra.Functions
             { SinhIdentity.Instance },
             { CoshIdentity.Instance },
             { TanhIdentity.Instance },
+            { ArsinhIdentity.Instance },
+            { ArcoshIdentity.Instance },
+            { ArtanhIdentity.Instance },
+            { SqrtIdentity.Instance },
         };
 
         private readonly Dictionary<string, IFunctionGenerator> generators;
