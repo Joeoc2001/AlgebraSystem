@@ -16,6 +16,8 @@ namespace Algebra
         T EvaluateLn(IExpression argumentExpression);
         T EvaluateSign(IExpression argumentExpression);
         T EvaluateSin(IExpression argumentExpression);
+        T EvaluateArcsin(IExpression argumentExpression);
+        T EvaluateArctan(IExpression argumentExpression);
         T EvaluateFunction(IFunction function);
     }
 }

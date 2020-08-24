@@ -155,12 +155,12 @@ namespace Algebra
 
         public static IExpression operator +(Expression left, Expression right)
         {
-            return (IExpression) left + right;
+            return (IExpression)left + right;
         }
 
         public static IExpression operator -(Expression left, Expression right)
         {
-            return (IExpression) left - right;
+            return (IExpression)left - right;
         }
 
         public static IExpression operator -(Expression a)
@@ -170,12 +170,12 @@ namespace Algebra
 
         public static IExpression operator *(Expression left, Expression right)
         {
-            return (IExpression) left * right;
+            return (IExpression)left * right;
         }
 
         public static IExpression operator /(Expression left, Expression right)
         {
-            return (IExpression) left / right;
+            return (IExpression)left / right;
         }
 
         public static IExpression Add<T>(IEnumerable<T> eqs) where T : IExpression
@@ -221,6 +221,21 @@ namespace Algebra
         public static IExpression TanOf(IExpression eq)
         {
             return TanIdentity.Instance.CreateExpression(eq);
+        }
+
+        public static IExpression ArcsinOf(IExpression eq)
+        {
+            return Arcsin.ArcsinOf(eq);
+        }
+
+        public static IExpression ArccosOf(IExpression eq)
+        {
+            return ArccosIdentity.Instance.CreateExpression(eq);
+        }
+
+        public static IExpression ArctanOf(IExpression eq)
+        {
+            return Arctan.ArctanOf(eq);
         }
 
         public static IExpression Abs(IExpression eq)
