@@ -67,5 +67,15 @@ namespace Algebra.Evaluators
             }
             return evaluated;
         }
+
+        protected override float ArcsinOf(float v)
+        {
+            return MathF.Asin(v);
+        }
+
+        protected override float ArctanOf(float v)
+        {
+            return MathF.Atan(v);
+        }
     }
 }

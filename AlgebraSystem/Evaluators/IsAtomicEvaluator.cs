@@ -67,5 +67,15 @@ namespace Algebra.Evaluators
         {
             return true;
         }
+
+        public bool EvaluateArcsin(IExpression argumentExpression)
+        {
+            return argumentExpression.Evaluate(this);
+        }
+
+        public bool EvaluateArctan(IExpression argumentExpression)
+        {
+            return argumentExpression.Evaluate(this);
+        }
     }
 }

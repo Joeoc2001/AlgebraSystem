@@ -101,5 +101,15 @@ namespace Algebra.Evaluators
             }
             return evaluated;
         }
+
+        protected override Rational ArcsinOf(Rational v)
+        {
+            return (Rational)Math.Asin((double)v);
+        }
+
+        protected override Rational ArctanOf(Rational v)
+        {
+            return (Rational)Math.Atan((double)v);
+        }
     }
 }

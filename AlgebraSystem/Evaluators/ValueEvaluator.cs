@@ -108,5 +108,19 @@ namespace Algebra.Evaluators
             }
             return Map(variableInputs.Get(name).Value);
         }
+
+        protected abstract T ArcsinOf(T v);
+
+        protected override sealed T Arcsin(T expression)
+        {
+            return Map(ArcsinOf(expression));
+        }
+
+        protected abstract T ArctanOf(T v);
+
+        protected override sealed T Arctan(T expression)
+        {
+            return Map(ArctanOf(expression));
+        }
     }
 }

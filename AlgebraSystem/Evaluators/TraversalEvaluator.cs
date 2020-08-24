@@ -85,5 +85,19 @@ namespace Algebra.Evaluators
         }
 
         public abstract T EvaluateVariable(string name);
+
+        protected abstract T Arcsin(T expression);
+
+        public T EvaluateArcsin(IExpression argumentExpression)
+        {
+            return Arcsin(argumentExpression.Evaluate(this));
+        }
+
+        protected abstract T Arctan(T expression);
+
+        public T EvaluateArctan(IExpression argumentExpression)
+        {
+            return Arctan(argumentExpression.Evaluate(this));
+        }
     }
 }

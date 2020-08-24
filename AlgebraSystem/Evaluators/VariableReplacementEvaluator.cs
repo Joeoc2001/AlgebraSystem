@@ -62,5 +62,15 @@ namespace Algebra.Evaluators
         {
             return Expression.Add(expressions);
         }
+
+        protected override IExpression Arcsin(IExpression expression)
+        {
+            return Expression.ArcsinOf(expression);
+        }
+
+        protected override IExpression Arctan(IExpression expression)
+        {
+            return Expression.ArctanOf(expression);
+        }
     }
 }
