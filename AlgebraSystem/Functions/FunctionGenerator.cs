@@ -6,34 +6,8 @@ using System.Text;
 
 namespace Algebra.Functions
 {
-    public abstract class FunctionGenerator : IFunctionGenerator
+    internal abstract class FunctionGenerator : IFunctionGenerator
     {
-        private static readonly IFunctionGenerator sinFunctionGenerator  = new AtomicFunctionGenerator("sin", 1, list => Expression.SinOf(list[0]));
-        private static readonly IFunctionGenerator arcsinFunctionGenerator = new AtomicFunctionGenerator("arcsin", 1, list => Expression.ArcsinOf(list[0]));
-        private static readonly IFunctionGenerator arctanFunctionGenerator = new AtomicFunctionGenerator("arctan", 1, list => Expression.ArctanOf(list[0]));
-        private static readonly IFunctionGenerator lnFunctionGenerator   = new AtomicFunctionGenerator("ln", 1, list => Expression.LnOf(list[0]));
-        private static readonly IFunctionGenerator signFunctionGenerator = new AtomicFunctionGenerator("sign", 1, list => Expression.SignOf(list[0]));
-
-        public static readonly Dictionary<string, IFunctionGenerator> DefaultFunctions = new Dictionary<string, IFunctionGenerator>()
-        {
-            { "sin", sinFunctionGenerator },
-            { "cos", CosIdentity.Instance },
-            { "tan", TanIdentity.Instance },
-            { "arcsin", arcsinFunctionGenerator },
-            { "arccos", ArccosIdentity.Instance },
-            { "arctan", arctanFunctionGenerator },
-            { "ln", lnFunctionGenerator },
-            { "log", LogIdentity.Instance },
-            { "sign", signFunctionGenerator },
-            { "max", MaxIdentity.Instance },
-            { "min", MinIdentity.Instance },
-            { "select", SelectIdentity.Instance },
-            { "abs", AbsIdentity.Instance },
-            { "sinh", SinhIdentity.Instance },
-            { "cosh", CoshIdentity.Instance },
-            { "tanh", TanhIdentity.Instance },
-        };
-
         private readonly string name;
         private readonly ReadOnlyCollection<string> parameterNames;
 

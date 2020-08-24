@@ -9,9 +9,9 @@ namespace Algebra.Parsing
     public class Parser
     {
         private readonly Tokenizer tokenizer;
-        private readonly IDictionary<string, IFunctionGenerator> functions;
+        private readonly FunctionGeneratorSet functions;
 
-        public Parser(Tokenizer tokenizer, IDictionary<string, IFunctionGenerator> functions)
+        public Parser(Tokenizer tokenizer, FunctionGeneratorSet functions)
         {
             this.tokenizer = tokenizer;
             this.functions = functions;
@@ -25,11 +25,11 @@ namespace Algebra.Parsing
 
         public static IExpression Parse(string s, ICollection<string> variables)
         {
-            IDictionary<string, IFunctionGenerator> functions = FunctionGenerator.DefaultFunctions;
+            FunctionGeneratorSet functions = FunctionGeneratorSet.DefaultFunctions;
             return Parse(s, variables, functions);
         }
 
-        public static IExpression Parse(string s, ICollection<string> variables, IDictionary<string, IFunctionGenerator> functions)
+        public static IExpression Parse(string s, ICollection<string> variables, FunctionGeneratorSet functions)
         {
             // Ensure that all identifiers are in lower case
             HashSet<string> variablesLower = new HashSet<string>();
@@ -37,15 +37,10 @@ namespace Algebra.Parsing
             {
                 variablesLower.Add(variable.ToLower());
             }
-            Dictionary<string, IFunctionGenerator> functionsLower = new Dictionary<string, IFunctionGenerator>();
-            foreach (string function in functions.Keys)
-            {
-                functionsLower.Add(function.ToLower(), functions[function]);
-            }
 
             // Create objects
-            Tokenizer t = new Tokenizer(new StringReader(s), variablesLower, functionsLower.Keys);
-            Parser p = new Parser(t, functionsLower);
+            Tokenizer t = new Tokenizer(new StringReader(s), variablesLower, functions.Names);
+            Parser p = new Parser(t, functions);
 
             // Parse
             return p.Parse();
