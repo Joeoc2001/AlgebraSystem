@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Algebra
 {
-    public interface IFunction : IExpression
+    public interface IFunction : IExpression, IEquatable<IFunction>
     {
         IFunctionIdentity GetIdentity();
         ReadOnlyCollection<IExpression> GetParameterList();

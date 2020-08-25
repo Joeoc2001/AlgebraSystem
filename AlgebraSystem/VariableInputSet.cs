@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Linq;
-
+using System.ComponentModel;
 
 namespace Algebra
 {
@@ -41,6 +41,15 @@ namespace Algebra
         public void Add(string name)
         {
             Add(name, default);
+        }
+
+        /// <summary>
+        /// Checks if this variable input set has no variables in it
+        /// </summary>
+        /// <returns>True iff this is empty</returns>
+        public bool IsEmpty()
+        {
+            return values.Count == 0;
         }
 
         /// <summary>

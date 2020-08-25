@@ -161,6 +161,11 @@ namespace Algebra
                 }
                 return evaluator.EvaluateOthers(this, other);
             }
+
+            public bool Equals(IFunction other)
+            {
+                return Equals((IExpression)other);
+            }
         }
     }
 }
