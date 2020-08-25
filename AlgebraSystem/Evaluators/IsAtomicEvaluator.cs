@@ -79,5 +79,10 @@ namespace Algebra.Evaluators
         {
             return argumentExpression.Evaluate(this);
         }
+
+        public bool EvaluateOther(IExpression other)
+        {
+            throw new NotImplementedException($"Cannot check if {other} is atomic. Override {typeof(IsAtomicEvaluator).Name} to add functionality for your new class.");
+        }
     }
 }

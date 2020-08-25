@@ -74,25 +74,12 @@ namespace Algebra
                 return true;
             }
 
-            public List<IExpression> GetDisplaySortedArguments()
-            {
-                return GetDisplaySortedArguments(arguments);
-            }
-
-            private static List<IExpression> GetDisplaySortedArguments(IList<IExpression> eqs)
-            {
-                List<IExpression> sortedEqs = new List<IExpression>(eqs);
-                sortedEqs.Sort(ExpressionComparer.COMPARER);
-                return sortedEqs;
-            }
-
             protected override int GenHashCode()
             {
                 int value = -1906136416 * OperationSymbol().GetHashCode();
-                foreach (IExpression eq in GetDisplaySortedArguments())
+                foreach (IExpression eq in arguments)
                 {
-                    value *= 33;
-                    value ^= eq.GetHashCode();
+                    value ^= eq.GetHashCode(); // This is bad practice but it will have to do
                 }
                 return value;
             }

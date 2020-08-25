@@ -19,5 +19,6 @@ namespace Algebra
         T EvaluateArcsin(IExpression argumentExpression);
         T EvaluateArctan(IExpression argumentExpression);
         T EvaluateFunction(IFunction function);
+        T EvaluateOther(IExpression other);
     }
 }

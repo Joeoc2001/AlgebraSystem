@@ -94,5 +94,7 @@ namespace Algebra.Evaluators
         {
             return Arctan(argumentExpression.Evaluate(this));
         }
+
+        public abstract T EvaluateOther(IExpression other);
     }
 }

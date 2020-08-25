@@ -39,6 +39,11 @@ namespace Algebra.Evaluators
             return Default();
         }
 
+        public T EvaluateOther(IExpression other)
+        {
+            return Default();
+        }
+
         public virtual T EvaluateProduct(ICollection<IExpression> expressions)
         {
             return Default();

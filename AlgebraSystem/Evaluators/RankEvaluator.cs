@@ -68,5 +68,10 @@ namespace Algebra.Evaluators
         {
             return 1000;
         }
+
+        public int EvaluateOther(IExpression other)
+        {
+            throw new NotImplementedException($"Cannot get rank for unknown expression {other}. Override {typeof(RankEvaluator).Name} to add functionality for your new class.");
+        }
     }
 }

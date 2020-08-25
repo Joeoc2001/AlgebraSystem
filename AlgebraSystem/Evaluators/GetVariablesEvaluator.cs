@@ -79,5 +79,10 @@ namespace Algebra.Evaluators
         {
             return Combine(expressions);
         }
+
+        public override HashSet<string> EvaluateOther(IExpression other)
+        {
+            throw new NotImplementedException($"Cannot get variables for unknown expression {other}. Override {typeof(GetVariablesEvaluator).Name} to add functionality for your new class.");
+        }
     }
 }

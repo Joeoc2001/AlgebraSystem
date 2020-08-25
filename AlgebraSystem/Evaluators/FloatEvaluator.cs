@@ -77,5 +77,10 @@ namespace Algebra.Evaluators
         {
             return MathF.Atan(v);
         }
+
+        public override float EvaluateOther(IExpression other)
+        {
+            throw new NotImplementedException($"Cannot evaluate {other}");
+        }
     }
 }

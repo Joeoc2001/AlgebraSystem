@@ -72,5 +72,10 @@ namespace Algebra.Evaluators
         {
             return Expression.ArctanOf(expression);
         }
+
+        public override IExpression EvaluateOther(IExpression other)
+        {
+            throw new NotImplementedException($"Cannot replace variables of unknown expression {other}. Override {typeof(VariableReplacementEvaluator).Name} to add functionality for your new class.");
+        }
     }
 }

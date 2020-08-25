@@ -111,5 +111,10 @@ namespace Algebra.Evaluators
         {
             return (Rational)Math.Atan((double)v);
         }
+
+        public override Rational EvaluateOther(IExpression other)
+        {
+            throw new NotImplementedException($"Cannot evaluate {other}. Override {typeof(RationalEvaluator).Name} to add functionality for your new class.");
+        }
     }
 }
