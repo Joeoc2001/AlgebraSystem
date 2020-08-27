@@ -17,7 +17,7 @@ namespace Algebra.Evaluators
 
         public int Compare(IExpression x, IExpression y)
         {
-            return x.DualEvaluate(y, this);
+            return x.Evaluate(y, this);
         }
 
         private int CompareCommutative(ICollection<IExpression> a, ICollection<IExpression> b)
@@ -44,12 +44,12 @@ namespace Algebra.Evaluators
 
         public int EvaluateArcsins(IExpression argument1, IExpression argument2)
         {
-            return argument1.DualEvaluate(argument2, this);
+            return argument1.Evaluate(argument2, this);
         }
 
         public int EvaluateArctans(IExpression argument1, IExpression argument2)
         {
-            return argument1.DualEvaluate(argument2, this);
+            return argument1.Evaluate(argument2, this);
         }
 
         public int EvaluateConstants(Rational value1, Rational value2)
@@ -59,12 +59,12 @@ namespace Algebra.Evaluators
 
         public int EvaluateExponents(IExpression baseArgument1, IExpression powerArgument1, IExpression baseArgument2, IExpression powerArgument2)
         {
-            int comp1 = baseArgument1.DualEvaluate(baseArgument2, this);
+            int comp1 = baseArgument1.Evaluate(baseArgument2, this);
             if (comp1 != 0)
             {
                 return comp1;
             }
-            return powerArgument1.DualEvaluate(powerArgument2, this);
+            return powerArgument1.Evaluate(powerArgument2, this);
         }
 
         public int EvaluateFunctions(IFunction function1, IFunction function2)
@@ -115,7 +115,7 @@ namespace Algebra.Evaluators
 
         public int EvaluateLns(IExpression argument1, IExpression argument2)
         {
-            return argument1.DualEvaluate(argument2, this);
+            return argument1.Evaluate(argument2, this);
         }
 
         public int EvaluateOthers(IExpression expression1, IExpression expression2)
@@ -132,12 +132,12 @@ namespace Algebra.Evaluators
 
         public int EvaluateSigns(IExpression argument1, IExpression argument2)
         {
-            return argument1.DualEvaluate(argument2, this);
+            return argument1.Evaluate(argument2, this);
         }
 
         public int EvaluateSins(IExpression argument1, IExpression argument2)
         {
-            return argument1.DualEvaluate(argument2, this);
+            return argument1.Evaluate(argument2, this);
         }
 
         public int EvaluateSums(ICollection<IExpression> arguments1, ICollection<IExpression> arguments2)

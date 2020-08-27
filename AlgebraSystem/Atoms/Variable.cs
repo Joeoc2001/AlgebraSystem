@@ -54,18 +54,23 @@ namespace Algebra
                 return evaluator.EvaluateVariable(name);
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return this;
+                return evaluator.EvaluateVariable(this, name);
             }
 
-            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Variable other)
                 {
                     return evaluator.EvaluateVariables(this.name, other.name);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
+            }
+
+            protected override IAtomicExpression GenAtomicExpression()
+            {
+                return this;
             }
         }
     }

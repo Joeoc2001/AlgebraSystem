@@ -9,8 +9,15 @@ using System.Xml.Schema;
 
 namespace Algebra.PatternMatching
 {
-    class PatternMatchingDualEvaluator : IDualEvaluator<PatternMatchingResultSet>
+    public class PatternMatchingDualEvaluator : IDualEvaluator<PatternMatchingResultSet>
     {
+        public static readonly PatternMatchingDualEvaluator Instance = new PatternMatchingDualEvaluator();
+
+        private PatternMatchingDualEvaluator()
+        {
+
+        }
+
         public PatternMatchingResultSet EvaluateConstants(Rational valuePattern, Rational valueToBeMatched)
         {
             if (valuePattern.Equals(valueToBeMatched))
@@ -22,32 +29,32 @@ namespace Algebra.PatternMatching
 
         public PatternMatchingResultSet EvaluateArcsins(IExpression argumentPattern, IExpression argumentToBeMatched)
         {
-            return argumentPattern.DualEvaluate(argumentToBeMatched, this);
+            return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
         public PatternMatchingResultSet EvaluateArctans(IExpression argumentPattern, IExpression argumentToBeMatched)
         {
-            return argumentPattern.DualEvaluate(argumentToBeMatched, this);
+            return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
         public PatternMatchingResultSet EvaluateLns(IExpression argumentPattern, IExpression argumentToBeMatched)
         {
-            return argumentPattern.DualEvaluate(argumentToBeMatched, this);
+            return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
         public PatternMatchingResultSet EvaluateSigns(IExpression argumentPattern, IExpression argumentToBeMatched)
         {
-            return argumentPattern.DualEvaluate(argumentToBeMatched, this);
+            return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
         public PatternMatchingResultSet EvaluateSins(IExpression argumentPattern, IExpression argumentToBeMatched)
         {
-            return argumentPattern.DualEvaluate(argumentToBeMatched, this);
+            return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
         public PatternMatchingResultSet EvaluateExponents(IExpression baseArgumentPattern, IExpression powerArgumentPattern, IExpression baseArgumentToBeMatched, IExpression powerArgumentToBeMatched)
         {
-            PatternMatchingResultSet baseInputs = baseArgumentPattern.DualEvaluate(baseArgumentToBeMatched, this);
+            PatternMatchingResultSet baseInputs = baseArgumentPattern.Evaluate(baseArgumentToBeMatched, this);
 
             // Short circuit if we can before we pattern match power inputs
             if (baseInputs.IsNone)
@@ -55,7 +62,7 @@ namespace Algebra.PatternMatching
                 return baseInputs;
             }
 
-            PatternMatchingResultSet powerInputs = powerArgumentPattern.DualEvaluate(powerArgumentToBeMatched, this);
+            PatternMatchingResultSet powerInputs = powerArgumentPattern.Evaluate(powerArgumentToBeMatched, this);
 
             return baseInputs.Intersect(powerInputs);
         }
@@ -78,7 +85,7 @@ namespace Algebra.PatternMatching
                     throw new NotSupportedException("Two functions with the same identity should always have the same parameter names");
                 }
 
-                PatternMatchingResultSet parameterInputs = parameterPattern.DualEvaluate(parameterToBeMatched, this);
+                PatternMatchingResultSet parameterInputs = parameterPattern.Evaluate(parameterToBeMatched, this);
 
                 resultSet = resultSet.Intersect(parameterInputs);
 
@@ -167,7 +174,7 @@ namespace Algebra.PatternMatching
                     foreach (List<IExpression> part in permutation)
                     {
                         IExpression partExpression = builder(part);
-                        PatternMatchingResultSet partResults = patternEnumerator.Current.DualEvaluate(partExpression, this);
+                        PatternMatchingResultSet partResults = patternEnumerator.Current.Evaluate(partExpression, this);
                         permResults.Intersect(partResults);
                     }
 

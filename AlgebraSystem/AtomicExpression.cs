@@ -43,6 +43,16 @@ namespace Algebra
             return atomicExpression.Evaluate(evaluator);
         }
 
+        public T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+        {
+            return atomicExpression.Evaluate(evaluator);
+        }
+
+        public T Evaluate<T>(IExpression secondary, IDualEvaluator<T> evaluator)
+        {
+            return atomicExpression.Evaluate(secondary, evaluator);
+        }
+
         public IAtomicExpression GetAtomicExpression()
         {
             return this;
@@ -66,11 +76,6 @@ namespace Algebra
         public bool IsAtomic()
         {
             return true;
-        }
-
-        public T DualEvaluate<T>(IExpression secondary, IDualEvaluator<T> evaluator)
-        {
-            return atomicExpression.DualEvaluate(secondary, evaluator);
         }
 
         public IEnumerable<string> GetVariables()

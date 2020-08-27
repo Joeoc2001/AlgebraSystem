@@ -53,7 +53,8 @@ namespace Algebra
         protected abstract int GenHashCode();
         protected abstract bool ExactlyEquals(IExpression expression);
         public abstract T Evaluate<T>(IEvaluator<T> evaluator);
-        public abstract T DualEvaluate<T>(IExpression other, IDualEvaluator<T> evaluator);
+        public abstract T Evaluate<T>(IExpandedEvaluator<T> evaluator);
+        public abstract T Evaluate<T>(IExpression other, IDualEvaluator<T> evaluator);
         public abstract int GetOrderIndex();
 
         private int? hashCode = null;
@@ -134,7 +135,7 @@ namespace Algebra
 
         public int CompareTo(IExpression other)
         {
-            return DualEvaluate(other, GetOrderingDualEvaluator.Instance);
+            return Evaluate(other, GetOrderingDualEvaluator.Instance);
         }
 
         public override bool Equals(object obj)

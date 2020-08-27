@@ -212,7 +212,12 @@ namespace Algebra
                 return evaluator.EvaluateProduct(arguments);
             }
 
-            public override T DualEvaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateProduct(this, arguments);
+            }
+
+            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Product other)
                 {

@@ -13,7 +13,8 @@ namespace Algebra
     {
         IExpression GetDerivative(string wrt);
         T Evaluate<T>(IEvaluator<T> evaluator);
-        T DualEvaluate<T>(IExpression secondary, IDualEvaluator<T> evaluator);
+        T Evaluate<T>(IExpandedEvaluator<T> evaluator);
+        T Evaluate<T>(IExpression secondary, IDualEvaluator<T> evaluator);
 
         public HashSet<string> GetVariables()
         {

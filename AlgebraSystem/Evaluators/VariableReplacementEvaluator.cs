@@ -1,17 +1,20 @@
 ﻿using Rationals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Algebra.Evaluators
 {
     class VariableReplacementEvaluator : TraversalEvaluator<IExpression>
     {
-        private readonly IDictionary<string, IExpression> substitutions;
+        private readonly IReadOnlyDictionary<string, IExpression> substitutions;
+        private readonly bool exceptionOnVariableMissing;
 
-        public VariableReplacementEvaluator(IDictionary<string, IExpression> substitutions)
+        public VariableReplacementEvaluator(IReadOnlyDictionary<string, IExpression> substitutions, bool exceptionOnVariableMissing = true)
         {
             this.substitutions = substitutions;
+            this.exceptionOnVariableMissing = exceptionOnVariableMissing;
         }
 
         public override IExpression EvaluateConstant(Rational value)
@@ -25,7 +28,14 @@ namespace Algebra.Evaluators
             {
                 return expression;
             }
-            throw new ArgumentException($"A substitution was not provided for variable {name}");
+            if (exceptionOnVariableMissing)
+            {
+                throw new ArgumentException($"A substitution was not provided for variable {name}");
+            }
+            else
+            {
+                return Expression.VariableFrom(name);
+            }
         }
 
         protected override IExpression Pow(IExpression b, IExpression e)
