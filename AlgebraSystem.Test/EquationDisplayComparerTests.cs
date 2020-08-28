@@ -14,9 +14,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X;
-            IExpression b = IExpression.X;
-            int checkInt = ExpressionComparer.COMPARER.Compare(a, b);
+            IExpression a = Expression.VarX;
+            IExpression b = Expression.VarX;
+            int checkInt = ExpressionComparer.Instance.Compare(a, b);
 
             // ASSERT
             Assert.AreEqual(0, checkInt);
@@ -28,9 +28,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Y;
-            IExpression b = IExpression.Y;
-            int checkInt = ExpressionComparer.COMPARER.Compare(a, b);
+            IExpression a = Expression.VarY;
+            IExpression b = Expression.VarY;
+            int checkInt = ExpressionComparer.Instance.Compare(a, b);
 
             // ASSERT
             Assert.AreEqual(0, checkInt);
@@ -42,9 +42,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Z;
-            IExpression b = IExpression.Z;
-            int checkInt = ExpressionComparer.COMPARER.Compare(a, b);
+            IExpression a = Expression.VarZ;
+            IExpression b = Expression.VarZ;
+            int checkInt = ExpressionComparer.Instance.Compare(a, b);
 
             // ASSERT
             Assert.AreEqual(0, checkInt);
@@ -56,9 +56,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X;
-            IExpression b = IExpression.Y;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX;
+            IExpression b = Expression.VarY;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -70,9 +70,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X;
-            IExpression b = IExpression.Z;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX;
+            IExpression b = Expression.VarZ;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -84,9 +84,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Y;
-            IExpression b = IExpression.Z;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarY;
+            IExpression b = Expression.VarZ;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -98,9 +98,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X;
-            IExpression b = 1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX;
+            Expression b = 1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -112,9 +112,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X;
-            IExpression b = -1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX;
+            Expression b = -1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -126,9 +126,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Y;
-            IExpression b = IExpression.X;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) > 0;
+            IExpression a = Expression.VarY;
+            IExpression b = Expression.VarX;
+            bool check = ExpressionComparer.Instance.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -140,9 +140,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Z;
-            IExpression b = IExpression.X;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) > 0;
+            IExpression a = Expression.VarZ;
+            IExpression b = Expression.VarX;
+            bool check = ExpressionComparer.Instance.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -154,9 +154,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Z;
-            IExpression b = IExpression.Y;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) > 0;
+            IExpression a = Expression.VarZ;
+            IExpression b = Expression.VarY;
+            bool check = ExpressionComparer.Instance.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -168,9 +168,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = 1;
-            IExpression b = IExpression.X;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) > 0;
+            Expression a = 1;
+            IExpression b = Expression.VarX;
+            bool check = ExpressionComparer.Instance.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -182,9 +182,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = -1;
-            IExpression b = IExpression.X;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) > 0;
+            Expression a = -1;
+            IExpression b = Expression.VarX;
+            bool check = ExpressionComparer.Instance.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -196,9 +196,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X + 1;
-            IExpression b = IExpression.Z + 1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX + 1;
+            IExpression b = Expression.VarZ + 1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -210,9 +210,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X + 1;
-            IExpression b = IExpression.X - 1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX + 1;
+            IExpression b = Expression.VarX - 1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -224,9 +224,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X;
-            IExpression b = IExpression.X + 1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX;
+            IExpression b = Expression.VarX + 1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -238,9 +238,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X + IExpression.Y;
-            IExpression b = IExpression.X + 1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX + Expression.VarY;
+            IExpression b = Expression.VarX + 1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -252,9 +252,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Y;
-            IExpression b = IExpression.X + 1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarY;
+            IExpression b = Expression.VarX + 1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -266,9 +266,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X + IExpression.Y;
-            IExpression b = IExpression.Y + 1;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.VarX + Expression.VarY;
+            IExpression b = Expression.VarY + 1;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -280,9 +280,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Pow(IExpression.X, 2);
-            IExpression b = IExpression.X;
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.Pow(Expression.VarX, 2);
+            IExpression b = Expression.VarX;
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -294,11 +294,11 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Pow(IExpression.X, 2);
-            IExpression b = IExpression.Pow(IExpression.X, 2);
+            IExpression a = Expression.Pow(Expression.VarX, 2);
+            IExpression b = Expression.Pow(Expression.VarX, 2);
 
             // ASSERT
-            Assert.AreEqual(0, ExpressionComparer.COMPARER.Compare(a, b));
+            Assert.AreEqual(0, ExpressionComparer.Instance.Compare(a, b));
         }
 
         [Test]
@@ -307,9 +307,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Pow(IExpression.X, 3);
-            IExpression b = IExpression.Pow(IExpression.X, 2);
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) < 0;
+            IExpression a = Expression.Pow(Expression.VarX, 3);
+            IExpression b = Expression.Pow(Expression.VarX, 2);
+            bool check = ExpressionComparer.Instance.Compare(a, b) < 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -321,9 +321,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.X;
-            IExpression b = IExpression.Pow(IExpression.X, 2);
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) > 0;
+            IExpression a = Expression.VarX;
+            IExpression b = Expression.Pow(Expression.VarX, 2);
+            bool check = ExpressionComparer.Instance.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);
@@ -335,9 +335,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression a = IExpression.Pow(IExpression.X, 2);
-            IExpression b = IExpression.Pow(IExpression.X, 3);
-            bool check = ExpressionComparer.COMPARER.Compare(a, b) > 0;
+            IExpression a = Expression.Pow(Expression.VarX, 2);
+            IExpression b = Expression.Pow(Expression.VarX, 3);
+            bool check = ExpressionComparer.Instance.Compare(a, b) > 0;
 
             // ASSERT
             Assert.IsTrue(check);

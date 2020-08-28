@@ -14,7 +14,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void XPlusY([Range(-10, 10)] int a, [Range(-10, 10)] int b)
         {
             // ARANGE
-            IExpression expression = IExpression.X + IExpression.Y;
+            IExpression expression = Expression.VarX + Expression.VarY;
 
             // ACT
             float value = expression.EvaluateOnce(new Vector2(a, b));
@@ -27,7 +27,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void XPlus1([Range(-10, 10)] int a)
         {
             // ARANGE
-            IExpression expression = IExpression.X + 1;
+            IExpression expression = Expression.VarX + 1;
 
             // ACT
             float value = expression.EvaluateOnce(a);
@@ -40,7 +40,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void XPlus100([Range(-10, 10)] int a)
         {
             // ARANGE
-            IExpression expression = IExpression.X + 100;
+            IExpression expression = Expression.VarX + 100;
 
             // ACT
             float value = expression.EvaluateOnce(a);

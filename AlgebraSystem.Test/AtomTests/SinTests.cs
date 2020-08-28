@@ -16,8 +16,8 @@ namespace AtomTests
         public void Sin_IsEqual_WhenSame()
         {
             // ARANGE
-            IExpression v1 = IExpression.SinOf(IExpression.X);
-            IExpression v2 = IExpression.SinOf(IExpression.X);
+            IExpression v1 = Expression.SinOf(Expression.VarX);
+            IExpression v2 = Expression.SinOf(Expression.VarX);
 
             // ACT
 
@@ -36,8 +36,8 @@ namespace AtomTests
         public void Sin_EqualReturnFalse_WhenDifferent()
         {
             // ARANGE
-            IExpression v1 = IExpression.SinOf(IExpression.X);
-            IExpression v2 = IExpression.SinOf(IExpression.Y);
+            IExpression v1 = Expression.SinOf(Expression.VarX);
+            IExpression v2 = Expression.SinOf(Expression.VarY);
 
             // ACT
 
@@ -56,8 +56,8 @@ namespace AtomTests
         public void Sin_XDerivative_IsCorrect()
         {
             // ARANGE
-            IExpression value = IExpression.SinOf(IExpression.X);
-            IExpression expected = IExpression.CosOf(IExpression.X);
+            IExpression value = Expression.SinOf(Expression.VarX);
+            IExpression expected = Expression.CosOf(Expression.VarX);
 
             // ACT
             IExpression derivative = value.GetDerivative("x");
@@ -70,8 +70,8 @@ namespace AtomTests
         public void Sin_XSquaredDerivative_IsCorrect()
         {
             // ARANGE
-            IExpression value = IExpression.SinOf(IExpression.Pow(IExpression.X, 2));
-            IExpression expected = 2 * IExpression.X * IExpression.CosOf(IExpression.Pow(IExpression.X, 2));
+            IExpression value = Expression.SinOf(Expression.Pow(Expression.VarX, 2));
+            IExpression expected = 2 * Expression.VarX * Expression.CosOf(Expression.Pow(Expression.VarX, 2));
 
             // ACT
             IExpression derivative = value.GetDerivative("x");
@@ -84,7 +84,7 @@ namespace AtomTests
         public void Sin_EvaluatesCorrectly([Range(-100, 100)] int v)
         {
             // ARANGE
-            IExpression expression = IExpression.SinOf(v);
+            IExpression expression = Expression.SinOf(v);
 
             // ACT
             float value = expression.EvaluateOnce(new VariableInputSet<float>());
@@ -100,7 +100,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = IExpression.SinOf(IExpression.X);
+            IExpression expression = Expression.SinOf(Expression.VarX);
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());
@@ -112,8 +112,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression argument = IExpression.Y;
-            IExpression expression = IExpression.SinOf(argument);
+            IExpression argument = Expression.VarY;
+            IExpression expression = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
 
@@ -127,8 +127,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression argument = 2;
-            IExpression expression = IExpression.SinOf(argument);
+            Expression argument = 2;
+            IExpression expression = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
 
@@ -142,8 +142,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression argument = IExpression.X + 1;
-            IExpression expression = IExpression.SinOf(argument);
+            IExpression argument = Expression.VarX + 1;
+            IExpression expression = Expression.SinOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
 
@@ -157,9 +157,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression argument = IExpression.X;
-            IExpression ln = IExpression.SinOf(argument);
-            IExpression sign = IExpression.SignOf(argument);
+            IExpression argument = Expression.VarX;
+            IExpression ln = Expression.SinOf(argument);
+            IExpression sign = Expression.SignOf(argument);
             int hash1 = ln.GetHashCode();
             int hash2 = sign.GetHashCode();
 
@@ -174,7 +174,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = IExpression.SinOf(dummy1);
+            IExpression _ = Expression.SinOf(dummy1);
 
             // ASSERT
             Assert.IsFalse(dummy1.GenAtomicExpressionCalled);
@@ -187,23 +187,23 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = IExpression.SinOf(dummy1);
+            IExpression _ = Expression.SinOf(dummy1);
 
             // ASSERT
             Assert.IsFalse(dummy1.ToStringCalled);
         }
 
         [Test]
-        public void Sin_Simplify_DoesntUseMap()
+        public void Sin_Simplify_DoesntUseEvaluate()
         {
             // ARANGE
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = IExpression.SinOf(dummy1);
+            IExpression _ = Expression.SinOf(dummy1);
 
             // ASSERT
-            Assert.IsFalse(dummy1.MapChildrenCalled);
+            Assert.IsFalse(dummy1.EvaluateCalled);
         }
     }
 }

@@ -80,5 +80,17 @@ namespace AlgebraSystem.Test
             EvaluateCalledCount += 1;
             return default;
         }
+
+        public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+        {
+            EvaluateCalledCount += 1;
+            return default;
+        }
+
+        public override T Evaluate<T>(IExpression other, IDualEvaluator<T> evaluator)
+        {
+            EvaluateCalledCount += 1;
+            return default;
+        }
     }
 }

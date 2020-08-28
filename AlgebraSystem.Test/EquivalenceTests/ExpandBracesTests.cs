@@ -10,20 +10,20 @@ namespace EquivalenceTests
 {
     public class ExpandBracesTests
     {
-        private static readonly EquivalencePath ExpandBracesPath = EquivalencePaths.ExpandBraces;
+        private static readonly EquivalencePath _expandBracesPath = EquivalencePaths.ExpandBraces;
 
         [Test]
         public void ExpandBraces_Expands_DOTS()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * (IExpression.X - 1);
+            IExpression eq = (Expression.VarX + 1) * (Expression.VarX - 1);
             List<IExpression> expected = new List<IExpression>()
             {
-                (IExpression.X * IExpression.X) - 1
+                (Expression.VarX * Expression.VarX) - 1
             };
 
             // ACT
-            List<IExpression> actual = ExpandBracesPath(eq);
+            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -33,14 +33,14 @@ namespace EquivalenceTests
         public void ExpandBraces_Expands_Quadratic()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * (IExpression.X + 2);
+            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2);
             List<IExpression> expected = new List<IExpression>()
             {
-                (IExpression.X * IExpression.X) + 3 * IExpression.X + 2
+                (Expression.VarX * Expression.VarX) + 3 * Expression.VarX + 2
             };
 
             // ACT
-            List<IExpression> actual = ExpandBracesPath(eq);
+            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -50,16 +50,16 @@ namespace EquivalenceTests
         public void ExpandBraces_Expands_AllThreeOfCubic()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * (IExpression.X + 2) * (IExpression.X + 3);
+            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
             List<IExpression> expected = new List<IExpression>()
             {
-                ((IExpression.X * IExpression.X) + 3 * IExpression.X + 2) * (IExpression.X + 3),
-                ((IExpression.X * IExpression.X) + 4 * IExpression.X + 3) * (IExpression.X + 2),
-                ((IExpression.X * IExpression.X) + 5 * IExpression.X + 6) * (IExpression.X + 1)
+                ((Expression.VarX * Expression.VarX) + 3 * Expression.VarX + 2) * (Expression.VarX + 3),
+                ((Expression.VarX * Expression.VarX) + 4 * Expression.VarX + 3) * (Expression.VarX + 2),
+                ((Expression.VarX * Expression.VarX) + 5 * Expression.VarX + 6) * (Expression.VarX + 1)
             };
 
             // ACT
-            List<IExpression> actual = ExpandBracesPath(eq);
+            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -69,14 +69,14 @@ namespace EquivalenceTests
         public void ExpandBraces_DoesntExpandAllOfCubicAtOnce()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * (IExpression.X + 2) * (IExpression.X + 3);
-            IExpression nonexpected = IExpression.X * IExpression.X * IExpression.X
-                + 6 * IExpression.X * IExpression.X
-                + 11 * IExpression.X
+            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
+            IExpression nonexpected = Expression.VarX * Expression.VarX * Expression.VarX
+                + 6 * Expression.VarX * Expression.VarX
+                + 11 * Expression.VarX
                 + 6;
 
             // ACT
-            List<IExpression> actual = ExpandBracesPath(eq);
+            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
             Assert.IsFalse(actual.Contains(nonexpected));
@@ -86,15 +86,15 @@ namespace EquivalenceTests
         public void ExpandBraces_Expands_Nested()
         {
             // ARANGE
-            IExpression eq = ((IExpression.X + 1) * (IExpression.X + 2) + 1) * (IExpression.X + 3);
+            IExpression eq = ((Expression.VarX + 1) * (Expression.VarX + 2) + 1) * (Expression.VarX + 3);
             List<IExpression> expected = new List<IExpression>()
             {
-                ((IExpression.X * IExpression.X) + 3 * IExpression.X + 3) * (IExpression.X + 3),
-                (IExpression.X + 1) * (IExpression.X + 2) * IExpression.X + (IExpression.X + 1) * (IExpression.X + 2) * 3 + IExpression.X + 3
+                ((Expression.VarX * Expression.VarX) + 3 * Expression.VarX + 3) * (Expression.VarX + 3),
+                (Expression.VarX + 1) * (Expression.VarX + 2) * Expression.VarX + (Expression.VarX + 1) * (Expression.VarX + 2) * 3 + Expression.VarX + 3
             };
 
             // ACT
-            List<IExpression> actual = ExpandBracesPath(eq);
+            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -104,10 +104,10 @@ namespace EquivalenceTests
         public void ExpandBraces_DoesntDistribute()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * 3;
+            IExpression eq = (Expression.VarX + 1) * 3;
 
             // ACT
-            List<IExpression> actual = ExpandBracesPath(eq);
+            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
             Assert.That(actual, Has.Count.EqualTo(0));
@@ -117,10 +117,10 @@ namespace EquivalenceTests
         public void ExpandBraces_onAddition_DoesNothing()
         {
             // ARANGE
-            IExpression eq = IExpression.X + 1;
+            IExpression eq = Expression.VarX + 1;
 
             // ACT
-            List<IExpression> actual = ExpandBracesPath(eq);
+            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
             Assert.That(actual, Has.Count.EqualTo(0));
@@ -130,10 +130,10 @@ namespace EquivalenceTests
         public void ExpandBraces_EquivalenceClass_ExpandsAllThreeOfCubic()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * (IExpression.X + 2) * (IExpression.X + 3);
-            IExpression expected = IExpression.X * IExpression.X * IExpression.X
-                + 6 * IExpression.X * IExpression.X
-                + 11 * IExpression.X
+            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
+            IExpression expected = Expression.VarX * Expression.VarX * Expression.VarX
+                + 6 * Expression.VarX * Expression.VarX
+                + 11 * Expression.VarX
                 + 6;
 
             // ACT
@@ -148,8 +148,8 @@ namespace EquivalenceTests
         public void ExpandBraces_EquivalenceClass_ExpandsTwoOfCubic()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * (IExpression.X + 2) * (IExpression.X + 3);
-            IExpression expected = ((IExpression.X * IExpression.X) + 4 * IExpression.X + 3) * (IExpression.X + 2);
+            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
+            IExpression expected = ((Expression.VarX * Expression.VarX) + 4 * Expression.VarX + 3) * (Expression.VarX + 2);
 
             // ACT
             IEquivalenceClass equivalenceClass = eq.GetEquivalenceClass();
@@ -163,8 +163,8 @@ namespace EquivalenceTests
         public void ExpandBraces_EquivalenceClass_IsFalseWhenExpansionIsntEqual()
         {
             // ARANGE
-            IExpression eq = (IExpression.X + 1) * (IExpression.X + 2) * (IExpression.X + 3);
-            IExpression notExpected = ((IExpression.X * IExpression.X) + 5 * IExpression.X + 3) * (IExpression.X + 2);
+            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
+            IExpression notExpected = ((Expression.VarX * Expression.VarX) + 5 * Expression.VarX + 3) * (Expression.VarX + 2);
 
             // ACT
             IEquivalenceClass equivalenceClass = eq.GetEquivalenceClass();

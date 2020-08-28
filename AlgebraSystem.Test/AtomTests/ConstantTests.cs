@@ -14,8 +14,8 @@ namespace AtomTests
         public void Constant_Zero_IsSelfEqual()
         {
             // ARANGE
-            IExpression zero1 = 0;
-            IExpression zero2 = 0;
+            Expression zero1 = 0;
+            Expression zero2 = 0;
 
             // ACT
 
@@ -34,8 +34,8 @@ namespace AtomTests
         public void Constant_ZeroAndOne_AreNotEqual()
         {
             // ARANGE
-            IExpression zero = 0;
-            IExpression one = 1;
+            Expression zero = 0;
+            Expression one = 1;
 
             // ACT
 
@@ -54,20 +54,20 @@ namespace AtomTests
         public void Constant_Derivative_IsZero([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            IExpression value = IExpression.ConstantFrom(v);
+            IExpression value = Expression.ConstantFrom(v);
 
             // ACT
             IExpression derivative = value.GetDerivative("x");
 
             // ASSERT
-            Assert.AreEqual(IExpression.ConstantFrom(0), derivative);
+            Assert.AreEqual(Expression.ConstantFrom(0), derivative);
         }
 
         [Test]
         public void Constant_EvaluatesCorrectly([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            IExpression expression = IExpression.ConstantFrom(v);
+            IExpression expression = Expression.ConstantFrom(v);
 
             // ACT
             float value = expression.EvaluateOnce(new VariableInputSet<float>());
@@ -82,7 +82,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = 1;
+            Expression expression = 1;
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());

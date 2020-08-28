@@ -13,8 +13,8 @@ namespace AtomTests
         public void Variable_IsSelfEqual([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
             // ARANGE
-            IExpression v1 = IExpression.VariableFrom(name);
-            IExpression v2 = IExpression.VariableFrom(name);
+            IExpression v1 = Expression.VariableFrom(name);
+            IExpression v2 = Expression.VariableFrom(name);
 
             // ACT
 
@@ -38,8 +38,8 @@ namespace AtomTests
             }
 
             // ARANGE
-            IExpression v1 = IExpression.VariableFrom(name1);
-            IExpression v2 = IExpression.VariableFrom(name2);
+            IExpression v1 = Expression.VariableFrom(name1);
+            IExpression v2 = Expression.VariableFrom(name2);
 
             // ACT
 
@@ -58,13 +58,13 @@ namespace AtomTests
         public void Variable_Derivative_IsOne_WRTSelf([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
             // ARANGE
-            IExpression v1 = IExpression.VariableFrom(name);
+            IExpression v1 = Expression.VariableFrom(name);
 
             // ACT
             IExpression derivative = v1.GetDerivative(name);
 
             // ASSERT
-            Assert.AreEqual(IExpression.ConstantFrom(1), derivative);
+            Assert.AreEqual(Expression.ConstantFrom(1), derivative);
         }
 
         [Test]
@@ -76,20 +76,20 @@ namespace AtomTests
             }
 
             // ARANGE
-            IExpression v1 = IExpression.VariableFrom(name1);
+            IExpression v1 = Expression.VariableFrom(name1);
 
             // ACT
             IExpression derivative = v1.GetDerivative(name2);
 
             // ASSERT
-            Assert.AreEqual(IExpression.ConstantFrom(0), derivative);
+            Assert.AreEqual(Expression.ConstantFrom(0), derivative);
         }
 
         [Test]
         public void Variable_EvaluatesCorrectly([Values("X", "Y", "Z", "W", "V", "val", "t")] string name, [Range(-100, 100)] int expected)
         {
             // ARANGE
-            IExpression v = IExpression.VariableFrom(name);
+            IExpression v = Expression.VariableFrom(name);
             VariableInputSet<float> inputSet = new VariableInputSet<float>();
             inputSet.Set(name, expected);
 
@@ -104,7 +104,7 @@ namespace AtomTests
         public void Variable_ThrowsIfNotPresent([Values("X", "Y", "Z", "W", "V", "val", "t")] string name, [Range(-10, 10)] int falseValue)
         {
             // ARANGE
-            IExpression v = IExpression.VariableFrom(name);
+            IExpression v = Expression.VariableFrom(name);
             VariableInputSet<float> inputSet = new VariableInputSet<float>();
             inputSet.Set("q", falseValue);
 
@@ -120,7 +120,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = IExpression.X;
+            IExpression expression = Expression.VarX;
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());

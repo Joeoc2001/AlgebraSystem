@@ -13,8 +13,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void IsValidFor_XPlusYPlusZ_WRT([Values("x", "y", "z")] string varName)
         {
             // ARANGE
-            IExpression value = IExpression.X + IExpression.Y + IExpression.Z;
-            IExpression expected = IExpression.ConstantFrom(1);
+            IExpression value = Expression.VarX + Expression.VarY + Expression.VarZ;
+            IExpression expected = Expression.ConstantFrom(1);
 
             // ACT
             IExpression derivative = value.GetDerivative(varName);
@@ -27,8 +27,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void IsValidFor_XPlusY_WRTz()
         {
             // ARANGE
-            IExpression value = IExpression.X + IExpression.Y;
-            IExpression expected = IExpression.ConstantFrom(0);
+            IExpression value = Expression.VarX + Expression.VarY;
+            IExpression expected = Expression.ConstantFrom(0);
 
             // ACT
             IExpression derivative = value.GetDerivative("z");
@@ -41,8 +41,8 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
         public void IsValidFor_XPlus1_WRTx()
         {
             // ARANGE
-            IExpression value = IExpression.X + 1;
-            IExpression expected = IExpression.ConstantFrom(1);
+            IExpression value = Expression.VarX + 1;
+            IExpression expected = Expression.ConstantFrom(1);
 
             // ACT
             IExpression derivative = value.GetDerivative("x");

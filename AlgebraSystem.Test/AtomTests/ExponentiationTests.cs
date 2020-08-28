@@ -16,8 +16,8 @@ namespace AtomTests
         public void Exponentiation_IsEqual_WhenSame()
         {
             // ARANGE
-            IExpression v1 = IExpression.Pow(IExpression.X, 2);
-            IExpression v2 = IExpression.Pow(IExpression.X, 2);
+            IExpression v1 = Expression.Pow(Expression.VarX, 2);
+            IExpression v2 = Expression.Pow(Expression.VarX, 2);
 
             // ACT
 
@@ -36,8 +36,8 @@ namespace AtomTests
         public void Exponentiation_EqualReturnFalse_WhenDifferent()
         {
             // ARANGE
-            IExpression v1 = IExpression.Pow(IExpression.X, 6);
-            IExpression v2 = IExpression.Pow(6, IExpression.X);
+            IExpression v1 = Expression.Pow(Expression.VarX, 6);
+            IExpression v2 = Expression.Pow(6, Expression.VarX);
 
             // ACT
 
@@ -56,8 +56,8 @@ namespace AtomTests
         public void Exponentiation_1stPowerDerivative_IsCorrect()
         {
             // ARANGE
-            IExpression value = IExpression.Pow(IExpression.X, 1);
-            IExpression expected = 1;
+            IExpression value = Expression.Pow(Expression.VarX, 1);
+            Expression expected = 1;
 
             // ACT
             IExpression derivative = value.GetDerivative("x");
@@ -70,8 +70,8 @@ namespace AtomTests
         public void Exponentiation_ConstantPowerDerivative_IsCorrect()
         {
             // ARANGE
-            IExpression value = IExpression.Pow(IExpression.X, 5);
-            IExpression expected = 5 * IExpression.Pow(IExpression.X, 4);
+            IExpression value = Expression.Pow(Expression.VarX, 5);
+            IExpression expected = 5 * Expression.Pow(Expression.VarX, 4);
 
             // ACT
             IExpression derivative = value.GetDerivative("x");
@@ -84,8 +84,8 @@ namespace AtomTests
         public void Exponentiation_ConstantBaseDerivative_IsCorrect()
         {
             // ARANGE
-            IExpression value = IExpression.Pow(5, IExpression.X);
-            IExpression expected = IExpression.LnOf(5) * IExpression.Pow(5, IExpression.X);
+            IExpression value = Expression.Pow(5, Expression.VarX);
+            IExpression expected = Expression.LnOf(5) * Expression.Pow(5, Expression.VarX);
 
             // ACT
             IExpression derivative = value.GetDerivative("x");
@@ -98,8 +98,8 @@ namespace AtomTests
         public void Exponentiation_BothVariableDerivative_IsAtomicallyCorrect()
         {
             // ARANGE
-            IExpression value = IExpression.Pow(IExpression.X, IExpression.X);
-            IExpression expected = (1 + IExpression.LnOf(IExpression.X)) * IExpression.Pow(IExpression.X, IExpression.X);
+            IExpression value = Expression.Pow(Expression.VarX, Expression.VarX);
+            IExpression expected = (1 + Expression.LnOf(Expression.VarX)) * Expression.Pow(Expression.VarX, Expression.VarX);
 
             // ACT
             IExpression derivative = value.GetDerivative("x");
@@ -113,7 +113,7 @@ namespace AtomTests
         public void Exponentiation_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(0, 10)] int b)
         {
             // ARANGE
-            IExpression expression = IExpression.Pow(a, b);
+            IExpression expression = Expression.Pow(a, b);
 
             // ACT
             float value = expression.EvaluateOnce(new VariableInputSet<float>());
@@ -128,8 +128,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = IExpression.Pow(5, IExpression.ConstantFrom(2));
-            IExpression expected = IExpression.ConstantFrom(25);
+            IExpression expression = Expression.Pow(5, Expression.ConstantFrom(2));
+            IExpression expected = Expression.ConstantFrom(25);
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -141,8 +141,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = IExpression.Pow(IExpression.Z, 1);
-            IExpression expected = IExpression.Z;
+            IExpression expression = Expression.Pow(Expression.VarZ, 1);
+            IExpression expected = Expression.VarZ;
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -154,8 +154,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = IExpression.Pow(IExpression.Y, 0);
-            IExpression expected = 1;
+            IExpression expression = Expression.Pow(Expression.VarY, 0);
+            Expression expected = 1;
 
             // ASSERT
             Assert.AreEqual(expected, expression);
@@ -167,7 +167,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = IExpression.Pow(IExpression.Y, 3);
+            IExpression expression = Expression.Pow(Expression.VarY, 3);
 
             // ASSERT
             Assert.AreEqual(10, expression.GetOrderIndex());
@@ -179,8 +179,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression1 = IExpression.Pow(IExpression.Y, 3);
-            IExpression expression2 = IExpression.Pow(3, IExpression.Y);
+            IExpression expression1 = Expression.Pow(Expression.VarY, 3);
+            IExpression expression2 = Expression.Pow(3, Expression.VarY);
             int hash1 = expression1.GetHashCode();
             int hash2 = expression2.GetHashCode();
 
@@ -194,8 +194,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression1 = IExpression.Pow(IExpression.Y, IExpression.X);
-            IExpression expression2 = IExpression.Pow(IExpression.X, IExpression.Y);
+            IExpression expression1 = Expression.Pow(Expression.VarY, Expression.VarX);
+            IExpression expression2 = Expression.Pow(Expression.VarX, Expression.VarY);
             int hash1 = expression1.GetHashCode();
             int hash2 = expression2.GetHashCode();
 
@@ -209,8 +209,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression1 = IExpression.Pow(IExpression.Y, IExpression.X + 1);
-            IExpression expression2 = IExpression.Pow(IExpression.X + 1, IExpression.Y);
+            IExpression expression1 = Expression.Pow(Expression.VarY, Expression.VarX + 1);
+            IExpression expression2 = Expression.Pow(Expression.VarX + 1, Expression.VarY);
             int hash1 = expression1.GetHashCode();
             int hash2 = expression2.GetHashCode();
 
@@ -225,7 +225,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = IExpression.Pow(dummy1, 2);
+            IExpression _ = Expression.Pow(dummy1, 2);
 
             // ASSERT
             Assert.IsFalse(dummy1.GenAtomicExpressionCalled);
@@ -238,23 +238,23 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = IExpression.Pow(dummy1, 2);
+            IExpression _ = Expression.Pow(dummy1, 2);
 
             // ASSERT
             Assert.IsFalse(dummy1.ToStringCalled);
         }
 
         [Test]
-        public void Exponentiation_Simplify_DoesntUseMap()
+        public void Exponentiation_Simplify_DoesntUseEvaluate()
         {
             // ARANGE
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = IExpression.Pow(dummy1, 2);
+            IExpression _ = Expression.Pow(dummy1, 2);
 
             // ASSERT
-            Assert.IsFalse(dummy1.MapChildrenCalled);
+            Assert.IsFalse(dummy1.EvaluateCalled);
         }
     }
 }
