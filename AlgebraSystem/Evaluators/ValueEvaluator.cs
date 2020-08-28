@@ -9,13 +9,13 @@ namespace Algebra.Evaluators
     {
         public delegate T FunctionEvaluator(ICollection<T> argumentExpressions);
 
-        private readonly IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators;
-        private readonly VariableInputSet<T> variableInputs;
+        private readonly IDictionary<IFunctionIdentity, FunctionEvaluator> _functionEvaluators;
+        private readonly VariableInputSet<T> _variableInputs;
 
         public ValueEvaluator(VariableInputSet<T> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators)
         {
-            this.functionEvaluators = functionEvaluators ?? new Dictionary<IFunctionIdentity, FunctionEvaluator>();
-            this.variableInputs = variableInputs;
+            this._functionEvaluators = functionEvaluators ?? new Dictionary<IFunctionIdentity, FunctionEvaluator>();
+            this._variableInputs = variableInputs;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Algebra.Evaluators
             IFunctionIdentity identity = function.GetIdentity();
 
             // Check for a faster method
-            if (functionEvaluators.TryGetValue(identity, out FunctionEvaluator evaluator))
+            if (_functionEvaluators.TryGetValue(identity, out FunctionEvaluator evaluator))
             {
                 return Map(evaluator(evaluated));
             }
@@ -60,7 +60,7 @@ namespace Algebra.Evaluators
                 evaluatedEnumerator.MoveNext();
                 variableInputs.Add(variableName, evaluatedEnumerator.Current);
             }
-            TraversalEvaluator<T> rationalEvaluator = Construct(functionEvaluators, variableInputs);
+            TraversalEvaluator<T> rationalEvaluator = Construct(_functionEvaluators, variableInputs);
             return Map(function.GetAtomicExpression().Evaluate(rationalEvaluator));
         }
 
@@ -102,11 +102,11 @@ namespace Algebra.Evaluators
         public override sealed T EvaluateVariable(string name)
         {
             name = name.ToLower();
-            if (!variableInputs.Contains(name))
+            if (!_variableInputs.Contains(name))
             {
                 throw new VariableNotPresentException($"Variable {name} could not be found in the given variable input set");
             }
-            return Map(variableInputs.Get(name).Value);
+            return Map(_variableInputs.Get(name).Value);
         }
 
         protected abstract T ArcsinOf(T v);

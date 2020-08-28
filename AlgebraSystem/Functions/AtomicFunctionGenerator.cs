@@ -14,12 +14,12 @@ namespace Algebra
         {
             public delegate IExpression AtomicFunctionGeneratorDelegate(List<IExpression> parameters);
 
-            private readonly AtomicFunctionGeneratorDelegate gen;
+            private readonly AtomicFunctionGeneratorDelegate _gen;
 
             public AtomicFunctionGenerator(string name, int parameterCount, AtomicFunctionGeneratorDelegate gen)
                 : base(name, GenerateRequiredParameters(parameterCount))
             {
-                this.gen = gen;
+                this._gen = gen;
             }
 
             private static ReadOnlyCollection<string> GenerateRequiredParameters(int parameterCount)
@@ -44,7 +44,7 @@ namespace Algebra
                     orderedParameters.Add(parameters[name]);
                 }
 
-                return gen(orderedParameters);
+                return _gen(orderedParameters);
             }
         }
     }

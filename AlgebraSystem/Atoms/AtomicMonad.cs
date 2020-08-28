@@ -7,11 +7,11 @@ namespace Algebra
     {
         internal abstract class AtomicMonad : Expression
         {
-            protected readonly IExpression argument;
+            protected readonly IExpression _argument;
 
             protected AtomicMonad(IExpression argument)
             {
-                this.argument = argument;
+                this._argument = argument;
             }
 
             public abstract Func<IExpression, IExpression> GetSimplifyingConstructor();
@@ -20,12 +20,12 @@ namespace Algebra
 
             protected override sealed int GenHashCode()
             {
-                return argument.GetHashCode() ^ GetHashSeed();
+                return _argument.GetHashCode() ^ GetHashSeed();
             }
 
             protected override sealed IAtomicExpression GenAtomicExpression()
             {
-                IAtomicExpression atomicArg = argument.GetAtomicExpression();
+                IAtomicExpression atomicArg = _argument.GetAtomicExpression();
                 IExpression expression = GetSimplifyingConstructor()(atomicArg);
                 return AtomicExpression.GetAtomicExpression(expression);
             }
@@ -36,7 +36,7 @@ namespace Algebra
 
                 builder.Append(GetMonadFunctionName());
                 builder.Append(" ");
-                builder.Append(ToParenthesisedString(this, argument));
+                builder.Append(ToParenthesisedString(this, _argument));
 
                 return builder.ToString();
             }

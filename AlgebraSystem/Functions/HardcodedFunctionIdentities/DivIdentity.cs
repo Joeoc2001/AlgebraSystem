@@ -10,11 +10,11 @@ namespace Algebra
     {
         internal static class DivIdentity
         {
-            private static readonly IExpression atomicExpression = Expression.VarA * Expression.Pow(Expression.VarB, Expression.MinusOne);
-            private static readonly int hashSeed = -1042411579;
-            private static readonly string name = "div";
+            private static readonly IExpression _atomicExpression = Expression.VarA * Expression.Pow(Expression.VarB, Expression.MinusOne);
+            private static readonly int _hashSeed = -1042411579;
+            private static readonly string _name = "div";
 
-            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression);
         }
     }
 }

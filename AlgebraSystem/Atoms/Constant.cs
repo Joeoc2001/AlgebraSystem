@@ -15,7 +15,7 @@ namespace Algebra
             public static implicit operator Constant(decimal r) => Rational.Approximate(r);
             public static implicit operator Constant(Rational r) => Constant.FromValue(r);
 
-            private readonly Rational value;
+            private readonly Rational _value;
 
             public static Constant FromValue(Rational value)
             {
@@ -24,7 +24,7 @@ namespace Algebra
 
             private Constant(Rational value)
             {
-                this.value = value;
+                this._value = value;
             }
 
             public override IExpression GetDerivative(string wrt)
@@ -39,22 +39,22 @@ namespace Algebra
                     return false;
                 }
 
-                return value.Equals(constant.value);
+                return _value.Equals(constant._value);
             }
 
             protected override int GenHashCode()
             {
-                return value.GetHashCode();
+                return _value.GetHashCode();
             }
 
             public Rational GetValue()
             {
-                return value;
+                return _value;
             }
 
             public override string ToString()
             {
-                return $"{value}";
+                return $"{_value}";
             }
 
             public override int GetOrderIndex()
@@ -64,19 +64,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateConstant(value);
+                return evaluator.EvaluateConstant(_value);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateConstant(this, value);
+                return evaluator.EvaluateConstant(this, _value);
             }
 
             public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Constant other)
                 {
-                    return evaluator.EvaluateConstants(this.value, other.value);
+                    return evaluator.EvaluateConstants(this._value, other._value);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }

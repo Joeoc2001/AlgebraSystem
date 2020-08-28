@@ -11,26 +11,26 @@ namespace Algebra.Evaluators
         {
             public static readonly Result False = new Result();
 
-            private readonly string name;
+            private readonly string _name;
 
             public Result(string name)
             {
-                this.name = name ?? throw new ArgumentNullException(nameof(name));
+                this._name = name ?? throw new ArgumentNullException(nameof(name));
             }
 
             private Result()
             {
-                name = null;
+                _name = null;
             }
 
             public bool IsVariable()
             {
-                return name is null;
+                return _name is null;
             }
 
             public string GetName()
             {
-                return name;
+                return _name;
             }
         }
 

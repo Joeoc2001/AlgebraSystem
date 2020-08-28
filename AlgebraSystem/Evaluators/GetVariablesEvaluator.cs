@@ -24,10 +24,9 @@ namespace Algebra.Evaluators
             return newSet;
         }
 
-        private static readonly HashSet<string> EmptySet = new HashSet<string>();
         public override HashSet<string> EvaluateConstant(Rational value)
         {
-            return EmptySet;
+            return new HashSet<string>();
         }
 
         public override HashSet<string> EvaluateVariable(string name)

@@ -18,7 +18,7 @@ namespace Algebra
                 {
                     if (eq is Sum addeq)
                     {
-                        collatedEqs.AddRange(addeq.arguments);
+                        collatedEqs.AddRange(addeq._arguments);
                     }
                     else
                     {
@@ -96,7 +96,7 @@ namespace Algebra
             public override IExpression GetDerivative(string wrt)
             {
                 List<IExpression> derivatives = new List<IExpression>();
-                foreach (IExpression e in arguments)
+                foreach (IExpression e in _arguments)
                 {
                     derivatives.Add(e.GetDerivative(wrt));
                 }
@@ -111,7 +111,7 @@ namespace Algebra
                 }
 
                 // Check for commutativity
-                return OperandsExactlyEquals(sum.arguments);
+                return OperandsExactlyEquals(sum._arguments);
             }
 
             public override int IdentityValue()
@@ -146,19 +146,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateSum(arguments);
+                return evaluator.EvaluateSum(_arguments);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateSum(this, arguments);
+                return evaluator.EvaluateSum(this, _arguments);
             }
 
             public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Sum other)
                 {
-                    return evaluator.EvaluateSums(this.arguments, other.arguments);
+                    return evaluator.EvaluateSums(this._arguments, other._arguments);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }

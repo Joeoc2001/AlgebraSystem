@@ -8,23 +8,23 @@ namespace Algebra.Functions
 {
     public class FunctionGeneratorSet : IEnumerable<IFunctionGenerator>
     {
-        private static readonly IFunctionGenerator sinFunctionGenerator = new AtomicFunctionGenerator("sin", 1, list => Expression.SinOf(list[0]));
-        private static readonly IFunctionGenerator arcsinFunctionGenerator = new AtomicFunctionGenerator("arcsin", 1, list => Expression.ArcsinOf(list[0]));
-        private static readonly IFunctionGenerator arctanFunctionGenerator = new AtomicFunctionGenerator("arctan", 1, list => Expression.ArctanOf(list[0]));
-        private static readonly IFunctionGenerator lnFunctionGenerator = new AtomicFunctionGenerator("ln", 1, list => Expression.LnOf(list[0]));
-        private static readonly IFunctionGenerator signFunctionGenerator = new AtomicFunctionGenerator("sign", 1, list => Expression.SignOf(list[0]));
+        private static readonly IFunctionGenerator _sinFunctionGenerator = new AtomicFunctionGenerator("sin", 1, list => Expression.SinOf(list[0]));
+        private static readonly IFunctionGenerator _arcsinFunctionGenerator = new AtomicFunctionGenerator("arcsin", 1, list => Expression.ArcsinOf(list[0]));
+        private static readonly IFunctionGenerator _arctanFunctionGenerator = new AtomicFunctionGenerator("arctan", 1, list => Expression.ArctanOf(list[0]));
+        private static readonly IFunctionGenerator _lnFunctionGenerator = new AtomicFunctionGenerator("ln", 1, list => Expression.LnOf(list[0]));
+        private static readonly IFunctionGenerator _signFunctionGenerator = new AtomicFunctionGenerator("sign", 1, list => Expression.SignOf(list[0]));
 
         public static readonly FunctionGeneratorSet DefaultFunctions = new FunctionGeneratorSet()
         {
-            { sinFunctionGenerator },
+            { _sinFunctionGenerator },
             { CosIdentity.Instance },
             { TanIdentity.Instance },
-            { arcsinFunctionGenerator },
+            { _arcsinFunctionGenerator },
             { ArccosIdentity.Instance },
-            { arctanFunctionGenerator },
-            { lnFunctionGenerator },
+            { _arctanFunctionGenerator },
+            { _lnFunctionGenerator },
             { LogIdentity.Instance },
-            { signFunctionGenerator },
+            { _signFunctionGenerator },
             { MaxIdentity.Instance },
             { MinIdentity.Instance },
             { SelectIdentity.Instance },
@@ -38,7 +38,7 @@ namespace Algebra.Functions
             { SqrtIdentity.Instance },
         };
 
-        private readonly Dictionary<string, IFunctionGenerator> generators;
+        private readonly Dictionary<string, IFunctionGenerator> _generators;
 
         public FunctionGeneratorSet()
             : this(new Dictionary<string, IFunctionGenerator>())
@@ -47,36 +47,36 @@ namespace Algebra.Functions
         }
 
         public FunctionGeneratorSet(FunctionGeneratorSet generators)
-            : this(generators.generators)
+            : this(generators._generators)
         {
 
         }
 
         public FunctionGeneratorSet(IDictionary<string, IFunctionGenerator> generators)
         {
-            this.generators = new Dictionary<string, IFunctionGenerator>(generators);
+            this._generators = new Dictionary<string, IFunctionGenerator>(generators);
         }
 
-        public ICollection<string> Names { get => generators.Keys; }
+        public ICollection<string> Names { get => _generators.Keys; }
 
         public IFunctionGenerator this[string name]
         {
-            get => generators[name];
+            get => _generators[name];
         }
 
         public void Add(IFunctionGenerator generator)
         {
-            generators.Add(generator.GetName(), generator);
+            _generators.Add(generator.GetName(), generator);
         }
 
         public IEnumerator<IFunctionGenerator> GetEnumerator()
         {
-            return generators.Values.GetEnumerator();
+            return _generators.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return generators.Values.GetEnumerator();
+            return _generators.Values.GetEnumerator();
         }
     }
 }

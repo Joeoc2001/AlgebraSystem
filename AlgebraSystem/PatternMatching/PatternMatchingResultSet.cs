@@ -11,7 +11,7 @@ namespace Algebra.PatternMatching
         public static PatternMatchingResultSet None = new PatternMatchingResultSet(new HashSet<PatternMatchingResult>());
         public static PatternMatchingResultSet All = new PatternMatchingResultSet(PatternMatchingResult.Empty);
 
-        private readonly HashSet<PatternMatchingResult> results;
+        private readonly HashSet<PatternMatchingResult> _results;
 
         public PatternMatchingResultSet(PatternMatchingResult result)
             : this(new HashSet<PatternMatchingResult>() { result })
@@ -21,7 +21,7 @@ namespace Algebra.PatternMatching
 
         public PatternMatchingResultSet(ISet<PatternMatchingResult> results)
         {
-            this.results = new HashSet<PatternMatchingResult>(results);
+            this._results = new HashSet<PatternMatchingResult>(results);
         }
 
         public PatternMatchingResultSet Intersect(PatternMatchingResultSet other)
@@ -60,8 +60,8 @@ namespace Algebra.PatternMatching
         public PatternMatchingResultSet Union(PatternMatchingResultSet other)
         {
             HashSet<PatternMatchingResult> union = new HashSet<PatternMatchingResult>();
-            union.UnionWith(results);
-            union.UnionWith(other.results);
+            union.UnionWith(_results);
+            union.UnionWith(other._results);
             return new PatternMatchingResultSet(union);
         }
 
@@ -77,7 +77,7 @@ namespace Algebra.PatternMatching
         {
             get
             {
-                return results.Contains(PatternMatchingResult.Empty);
+                return _results.Contains(PatternMatchingResult.Empty);
             }
         }
 
@@ -85,18 +85,18 @@ namespace Algebra.PatternMatching
         {
             get
             {
-                return results.Count;
+                return _results.Count;
             }
         }
 
         public IEnumerator<PatternMatchingResult> GetEnumerator()
         {
-            return results.GetEnumerator();
+            return _results.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return results.GetEnumerator();
+            return _results.GetEnumerator();
         }
     }
 }

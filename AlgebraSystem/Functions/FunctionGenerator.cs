@@ -8,8 +8,8 @@ namespace Algebra.Functions
 {
     public abstract class FunctionGenerator : IFunctionGenerator
     {
-        private readonly string name;
-        private readonly ReadOnlyCollection<string> parameterNames;
+        private readonly string _name;
+        private readonly ReadOnlyCollection<string> _parameterNames;
 
         protected FunctionGenerator(string name, IEnumerable<string> parameterNames)
             : this(name, new List<string>(parameterNames).AsReadOnly())
@@ -19,20 +19,20 @@ namespace Algebra.Functions
 
         protected FunctionGenerator(string name, ReadOnlyCollection<string> parameterNames)
         {
-            this.name = name ?? throw new ArgumentNullException(nameof(name));
-            this.parameterNames = parameterNames ?? throw new ArgumentNullException(nameof(parameterNames));
+            this._name = name ?? throw new ArgumentNullException(nameof(name));
+            this._parameterNames = parameterNames ?? throw new ArgumentNullException(nameof(parameterNames));
         }
 
         protected abstract IExpression CreateExpressionImpl(IDictionary<string, IExpression> parameters);
 
         public ReadOnlyCollection<string> GetRequiredParameters()
         {
-            return parameterNames;
+            return _parameterNames;
         }
 
         public string GetName()
         {
-            return name;
+            return _name;
         }
 
         /// <summary>

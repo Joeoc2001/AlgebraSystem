@@ -57,14 +57,14 @@ namespace Algebra
         public abstract T Evaluate<T>(IExpression other, IDualEvaluator<T> evaluator);
         public abstract int GetOrderIndex();
 
-        private int? hashCode = null;
+        private int? _hashCode = null;
         public override int GetHashCode()
         {
-            if (!hashCode.HasValue)
+            if (!_hashCode.HasValue)
             {
-                hashCode = GenHashCode();
+                _hashCode = GenHashCode();
             }
-            return hashCode.Value;
+            return _hashCode.Value;
         }
 
         public bool Equals(IExpression e, EqualityLevel level)
@@ -98,14 +98,14 @@ namespace Algebra
         }
 
         protected abstract IAtomicExpression GenAtomicExpression();
-        private IAtomicExpression atomicExpression = null;
+        private IAtomicExpression _atomicExpression = null;
         public IAtomicExpression GetAtomicExpression()
         {
-            if (atomicExpression is null)
+            if (_atomicExpression is null)
             {
-                atomicExpression = GenAtomicExpression();
+                _atomicExpression = GenAtomicExpression();
             }
-            return atomicExpression;
+            return _atomicExpression;
         }
 
         public static bool ShouldParenthesise(IExpression parent, IExpression child)

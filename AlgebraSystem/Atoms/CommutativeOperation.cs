@@ -12,11 +12,11 @@ namespace Algebra
     {
         internal abstract class CommutativeOperation : Expression
         {
-            protected readonly ReadOnlyCollection<IExpression> arguments;
+            protected readonly ReadOnlyCollection<IExpression> _arguments;
 
             public CommutativeOperation(IList<IExpression> eqs)
             {
-                this.arguments = new ReadOnlyCollection<IExpression>(eqs);
+                this._arguments = new ReadOnlyCollection<IExpression>(eqs);
             }
 
             public abstract int IdentityValue();
@@ -43,7 +43,7 @@ namespace Algebra
                 }
 
                 // Check all parameters in this are present
-                IList<IExpression> thisArgs = arguments;
+                IList<IExpression> thisArgs = _arguments;
                 foreach (IExpression thisArg in thisArgs)
                 {
                     int hash = thisArg.GetHashCode();
@@ -77,7 +77,7 @@ namespace Algebra
             protected override int GenHashCode()
             {
                 int value = -1906136416 * OperationSymbol().GetHashCode();
-                foreach (IExpression eq in arguments)
+                foreach (IExpression eq in _arguments)
                 {
                     value ^= eq.GetHashCode(); // This is bad practice but it will have to do
                 }
@@ -112,20 +112,20 @@ namespace Algebra
 
             public override string ToString()
             {
-                if (arguments.Count == 0)
+                if (_arguments.Count == 0)
                 {
                     return "()";
                 }
 
                 StringBuilder builder = new StringBuilder();
 
-                builder.Append(ToParenthesisedString(this, arguments[0]));
-                for (int i = 1; i < arguments.Count; i++)
+                builder.Append(ToParenthesisedString(this, _arguments[0]));
+                for (int i = 1; i < _arguments.Count; i++)
                 {
                     builder.Append(" ");
                     builder.Append(OperationSymbol());
                     builder.Append(" ");
-                    builder.Append(ToParenthesisedString(this, arguments[i]));
+                    builder.Append(ToParenthesisedString(this, _arguments[i]));
                 }
 
                 return builder.ToString();
@@ -135,7 +135,7 @@ namespace Algebra
             {
                 // Replace variables with their expressions
                 List<IExpression> atomicArguments = new List<IExpression>();
-                foreach (var argument in arguments)
+                foreach (var argument in _arguments)
                 {
                     atomicArguments.Add(argument.GetAtomicExpression());
                 }

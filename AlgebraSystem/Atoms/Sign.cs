@@ -55,7 +55,7 @@ namespace Algebra
                     return false;
                 }
 
-                return argument.Equals(sign.argument, EqualityLevel.Exactly);
+                return _argument.Equals(sign._argument, EqualityLevel.Exactly);
             }
 
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
@@ -75,19 +75,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateSign(argument);
+                return evaluator.EvaluateSign(_argument);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateSign(this, argument);
+                return evaluator.EvaluateSign(this, _argument);
             }
 
             public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Sign other)
                 {
-                    return evaluator.EvaluateSigns(this.argument, other.argument);
+                    return evaluator.EvaluateSigns(this._argument, other._argument);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }

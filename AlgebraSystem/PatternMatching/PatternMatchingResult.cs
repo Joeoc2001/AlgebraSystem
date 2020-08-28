@@ -11,7 +11,7 @@ namespace Algebra.PatternMatching
     {
         public static PatternMatchingResult Empty = new PatternMatchingResult(new Dictionary<string, IExpression>());
 
-        private readonly ReadOnlyDictionary<string, IExpression> matches;
+        private readonly ReadOnlyDictionary<string, IExpression> _matches;
 
         public PatternMatchingResult(string name, IExpression match)
             : this(new Dictionary<string, IExpression>() { { name, match } })
@@ -21,7 +21,7 @@ namespace Algebra.PatternMatching
 
         public PatternMatchingResult(IDictionary<string, IExpression> matches)
         {
-            this.matches = new ReadOnlyDictionary<string, IExpression>(matches);
+            this._matches = new ReadOnlyDictionary<string, IExpression>(matches);
         }
 
         public PatternMatchingResult CalculateJoin(PatternMatchingResult other)
@@ -62,7 +62,7 @@ namespace Algebra.PatternMatching
         {
             get
             {
-                return matches[key];
+                return _matches[key];
             }
         }
 
@@ -70,7 +70,7 @@ namespace Algebra.PatternMatching
         {
             get
             {
-                return ((IReadOnlyDictionary<string, IExpression>)matches).Keys;
+                return ((IReadOnlyDictionary<string, IExpression>)_matches).Keys;
             }
         }
 
@@ -78,7 +78,7 @@ namespace Algebra.PatternMatching
         {
             get
             {
-                return ((IReadOnlyDictionary<string, IExpression>)matches).Values;
+                return ((IReadOnlyDictionary<string, IExpression>)_matches).Values;
             }
         }
 
@@ -86,28 +86,28 @@ namespace Algebra.PatternMatching
         {
             get
             {
-                return matches.Count;
+                return _matches.Count;
             }
         }
 
         public bool ContainsKey(string key)
         {
-            return matches.ContainsKey(key);
+            return _matches.ContainsKey(key);
         }
 
         public IEnumerator<KeyValuePair<string, IExpression>> GetEnumerator()
         {
-            return matches.GetEnumerator();
+            return _matches.GetEnumerator();
         }
 
         public bool TryGetValue(string key, out IExpression value)
         {
-            return matches.TryGetValue(key, out value);
+            return _matches.TryGetValue(key, out value);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return matches.GetEnumerator();
+            return _matches.GetEnumerator();
         }
 
         public bool Equals(PatternMatchingResult other)
@@ -116,7 +116,7 @@ namespace Algebra.PatternMatching
             {
                 return false;
             }
-            return matches.Count == other.matches.Count && !matches.Except(other.matches).Any();
+            return _matches.Count == other._matches.Count && !_matches.Except(other._matches).Any();
         }
 
         public override bool Equals(object obj)
@@ -128,7 +128,7 @@ namespace Algebra.PatternMatching
         {
             // Use ^ because it is commutative, even though it results in a worse hash
             int v = 1875743615;
-            foreach (var result in matches)
+            foreach (var result in _matches)
             {
                 v ^= result.Key.GetHashCode();
                 v ^= (result.Value.GetHashCode() * 65);

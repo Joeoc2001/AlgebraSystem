@@ -10,11 +10,11 @@ namespace Algebra
     {
         internal static class SelectIdentity
         {
-            private static readonly IExpression atomicExpression = 0.5 * (Expression.VarA + Expression.VarB + (Expression.VarB - Expression.VarA) * Expression.SignOf(Expression.VarC));
-            private static readonly int hashSeed = 739870216;
-            private static readonly string name = "select";
+            private static readonly IExpression _atomicExpression = 0.5 * (Expression.VarA + Expression.VarB + (Expression.VarB - Expression.VarA) * Expression.SignOf(Expression.VarC));
+            private static readonly int _hashSeed = 739870216;
+            private static readonly string _name = "select";
 
-            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression);
         }
     }
 }

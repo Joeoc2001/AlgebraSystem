@@ -8,16 +8,16 @@ namespace Algebra
     {
         internal class Variable : Expression, IAtomicExpression
         {
-            private readonly string name;
+            private readonly string _name;
 
             public Variable(string name)
             {
-                this.name = name.ToLower();
+                this._name = name.ToLower();
             }
 
             public override IExpression GetDerivative(string wrt)
             {
-                if (wrt == name)
+                if (wrt == _name)
                 {
                     return One;
                 }
@@ -31,17 +31,17 @@ namespace Algebra
                     return false;
                 }
 
-                return name.Equals(variable.name);
+                return _name.Equals(variable._name);
             }
 
             protected override int GenHashCode()
             {
-                return name.GetHashCode() * 1513357220;
+                return _name.GetHashCode() * 1513357220;
             }
 
             public override string ToString()
             {
-                return name;
+                return _name;
             }
 
             public override int GetOrderIndex()
@@ -51,19 +51,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateVariable(name);
+                return evaluator.EvaluateVariable(_name);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateVariable(this, name);
+                return evaluator.EvaluateVariable(this, _name);
             }
 
             public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Variable other)
                 {
-                    return evaluator.EvaluateVariables(this.name, other.name);
+                    return evaluator.EvaluateVariables(this._name, other._name);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }

@@ -6,7 +6,7 @@ namespace Algebra
 {
     internal class AtomicExpression : IAtomicExpression
     {
-        private readonly IExpression atomicExpression;
+        private readonly IExpression _atomicExpression;
 
         public static IAtomicExpression GetAtomicExpression(IExpression expression)
         {
@@ -23,7 +23,7 @@ namespace Algebra
             {
                 expression = expression.GetAtomicExpression();
             }
-            atomicExpression = expression;
+            _atomicExpression = expression;
         }
 
         public bool Equals(IExpression e, EqualityLevel level)
@@ -32,25 +32,25 @@ namespace Algebra
             {
                 // We can shortcut this bit slightly as this doesn't need to be put into atomic form
                 case EqualityLevel.Atomic:
-                    return atomicExpression.Equals(e.GetAtomicExpression(), EqualityLevel.Exactly);
+                    return _atomicExpression.Equals(e.GetAtomicExpression(), EqualityLevel.Exactly);
                 default:
-                    return atomicExpression.Equals(e, level);
+                    return _atomicExpression.Equals(e, level);
             }
         }
 
         public T Evaluate<T>(IEvaluator<T> evaluator)
         {
-            return atomicExpression.Evaluate(evaluator);
+            return _atomicExpression.Evaluate(evaluator);
         }
 
         public T Evaluate<T>(IExpandedEvaluator<T> evaluator)
         {
-            return atomicExpression.Evaluate(evaluator);
+            return _atomicExpression.Evaluate(evaluator);
         }
 
         public T Evaluate<T>(IExpression secondary, IDualEvaluator<T> evaluator)
         {
-            return atomicExpression.Evaluate(secondary, evaluator);
+            return _atomicExpression.Evaluate(secondary, evaluator);
         }
 
         public IAtomicExpression GetAtomicExpression()
@@ -60,17 +60,17 @@ namespace Algebra
 
         public IExpression GetDerivative(string wrt)
         {
-            return atomicExpression.GetDerivative(wrt);
+            return _atomicExpression.GetDerivative(wrt);
         }
 
         public IEquivalenceClass GetEquivalenceClass()
         {
-            return atomicExpression.GetEquivalenceClass();
+            return _atomicExpression.GetEquivalenceClass();
         }
 
         public int GetOrderIndex()
         {
-            return atomicExpression.GetOrderIndex();
+            return _atomicExpression.GetOrderIndex();
         }
 
         public bool IsAtomic()
@@ -80,12 +80,12 @@ namespace Algebra
 
         public IEnumerable<string> GetVariables()
         {
-            return atomicExpression.GetVariables();
+            return _atomicExpression.GetVariables();
         }
 
         public int CompareTo(IExpression other)
         {
-            return atomicExpression.CompareTo(other);
+            return _atomicExpression.CompareTo(other);
         }
     }
 }

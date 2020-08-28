@@ -8,13 +8,13 @@ namespace Algebra.Parsing
 {
     public class Parser
     {
-        private readonly Tokenizer tokenizer;
-        private readonly FunctionGeneratorSet functions;
+        private readonly Tokenizer _tokenizer;
+        private readonly FunctionGeneratorSet _functions;
 
         public Parser(Tokenizer tokenizer, FunctionGeneratorSet functions)
         {
-            this.tokenizer = tokenizer;
-            this.functions = functions;
+            this._tokenizer = tokenizer;
+            this._functions = functions;
         }
 
         public static IExpression Parse(string s)
@@ -51,7 +51,7 @@ namespace Algebra.Parsing
             var expr = ParseAddSubtract();
 
             // Check everything was consumed
-            if (tokenizer.Token != Token.EOF)
+            if (_tokenizer.Token != Token.EOF)
             {
                 throw new SyntaxException("Unexpected characters at end of expression");
             }
@@ -71,11 +71,11 @@ namespace Algebra.Parsing
             bool subtractNext;
             while (true)
             {
-                if (tokenizer.Token == Token.Add)
+                if (_tokenizer.Token == Token.Add)
                 {
                     subtractNext = false;
                 }
-                else if (tokenizer.Token == Token.Subtract)
+                else if (_tokenizer.Token == Token.Subtract)
                 {
                     subtractNext = true;
                 }
@@ -85,7 +85,7 @@ namespace Algebra.Parsing
                 }
 
                 // Skip the operator
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
 
                 // Parse the next term in the expression
                 IExpression rhs = ParseMultiply();
@@ -115,13 +115,13 @@ namespace Algebra.Parsing
 
             while (true)
             {
-                if (tokenizer.Token != Token.Multiply)
+                if (_tokenizer.Token != Token.Multiply)
                 {
                     return Product.Multiply(terms);
                 }
 
                 // Skip the operator
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
 
                 // Parse the next term in the expression
                 IExpression rhs = ParseDivision();
@@ -136,13 +136,13 @@ namespace Algebra.Parsing
 
             while (true)
             {
-                if (tokenizer.Token != Token.Divide)
+                if (_tokenizer.Token != Token.Divide)
                 {
                     return lhs;
                 }
 
                 // Skip the operator
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
 
                 // Parse the next term in the expression
                 IExpression rhs = ParseExponent();
@@ -157,13 +157,13 @@ namespace Algebra.Parsing
 
             while (true)
             {
-                if (tokenizer.Token != Token.Exponent)
+                if (_tokenizer.Token != Token.Exponent)
                 {
                     return lhs;
                 }
 
                 // Skip the operator
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
 
                 // Parse the next term in the expression
                 IExpression rhs = ParseLeaf();
@@ -174,70 +174,70 @@ namespace Algebra.Parsing
         // Parse a leaf node (Variable, Constant or Function)
         IExpression ParseLeaf()
         {
-            if (tokenizer.Token == Token.Subtract)
+            if (_tokenizer.Token == Token.Subtract)
             {
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
                 return -1 * ParseLeaf();
             }
 
-            if (tokenizer.Token == Token.Decimal)
+            if (_tokenizer.Token == Token.Decimal)
             {
-                IExpression node = Constant.ConstantFrom(tokenizer.Number);
-                tokenizer.NextToken();
+                IExpression node = Constant.ConstantFrom(_tokenizer.Number);
+                _tokenizer.NextToken();
                 return node;
             }
 
-            if (tokenizer.Token == Token.Variable)
+            if (_tokenizer.Token == Token.Variable)
             {
-                string name = tokenizer.TokenSignature;
+                string name = _tokenizer.TokenSignature;
                 IExpression node = new Variable(name);
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
                 return node;
             }
 
-            if (tokenizer.Token == Token.OpenBrace)
+            if (_tokenizer.Token == Token.OpenBrace)
             {
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
 
                 IExpression node = ParseAddSubtract();
 
-                if (tokenizer.Token != Token.CloseBrace)
+                if (_tokenizer.Token != Token.CloseBrace)
                 {
                     throw new SyntaxException("Missing close parenthesis");
                 }
 
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
 
                 return node;
             }
 
-            if (tokenizer.Token == Token.Function)
+            if (_tokenizer.Token == Token.Function)
             {
-                string functionName = tokenizer.TokenSignature;
+                string functionName = _tokenizer.TokenSignature;
 
-                tokenizer.NextToken();
+                _tokenizer.NextToken();
 
                 List<IExpression> nodes;
-                if (tokenizer.Token == Token.OpenBrace)
+                if (_tokenizer.Token == Token.OpenBrace)
                 {
-                    tokenizer.NextToken();
+                    _tokenizer.NextToken();
                     nodes = new List<IExpression>()
                     {
                         ParseAddSubtract()
                     };
 
-                    while (tokenizer.Token == Token.Comma)
+                    while (_tokenizer.Token == Token.Comma)
                     {
-                        tokenizer.NextToken();
+                        _tokenizer.NextToken();
                         nodes.Add(ParseAddSubtract());
                     }
 
-                    if (tokenizer.Token != Token.CloseBrace)
+                    if (_tokenizer.Token != Token.CloseBrace)
                     {
                         throw new SyntaxException("Missing close parenthesis");
                     }
 
-                    tokenizer.NextToken();
+                    _tokenizer.NextToken();
                 }
                 else
                 {
@@ -248,7 +248,7 @@ namespace Algebra.Parsing
                 }
 
                 // Create the function
-                IFunctionGenerator factory = functions[functionName];
+                IFunctionGenerator factory = _functions[functionName];
                 try
                 {
                     return factory.CreateExpression(nodes);
@@ -259,7 +259,7 @@ namespace Algebra.Parsing
                 }
             }
 
-            throw new SyntaxException($"Unexpected leaf token: {tokenizer.Token}");
+            throw new SyntaxException($"Unexpected leaf token: {_tokenizer.Token}");
         }
     }
 }

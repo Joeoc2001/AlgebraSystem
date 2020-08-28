@@ -9,11 +9,11 @@ namespace Algebra
     {
         internal static class CoshIdentity
         {
-            private static readonly IExpression atomicExpression = 0.5 * (Expression.Pow(Expression.E, Expression.VarA) + Expression.Pow(Expression.E, -Expression.VarA));
-            private static readonly int hashSeed = -1733178947;
-            private static readonly string name = "cosh";
+            private static readonly IExpression _atomicExpression = 0.5 * (Expression.Pow(Expression.E, Expression.VarA) + Expression.Pow(Expression.E, -Expression.VarA));
+            private static readonly int _hashSeed = -1733178947;
+            private static readonly string _name = "cosh";
 
-            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression);
         }
     }
 }

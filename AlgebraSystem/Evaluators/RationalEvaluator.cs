@@ -8,7 +8,7 @@ namespace Algebra.Evaluators
 {
     public class RationalEvaluator : ValueEvaluator<Rational>
     {
-        private readonly BigInteger? maxSize;
+        private readonly BigInteger? _maxSize;
 
         public RationalEvaluator(VariableInputSet<Rational> variableInputs)
             : this(variableInputs, null, null)
@@ -25,16 +25,16 @@ namespace Algebra.Evaluators
         public RationalEvaluator(VariableInputSet<Rational> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, BigInteger? maxSize)
             : base(variableInputs, functionEvaluators)
         {
-            this.maxSize = maxSize;
+            this._maxSize = maxSize;
         }
 
         protected override Rational Map(Rational value)
         {
             value = value.CanonicalForm;
-            if (maxSize.HasValue)
+            if (_maxSize.HasValue)
             {
-                BigInteger division = BigInteger.Abs(value.Numerator / maxSize.Value);
-                division = BigInteger.Max(division, BigInteger.Abs(value.Denominator / maxSize.Value));
+                BigInteger division = BigInteger.Abs(value.Numerator / _maxSize.Value);
+                division = BigInteger.Max(division, BigInteger.Abs(value.Denominator / _maxSize.Value));
                 division = BigInteger.Min(division, BigInteger.Abs(value.Numerator));
                 division = BigInteger.Min(division, BigInteger.Abs(value.Denominator));
                 if (division > 1)
@@ -64,7 +64,7 @@ namespace Algebra.Evaluators
 
         protected override TraversalEvaluator<Rational> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<Rational> variableInputs)
         {
-            return new RationalEvaluator(variableInputs, functionEvaluators, maxSize);
+            return new RationalEvaluator(variableInputs, functionEvaluators, _maxSize);
         }
 
         protected override Rational LnOf(Rational v)

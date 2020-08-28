@@ -20,7 +20,7 @@ namespace Algebra
                 {
                     if (eq is Product multeq)
                     {
-                        collatedEqs.AddRange(multeq.arguments);
+                        collatedEqs.AddRange(multeq._arguments);
                         continue;
                     }
 
@@ -106,28 +106,28 @@ namespace Algebra
             public override IExpression GetDerivative(string wrt)
             {
                 // Get all derivatives
-                List<IExpression> derivatives = new List<IExpression>(arguments.Count);
-                foreach (IExpression eq in arguments)
+                List<IExpression> derivatives = new List<IExpression>(_arguments.Count);
+                foreach (IExpression eq in _arguments)
                 {
                     derivatives.Add(eq.GetDerivative(wrt));
                 }
 
                 // Collate into multi term product rule
                 List<IExpression> terms = new List<IExpression>();
-                for (int iDerivative = 0; iDerivative < arguments.Count; iDerivative++)
+                for (int iDerivative = 0; iDerivative < _arguments.Count; iDerivative++)
                 {
                     List<IExpression> term = new List<IExpression>()
                     {
                         derivatives[iDerivative]
                     };
-                    for (int iCoefficient = 0; iCoefficient < arguments.Count; iCoefficient++)
+                    for (int iCoefficient = 0; iCoefficient < _arguments.Count; iCoefficient++)
                     {
                         if (iCoefficient == iDerivative)
                         {
                             continue;
                         }
 
-                        term.Add(arguments[iCoefficient]);
+                        term.Add(_arguments[iCoefficient]);
                     }
                     terms.Add(Multiply(term));
                 }
@@ -142,7 +142,7 @@ namespace Algebra
                 }
 
                 // Check for commutativity
-                return OperandsExactlyEquals(product.arguments);
+                return OperandsExactlyEquals(product._arguments);
             }
 
             public override int IdentityValue()
@@ -168,7 +168,7 @@ namespace Algebra
             // Finds the first constant in the multiplication, or returns 1 if there are none
             public Constant GetConstantCoefficient()
             {
-                foreach (IExpression eq in arguments)
+                foreach (IExpression eq in _arguments)
                 {
                     if (eq is Constant c)
                     {
@@ -181,11 +181,11 @@ namespace Algebra
             // Gets a multiplication term of all of the terms minus the first constant, or this if there are no constants
             public IExpression GetVariable()
             {
-                foreach (IExpression eq in arguments)
+                foreach (IExpression eq in _arguments)
                 {
                     if (eq is Constant)
                     {
-                        List<IExpression> others = new List<IExpression>(arguments);
+                        List<IExpression> others = new List<IExpression>(_arguments);
                         others.Remove(eq);
                         if (others.Count == 1)
                         {
@@ -209,19 +209,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateProduct(arguments);
+                return evaluator.EvaluateProduct(_arguments);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateProduct(this, arguments);
+                return evaluator.EvaluateProduct(this, _arguments);
             }
 
             public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Product other)
                 {
-                    return evaluator.EvaluateProducts(this.arguments, other.arguments);
+                    return evaluator.EvaluateProducts(this._arguments, other._arguments);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }

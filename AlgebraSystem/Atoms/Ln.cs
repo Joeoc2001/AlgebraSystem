@@ -24,8 +24,8 @@ namespace Algebra
 
             public override IExpression GetDerivative(string wrt)
             {
-                IExpression derivative = argument.GetDerivative(wrt);
-                return derivative / argument;
+                IExpression derivative = _argument.GetDerivative(wrt);
+                return derivative / _argument;
             }
 
             protected override bool ExactlyEquals(IExpression expression)
@@ -35,7 +35,7 @@ namespace Algebra
                     return false;
                 }
 
-                return argument.Equals(ln.argument);
+                return _argument.Equals(ln._argument);
             }
 
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
@@ -55,19 +55,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateLn(argument);
+                return evaluator.EvaluateLn(_argument);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateLn(this, argument);
+                return evaluator.EvaluateLn(this, _argument);
             }
 
             public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Ln other)
                 {
-                    return evaluator.EvaluateLns(this.argument, other.argument);
+                    return evaluator.EvaluateLns(this._argument, other._argument);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }

@@ -12,8 +12,8 @@ namespace Algebra
     {
         internal class Function : Expression, IFunction
         {
-            private readonly IFunctionIdentity identity;
-            private readonly ReadOnlyDictionary<string, IExpression> parameters;
+            private readonly IFunctionIdentity _identity;
+            private readonly ReadOnlyDictionary<string, IExpression> _parameters;
 
             public Function(IFunctionIdentity identity, IDictionary<string, IExpression> parameters)
             {
@@ -23,22 +23,22 @@ namespace Algebra
                     throw new ArgumentException("Incorrect function parameters were provided");
                 }
 
-                this.identity = identity;
-                this.parameters = new ReadOnlyDictionary<string, IExpression>(parameters);
+                this._identity = identity;
+                this._parameters = new ReadOnlyDictionary<string, IExpression>(parameters);
             }
 
             public ReadOnlyDictionary<string, IExpression> GetParameters()
             {
-                return parameters;
+                return _parameters;
             }
 
             public ReadOnlyCollection<IExpression> GetParameterList()
             {
                 List<IExpression> parameterList = new List<IExpression>();
 
-                foreach (string name in identity.GetRequiredParameters())
+                foreach (string name in _identity.GetRequiredParameters())
                 {
-                    parameterList.Add(parameters[name]);
+                    parameterList.Add(_parameters[name]);
                 }
 
                 return parameterList.AsReadOnly();
@@ -46,7 +46,7 @@ namespace Algebra
 
             public IFunctionIdentity GetIdentity()
             {
-                return identity;
+                return _identity;
             }
 
             public override IExpression GetDerivative(string wrt)
@@ -61,7 +61,7 @@ namespace Algebra
                     return false;
                 }
 
-                if (!identity.Equals(function.identity))
+                if (!_identity.Equals(function._identity))
                 {
                     return false;
                 }
@@ -92,7 +92,7 @@ namespace Algebra
 
             protected override int GenHashCode()
             {
-                int value = identity.GetHashSeed();
+                int value = _identity.GetHashSeed();
 
                 IDictionary<string, IExpression> parameters = GetParameters();
                 List<string> parameterNames = parameters.Keys.ToList();
@@ -116,13 +116,13 @@ namespace Algebra
             {
                 StringBuilder builder = new StringBuilder();
 
-                IList<string> paramNames = identity.GetRequiredParameters();
+                IList<string> paramNames = _identity.GetRequiredParameters();
 
-                builder.Append(identity.GetName());
+                builder.Append(_identity.GetName());
                 builder.Append(" (");
                 for (int i = 0; i < paramNames.Count; i++)
                 {
-                    builder.Append(parameters[paramNames[i]]);
+                    builder.Append(_parameters[paramNames[i]]);
                     if (i < paramNames.Count - 1)
                     {
                         builder.Append(", ");
@@ -135,11 +135,11 @@ namespace Algebra
 
             protected override IAtomicExpression GenAtomicExpression()
             {
-                IExpression atomicVariabledExpression = identity.GetBodyAsAtomicExpression();
+                IExpression atomicVariabledExpression = _identity.GetBodyAsAtomicExpression();
 
                 // Replace variables with their expressions
                 Dictionary<string, IExpression> atomicReplacements = new Dictionary<string, IExpression>();
-                foreach (var parameter in parameters)
+                foreach (var parameter in _parameters)
                 {
                     atomicReplacements.Add(parameter.Key, parameter.Value.GetAtomicExpression());
                 }

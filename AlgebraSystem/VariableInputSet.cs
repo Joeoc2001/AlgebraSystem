@@ -15,7 +15,7 @@ namespace Algebra
     /// </summary>
     public class VariableInputSet<T> : IEquatable<VariableInputSet<T>>, IEnumerable<VariableInput<T>>
     {
-        private readonly Dictionary<string, VariableInput<T>> values = new Dictionary<string, VariableInput<T>>();
+        private readonly Dictionary<string, VariableInput<T>> _values = new Dictionary<string, VariableInput<T>>();
 
         public VariableInputSet()
         {
@@ -24,12 +24,12 @@ namespace Algebra
 
         public VariableInput<T> this[string v]
         {
-            get => values[v.ToLower()];
+            get => _values[v.ToLower()];
         }
 
         public bool Contains(string name)
         {
-            return values.ContainsKey(name.ToLower());
+            return _values.ContainsKey(name.ToLower());
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Algebra
         /// <returns>True iff this is empty</returns>
         public bool IsEmpty()
         {
-            return values.Count == 0;
+            return _values.Count == 0;
         }
 
         /// <summary>
@@ -62,13 +62,13 @@ namespace Algebra
         public void Add(string name, T value)
         {
             string lowerName = name.ToLower();
-            if (values.ContainsKey(lowerName))
+            if (_values.ContainsKey(lowerName))
             {
                 throw new ArgumentException("A variable with the same name has already been added");
             }
 
             VariableInput<T> variableInput = new VariableInput<T>();
-            values.Add(lowerName, variableInput);
+            _values.Add(lowerName, variableInput);
             variableInput.Value = value;
         }
 
@@ -82,7 +82,7 @@ namespace Algebra
         public void Set(string name, T value)
         {
             string lowerName = name.ToLower();
-            if (!values.TryGetValue(lowerName, out VariableInput<T> variableInput))
+            if (!_values.TryGetValue(lowerName, out VariableInput<T> variableInput))
             {
                 throw new ArgumentException($"No variable exists in this set with name {lowerName}");
             }
@@ -97,10 +97,10 @@ namespace Algebra
         public void AddOrSet(string name, T value)
         {
             string lowerName = name.ToLower();
-            if (!values.TryGetValue(lowerName, out VariableInput<T> variableInput))
+            if (!_values.TryGetValue(lowerName, out VariableInput<T> variableInput))
             {
                 variableInput = new VariableInput<T>();
-                values.Add(lowerName, variableInput);
+                _values.Add(lowerName, variableInput);
             }
             variableInput.Value = value;
         }
@@ -114,7 +114,7 @@ namespace Algebra
         public VariableInput<T> Get(string name)
         {
             string lowerName = name.ToLower();
-            if (!values.TryGetValue(lowerName, out VariableInput<T> variableInput))
+            if (!_values.TryGetValue(lowerName, out VariableInput<T> variableInput))
             {
                 throw new ArgumentException($"No variable exists in this set with name {lowerName}");
             }
@@ -123,19 +123,19 @@ namespace Algebra
 
         public bool Equals(VariableInputSet<T> o)
         {
-            if (o.values.Count != values.Count)
+            if (o._values.Count != _values.Count)
             {
                 return false;
             }
 
-            foreach (string name in values.Keys)
+            foreach (string name in _values.Keys)
             {
-                if (!o.values.TryGetValue(name, out VariableInput<T> otherVariableInput))
+                if (!o._values.TryGetValue(name, out VariableInput<T> otherVariableInput))
                 {
                     return false;
                 }
 
-                VariableInput<T> thisVariableInput = values[name];
+                VariableInput<T> thisVariableInput = _values[name];
                 if (ReferenceEquals(thisVariableInput, otherVariableInput))
                 {
                     continue;
@@ -165,7 +165,7 @@ namespace Algebra
             {
                 int hash = 17;
 
-                List<string> valueNames = values.Keys.ToList();
+                List<string> valueNames = _values.Keys.ToList();
                 valueNames.Sort(StringComparer.CurrentCulture);
 
                 foreach (string name in valueNames)
@@ -173,7 +173,7 @@ namespace Algebra
                     hash *= 33;
                     hash ^= name.GetHashCode();
                     hash *= 17;
-                    hash ^= values[name].GetHashCode();
+                    hash ^= _values[name].GetHashCode();
                 }
                 return hash;
             }
@@ -181,12 +181,12 @@ namespace Algebra
 
         public IEnumerator<VariableInput<T>> GetEnumerator()
         {
-            return values.Values.GetEnumerator();
+            return _values.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return values.Values.GetEnumerator();
+            return _values.Values.GetEnumerator();
         }
 
         public static bool operator ==(VariableInputSet<T> left, VariableInputSet<T> right)

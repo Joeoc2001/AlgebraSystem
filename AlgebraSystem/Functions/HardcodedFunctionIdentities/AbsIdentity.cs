@@ -9,11 +9,11 @@ namespace Algebra
     {
         internal static class AbsIdentity
         {
-            private static readonly IExpression atomicExpression = Expression.VarA * Expression.SignOf(Expression.VarA);
-            private static readonly int hashSeed = -2124003897;
-            private static readonly string name = "abs";
+            private static readonly IExpression _atomicExpression = Expression.VarA * Expression.SignOf(Expression.VarA);
+            private static readonly int _hashSeed = -2124003897;
+            private static readonly string _name = "abs";
 
-            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression);
         }
     }
 }

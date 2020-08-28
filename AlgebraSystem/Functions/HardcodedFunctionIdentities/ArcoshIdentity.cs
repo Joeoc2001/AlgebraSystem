@@ -9,11 +9,11 @@ namespace Algebra
     {
         internal static class ArcoshIdentity
         {
-            private static readonly IExpression atomicExpression = Expression.LnOf(Expression.VarA + Expression.Sqrt(Expression.VarA * Expression.VarA - 1));
-            private static readonly int hashSeed = 615814358;
-            private static readonly string name = "arcosh";
+            private static readonly IExpression _atomicExpression = Expression.LnOf(Expression.VarA + Expression.Sqrt(Expression.VarA * Expression.VarA - 1));
+            private static readonly int _hashSeed = 615814358;
+            private static readonly string _name = "arcosh";
 
-            public static readonly FunctionIdentity Instance = new FunctionIdentity(name, hashSeed, atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression);
         }
     }
 }

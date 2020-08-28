@@ -24,8 +24,8 @@ namespace Algebra
 
             public override IExpression GetDerivative(string wrt)
             {
-                IExpression derivative = argument.GetDerivative(wrt);
-                return derivative / (1 + Pow(argument, ConstantFrom(2)));
+                IExpression derivative = _argument.GetDerivative(wrt);
+                return derivative / (1 + Pow(_argument, ConstantFrom(2)));
             }
 
             protected override bool ExactlyEquals(IExpression expression)
@@ -35,7 +35,7 @@ namespace Algebra
                     return false;
                 }
 
-                return argument.Equals(arctan.argument);
+                return _argument.Equals(arctan._argument);
             }
 
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
@@ -55,19 +55,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateArctan(argument);
+                return evaluator.EvaluateArctan(_argument);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateArctan(this, argument);
+                return evaluator.EvaluateArctan(this, _argument);
             }
 
             public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Arctan other)
                 {
-                    return evaluator.EvaluateArctans(this.argument, other.argument);
+                    return evaluator.EvaluateArctans(this._argument, other._argument);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }
