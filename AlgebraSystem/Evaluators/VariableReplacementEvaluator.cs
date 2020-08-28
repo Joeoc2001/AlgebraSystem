@@ -8,13 +8,13 @@ namespace Algebra.Evaluators
 {
     class VariableReplacementEvaluator : TraversalEvaluator<IExpression>
     {
-        private readonly IReadOnlyDictionary<string, IExpression> substitutions;
-        private readonly bool exceptionOnVariableMissing;
+        private readonly IReadOnlyDictionary<string, IExpression> _substitutions;
+        private readonly bool _exceptionOnVariableMissing;
 
         public VariableReplacementEvaluator(IReadOnlyDictionary<string, IExpression> substitutions, bool exceptionOnVariableMissing = true)
         {
-            this.substitutions = substitutions;
-            this.exceptionOnVariableMissing = exceptionOnVariableMissing;
+            this._substitutions = substitutions;
+            this._exceptionOnVariableMissing = exceptionOnVariableMissing;
         }
 
         public override IExpression EvaluateConstant(Rational value)
@@ -24,11 +24,11 @@ namespace Algebra.Evaluators
 
         public override IExpression EvaluateVariable(string name)
         {
-            if (substitutions.TryGetValue(name, out IExpression expression))
+            if (_substitutions.TryGetValue(name, out IExpression expression))
             {
                 return expression;
             }
-            if (exceptionOnVariableMissing)
+            if (_exceptionOnVariableMissing)
             {
                 throw new ArgumentException($"A substitution was not provided for variable {name}");
             }

@@ -10,7 +10,7 @@ namespace EquivalenceTests
 {
     public class ExpandBracesTests
     {
-        private static readonly EquivalencePath ExpandBracesPath = EquivalencePaths.EXPAND_BRACES;
+        private static readonly EquivalencePath ExpandBracesPath = EquivalencePaths.ExpandBraces;
 
         [Test]
         public void ExpandBraces_Expands_DOTS()

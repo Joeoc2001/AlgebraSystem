@@ -5,25 +5,13 @@ namespace Algebra.Equivalence
 {
     public static class EquivalencePaths
     {
-        public static readonly EquivalencePath EXPAND_BRACES = eq =>
-        {
-            int i = 0;
-            List<IExpression> newEqs = new List<IExpression>();
-            while (true)
-            {
-                ExpressionMapping expansionMapping = new BraceExpansionMapping(i);
-
-                IExpression newEq = eq.PostMap(expansionMapping);
-
-                if (newEq.Equals(eq))
-                {
-                    break;
-                }
-
-                newEqs.Add(newEq);
-                i++;
-            }
-            return newEqs;
-        };
+        public static readonly ReplacementPath ExpandBraces = new ReplacementPath(
+                Expression.VarX * (Expression.VarY + Expression.VarZ),
+                Expression.VarX * Expression.VarY + Expression.VarX * Expression.VarZ
+            );
+        public static readonly ReplacementPath FactorBraces = new ReplacementPath(
+                Expression.VarX * Expression.VarY + Expression.VarX * Expression.VarZ,
+                Expression.VarX * (Expression.VarY + Expression.VarZ)
+            );
     }
 }

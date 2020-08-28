@@ -54,8 +54,8 @@ namespace Algebra
                     IExpression exponentEq;
                     if (eq is Exponent expeq)
                     {
-                        baseEq = expeq.term;
-                        exponentEq = expeq.power;
+                        baseEq = expeq.GetTerm();
+                        exponentEq = expeq.GetPower();
                     }
                     else
                     {
