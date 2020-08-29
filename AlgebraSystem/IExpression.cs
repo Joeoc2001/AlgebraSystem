@@ -129,7 +129,7 @@ namespace Algebra
 
         public static IExpression operator /(IExpression left, IExpression right)
         {
-            return DivIdentity.Instance.CreateExpression(left, right);
+            return Expression.Divide(left, right);
         }
         public static IExpression operator /(double left, IExpression right) => Expression.ConstantFrom(left) / right;
         public static IExpression operator /(IExpression left, double right) => left / Expression.ConstantFrom(right);
