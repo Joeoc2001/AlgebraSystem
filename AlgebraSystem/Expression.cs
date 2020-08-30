@@ -67,36 +67,6 @@ namespace Algebra
             return _hashCode.Value;
         }
 
-        public bool Equals(IExpression e, EqualityLevel level)
-        {
-            if (e is null)
-            {
-                return false;
-            }
-
-            switch (level)
-            {
-                case EqualityLevel.Exactly:
-                    // Check hash first
-                    if (GetHashCode() != e.GetHashCode())
-                    {
-                        return false;
-                    }
-                    return ExactlyEquals(e);
-                case EqualityLevel.Atomic:
-                    // Get atomic expressions and check if they are equal on the mimimum level
-                    IExpression atomicA = this.GetAtomicExpression();
-                    IExpression atomicB = e.GetAtomicExpression();
-                    return atomicA.Equals(atomicB, EqualityLevel.Exactly);
-                case EqualityLevel.Deep:
-                    return GetEquivalenceClass().IsInClass(e, 3);
-                case EqualityLevel.Deepest:
-                    return GetEquivalenceClass().IsInClass(e);
-                default:
-                    throw new NotImplementedException($"Unknown equality level: {level}");
-            }
-        }
-
         protected abstract IAtomicExpression GenAtomicExpression();
         private IAtomicExpression _atomicExpression = null;
         public IAtomicExpression GetAtomicExpression()
@@ -138,9 +108,44 @@ namespace Algebra
             return Evaluate(other, GetOrderingDualEvaluator.Instance);
         }
 
-        public override bool Equals(object obj)
+        public override sealed bool Equals(object obj)
         {
             return Equals(obj as IExpression);
+        }
+
+        public bool Equals(IExpression obj)
+        {
+            return Equals(obj, EqualityLevel.Atomic);
+        }
+
+        public bool Equals(IExpression e, EqualityLevel level)
+        {
+            if (e is null)
+            {
+                return false;
+            }
+
+            switch (level)
+            {
+                case EqualityLevel.Exactly:
+                    // Check hash first
+                    if (GetHashCode() != e.GetHashCode())
+                    {
+                        return false;
+                    }
+                    return ExactlyEquals(e);
+                case EqualityLevel.Atomic:
+                    // Get atomic expressions and check if they are equal on the mimimum level
+                    IExpression atomicA = this.GetAtomicExpression();
+                    IExpression atomicB = e.GetAtomicExpression();
+                    return atomicA.Equals(atomicB, EqualityLevel.Exactly);
+                case EqualityLevel.Deep:
+                    return GetEquivalenceClass().IsInClass(e, 3);
+                case EqualityLevel.Deepest:
+                    return GetEquivalenceClass().IsInClass(e);
+                default:
+                    throw new NotImplementedException($"Unknown equality level: {level}");
+            }
         }
 
         public static bool operator ==(Expression left, Expression right)
@@ -182,7 +187,9 @@ namespace Algebra
         public static IExpression operator /(Expression left, Expression right) => Divide(left, right);
 
 
+        public static IExpression Add<T>(params T[] eqs) where T : IExpression => Add(new List<T>(eqs));
         public static IExpression Add<T>(IEnumerable<T> eqs) where T : IExpression => Sum.Add(eqs);
+        public static IExpression Multiply<T>(params T[] eqs) where T : IExpression => Multiply(new List<T>(eqs));
         public static IExpression Multiply<T>(IEnumerable<T> eqs) where T : IExpression => Product.Multiply(eqs);
 
         public static IExpression Divide(Expression left, Expression right) => Divide((IExpression)left, (IExpression)right);

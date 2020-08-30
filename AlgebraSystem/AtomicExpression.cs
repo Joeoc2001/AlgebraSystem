@@ -26,8 +26,33 @@ namespace Algebra
             _atomicExpression = expression;
         }
 
+        public override string ToString()
+        {
+            return _atomicExpression.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return _atomicExpression.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IExpression);
+        }
+
+        public bool Equals(IExpression other)
+        {
+            return Equals(other, EqualityLevel.Atomic);
+        }
+
         public bool Equals(IExpression e, EqualityLevel level)
         {
+            if (e is null)
+            {
+                return false;
+            }
+
             switch (level)
             {
                 // We can shortcut this bit slightly as this doesn't need to be put into atomic form

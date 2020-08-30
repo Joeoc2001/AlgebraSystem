@@ -73,10 +73,7 @@ namespace Algebra
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>True if obj is an Expression and has the same exact representation as this</returns>
-        public bool Equals(object obj)
-        {
-            return Equals(obj as IExpression);
-        }
+        public bool Equals(object obj);
 
         /// <summary>
         /// Default Expression equality method.
@@ -84,10 +81,7 @@ namespace Algebra
         /// </summary>
         /// <param name="e">The expression to check</param>
         /// <returns>True if the expression has the same exact representation as this</returns>
-        public bool Equals(IExpression other)
-        {
-            return Equals(other, EqualityLevel.Exactly);
-        }
+        public bool Equals(IExpression other);
 
         /// <summary>
         /// Checks if an expression is equal to this on a variable level.

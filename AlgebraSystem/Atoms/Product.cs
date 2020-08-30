@@ -65,7 +65,8 @@ namespace Algebra
 
                     if (!exponents.TryGetValue(baseEq, out List<IExpression> exponentList))
                     {
-                        exponents.Add(baseEq, new List<IExpression>());
+                        exponentList = new List<IExpression>();
+                        exponents.Add(baseEq, exponentList);
                     }
                     exponentList.Add(exponentEq);
                 }
