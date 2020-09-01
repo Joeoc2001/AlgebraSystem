@@ -63,11 +63,11 @@ namespace Algebra
                 }
                 // Put back into exponent form
                 newEqs.Clear();
-                foreach (IExpression eq in terms.Keys)
+                foreach ((IExpression eq, Constant coefficient) in terms)
                 {
-                    IExpression newEq = eq * terms[eq];
+                    IExpression newEq = eq * coefficient;
 
-                    if (newEq.Equals(Constant.Zero))
+                    if (newEq.Equals(Zero))
                     {
                         continue;
                     }

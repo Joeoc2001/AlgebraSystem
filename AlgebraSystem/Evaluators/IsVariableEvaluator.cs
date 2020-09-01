@@ -25,7 +25,7 @@ namespace Algebra.Evaluators
 
             public bool IsVariable()
             {
-                return _name is null;
+                return !(_name is null);
             }
 
             public string GetName()

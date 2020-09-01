@@ -9,7 +9,7 @@ using System.Numerics;
 
 namespace Algebra
 {
-    public interface IExpression : IComparable<IExpression>
+    public interface IExpression : IComparable<IExpression>, IEquatable<IExpression>
     {
         IExpression GetDerivative(string wrt);
         T Evaluate<T>(IEvaluator<T> evaluator);
@@ -65,23 +65,6 @@ namespace Algebra
         /// </summary>
         /// <returns>A queriable equivalence class for this expression</returns>
         IEquivalenceClass GetEquivalenceClass();
-
-        // Equality methods
-        /// <summary>
-        /// Default object equality method.
-        /// If obj is an Expression, checks equality on the exact level
-        /// </summary>
-        /// <param name="obj">The object to check</param>
-        /// <returns>True if obj is an Expression and has the same exact representation as this</returns>
-        public bool Equals(object obj);
-
-        /// <summary>
-        /// Default Expression equality method.
-        /// Checks equality on the exact level
-        /// </summary>
-        /// <param name="e">The expression to check</param>
-        /// <returns>True if the expression has the same exact representation as this</returns>
-        public bool Equals(IExpression other);
 
         /// <summary>
         /// Checks if an expression is equal to this on a variable level.

@@ -10,7 +10,8 @@ namespace Algebra.Equivalence
     internal class EquivalenceClass : IEquivalenceClass
     {
         public static readonly List<EquivalencePath> DEFAULT_PATHS = new List<EquivalencePath> {
-            EquivalencePaths.ExpandBraces
+            EquivalencePaths.ExpandBraces,
+            EquivalencePaths.FactorBraces
         };
 
         private readonly IExpression _anchorExpression; // The expression used to define the equivalence class

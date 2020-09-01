@@ -72,10 +72,8 @@ namespace Algebra
                 }
                 // Put back into exponent form
                 newEqs.Clear();
-                foreach (IExpression eq in exponents.Keys)
+                foreach ((IExpression eq, List<IExpression> powers) in exponents)
                 {
-                    List<IExpression> powers = exponents[eq];
-
                     IExpression newEq = Pow(eq, Add(powers));
 
                     if (newEq.Equals(One))
