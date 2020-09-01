@@ -6,7 +6,7 @@ namespace Algebra
 {
     namespace Atoms
     {
-        internal class Variable : Expression, IAtomicExpression
+        internal class Variable : Expression
         {
             private readonly string _name;
 
@@ -22,16 +22,6 @@ namespace Algebra
                     return One;
                 }
                 return Zero;
-            }
-
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Variable variable))
-                {
-                    return false;
-                }
-
-                return _name.Equals(variable._name);
             }
 
             protected override int GenHashCode()
@@ -68,7 +58,7 @@ namespace Algebra
                 return evaluator.EvaluateOthers(this, otherExpression);
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            protected override IExpression GenAtomicExpression()
             {
                 return this;
             }

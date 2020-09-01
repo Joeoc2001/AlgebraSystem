@@ -54,42 +54,6 @@ namespace Algebra
                 return GetAtomicExpression().GetDerivative(wrt);
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Function function))
-                {
-                    return false;
-                }
-
-                if (!_identity.Equals(function._identity))
-                {
-                    return false;
-                }
-
-                IDictionary<string, IExpression> p1 = GetParameters();
-                IDictionary<string, IExpression> p2 = function.GetParameters();
-
-                if (p1.Count != p2.Count)
-                {
-                    return false;
-                }
-
-                foreach (string parameterName in p1.Keys)
-                {
-                    if (!p2.TryGetValue(parameterName, out IExpression expression2))
-                    {
-                        return false; // The parameter with given name doesn't exist in p2
-                    }
-                    IExpression expression1 = p1[parameterName];
-                    if (!expression1.Equals(expression2, EqualityLevel.Exactly))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
             protected override int GenHashCode()
             {
                 int value = _identity.GetHashSeed();
@@ -133,7 +97,7 @@ namespace Algebra
                 return builder.ToString();
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            protected override IExpression GenAtomicExpression()
             {
                 IExpression atomicVariabledExpression = _identity.GetBodyAsAtomicExpression();
 
@@ -143,9 +107,7 @@ namespace Algebra
                 {
                     atomicReplacements.Add(parameter.Key, parameter.Value.GetAtomicExpression());
                 }
-                IExpression atomicExpression = atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(atomicReplacements));
-
-                return AtomicExpression.GetAtomicExpression(atomicExpression);
+                return atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(atomicReplacements));
             }
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)

@@ -6,7 +6,7 @@ namespace Algebra
 {
     namespace Atoms
     {
-        internal class Constant : Expression, IAtomicExpression
+        internal class Constant : Expression
         {
             public static implicit operator Constant(int r) => Constant.FromValue(r);
             public static implicit operator Constant(long r) => Constant.FromValue(r);
@@ -30,16 +30,6 @@ namespace Algebra
             public override IExpression GetDerivative(string wrt)
             {
                 return Expression.Zero;
-            }
-
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Constant constant))
-                {
-                    return false;
-                }
-
-                return _value.Equals(constant._value);
             }
 
             protected override int GenHashCode()
@@ -81,7 +71,7 @@ namespace Algebra
                 return evaluator.EvaluateOthers(this, otherExpression);
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            protected override IExpression GenAtomicExpression()
             {
                 return this;
             }

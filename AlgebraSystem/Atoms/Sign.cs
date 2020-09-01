@@ -48,16 +48,6 @@ namespace Algebra
                 return Zero; // Not always true, but true 100% of the time :P
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Sign sign))
-                {
-                    return false;
-                }
-
-                return _argument.Equals(sign._argument, EqualityLevel.Exactly);
-            }
-
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
             {
                 return SignOf;

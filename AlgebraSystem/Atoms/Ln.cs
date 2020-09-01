@@ -28,16 +28,6 @@ namespace Algebra
                 return derivative / _argument;
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Ln ln))
-                {
-                    return false;
-                }
-
-                return _argument.Equals(ln._argument);
-            }
-
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
             {
                 return LnOf;

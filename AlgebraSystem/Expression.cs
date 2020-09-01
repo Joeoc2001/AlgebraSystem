@@ -51,13 +51,22 @@ namespace Algebra
 
         public abstract IExpression GetDerivative(string wrt);
         protected abstract int GenHashCode();
-        protected abstract bool ExactlyEquals(IExpression expression);
+        protected abstract IExpression GenAtomicExpression();
         public abstract T Evaluate<T>(IEvaluator<T> evaluator);
         public abstract T Evaluate<T>(IExpandedEvaluator<T> evaluator);
         public abstract T Evaluate<T>(IExpression other, IDualEvaluator<T> evaluator);
         public abstract int GetOrderIndex();
 
-        private int? _hashCode = null;
+        // Generated on demand
+        private int? _hashCode;
+        private bool? _isAtomic;
+        private IExpression _atomicExpression; 
+
+        public Expression()
+        {
+
+        }
+
         public override int GetHashCode()
         {
             if (!_hashCode.HasValue)
@@ -67,14 +76,27 @@ namespace Algebra
             return _hashCode.Value;
         }
 
-        protected abstract IAtomicExpression GenAtomicExpression();
-        private IAtomicExpression _atomicExpression = null;
-        public IAtomicExpression GetAtomicExpression()
+        public bool IsAtomic()
         {
+            if (!_isAtomic.HasValue)
+            {
+                _isAtomic = Evaluate(IsAtomicEvaluator.Instance);
+            }
+            return _isAtomic.Value;
+        }
+
+        public IExpression GetAtomicExpression()
+        {
+            if (IsAtomic())
+            {
+                return this;
+            }
+
             if (_atomicExpression is null)
             {
                 _atomicExpression = GenAtomicExpression();
             }
+
             return _atomicExpression;
         }
 
@@ -98,11 +120,6 @@ namespace Algebra
             return new EquivalenceClass(this);
         }
 
-        public bool IsAtomic()
-        {
-            return Evaluate(IsAtomicEvaluator.Instance);
-        }
-
         public int CompareTo(IExpression other)
         {
             return Evaluate(other, GetOrderingDualEvaluator.Instance);
@@ -115,7 +132,7 @@ namespace Algebra
 
         public bool Equals(IExpression obj)
         {
-            return Equals(obj, EqualityLevel.Atomic);
+            return Equals(obj, EqualityLevel.Exactly);
         }
 
         public bool Equals(IExpression e, EqualityLevel level)
@@ -146,6 +163,11 @@ namespace Algebra
                 default:
                     throw new NotImplementedException($"Unknown equality level: {level}");
             }
+        }
+
+        protected bool ExactlyEquals(IExpression expression)
+        {
+            return Evaluate(expression, ExactlyEqualsDualEvaluator.Instance);
         }
 
         public static bool operator ==(Expression left, Expression right)

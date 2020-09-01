@@ -26,54 +26,6 @@ namespace Algebra
             public abstract string OperationSymbol();
             public abstract Func<List<IExpression>, IExpression> GetSimplifyingConstructor();
 
-            protected bool OperandsExactlyEquals(IList<IExpression> otherArgs)
-            {
-                // Check for commutativity
-                // Add all parameters to dict by hash
-                Dictionary<int, List<IExpression>> expressionsByHashes = new Dictionary<int, List<IExpression>>();
-                foreach (IExpression otherArg in otherArgs)
-                {
-                    int hash = otherArg.GetHashCode();
-                    if (!expressionsByHashes.TryGetValue(hash, out List<IExpression> expressions))
-                    {
-                        expressions = new List<IExpression>();
-                        expressionsByHashes.Add(hash, expressions);
-                    }
-                    expressions.Add(otherArg);
-                }
-
-                // Check all parameters in this are present
-                IList<IExpression> thisArgs = _arguments;
-                foreach (IExpression thisArg in thisArgs)
-                {
-                    int hash = thisArg.GetHashCode();
-                    if (!expressionsByHashes.TryGetValue(hash, out List<IExpression> expressions))
-                    {
-                        return false;
-                    }
-
-                    // Perform linear search on all equations with same hash
-                    bool found = false;
-                    foreach (IExpression otherArg in expressions)
-                    {
-                        if (otherArg.Equals(thisArg, EqualityLevel.Exactly))
-                        {
-                            found = true;
-                            expressions.Remove(otherArg);
-                            break;
-                        }
-                    }
-
-                    // If linear search failed then args are different
-                    if (!found)
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
             protected override int GenHashCode()
             {
                 int value = -1906136416 * OperationSymbol().GetHashCode();
@@ -131,7 +83,7 @@ namespace Algebra
                 return builder.ToString();
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            protected override IExpression GenAtomicExpression()
             {
                 // Replace variables with their expressions
                 List<IExpression> atomicArguments = new List<IExpression>();
@@ -139,9 +91,7 @@ namespace Algebra
                 {
                     atomicArguments.Add(argument.GetAtomicExpression());
                 }
-                IExpression atomicExpression = GetSimplifyingConstructor()(atomicArguments);
-
-                return AtomicExpression.GetAtomicExpression(atomicExpression);
+                return GetSimplifyingConstructor()(atomicArguments);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Algebra.Functions
     public class FunctionIdentity : FunctionGenerator, IFunctionIdentity
     {
         private readonly int _hashSeed;
-        private readonly IAtomicExpression _atomicExpression;
+        private readonly IExpression _atomicExpression;
 
         public FunctionIdentity(string name, int hashSeed, IExpression alternateExpression)
             : base(name, alternateExpression.GetVariables())
@@ -29,7 +29,7 @@ namespace Algebra.Functions
             return _hashSeed;
         }
 
-        public IAtomicExpression GetBodyAsAtomicExpression()
+        public IExpression GetBodyAsAtomicExpression()
         {
             return _atomicExpression;
         }

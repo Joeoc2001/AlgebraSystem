@@ -133,17 +133,6 @@ namespace Algebra
                 return Sum.Add(terms);
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Product product))
-                {
-                    return false;
-                }
-
-                // Check for commutativity
-                return OperandsExactlyEquals(product._arguments);
-            }
-
             public override int IdentityValue()
             {
                 return 1;

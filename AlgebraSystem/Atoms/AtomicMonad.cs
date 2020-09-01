@@ -23,11 +23,10 @@ namespace Algebra
                 return _argument.GetHashCode() ^ GetHashSeed();
             }
 
-            protected override sealed IAtomicExpression GenAtomicExpression()
+            protected override IExpression GenAtomicExpression()
             {
-                IAtomicExpression atomicArg = _argument.GetAtomicExpression();
-                IExpression expression = GetSimplifyingConstructor()(atomicArg);
-                return AtomicExpression.GetAtomicExpression(expression);
+                IExpression atomicArg = _argument.GetAtomicExpression();
+                return GetSimplifyingConstructor()(atomicArg);
             }
 
             public override sealed string ToString()

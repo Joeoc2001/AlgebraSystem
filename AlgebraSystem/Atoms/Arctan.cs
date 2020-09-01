@@ -28,16 +28,6 @@ namespace Algebra
                 return derivative / (1 + Pow(_argument, ConstantFrom(2)));
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Arctan arctan))
-                {
-                    return false;
-                }
-
-                return _argument.Equals(arctan._argument);
-            }
-
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
             {
                 return ArctanOf;

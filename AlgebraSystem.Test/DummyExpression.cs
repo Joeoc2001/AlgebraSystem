@@ -6,16 +6,13 @@ using System.Text;
 
 namespace AlgebraSystem.Test
 {
-    class DummyExpression : Expression, IAtomicExpression
+    class DummyExpression : Expression, IExpression
     {
         public bool DerivativeGot { get => DerivativeGotCount > 0; }
         public int DerivativeGotCount { get; private set; } = 0;
 
         public bool OrderIndexGot { get => OrderIndexGotCount > 0; }
         public int OrderIndexGotCount { get; private set; } = 0;
-
-        public bool ExactlyEqualsCalled { get => ExactlyEqualsCalledCount > 0; }
-        public int ExactlyEqualsCalledCount { get; private set; } = 0;
 
         public bool GenHashCodeCalled { get => GenHashCodeCalledCount > 0; }
         public int GenHashCodeCalledCount { get; private set; } = 0;
@@ -51,19 +48,13 @@ namespace AlgebraSystem.Test
             return 0;
         }
 
-        protected override bool ExactlyEquals(IExpression expression)
-        {
-            ExactlyEqualsCalledCount += 1;
-            return ReferenceEquals(this, expression);
-        }
-
         protected override int GenHashCode()
         {
             GenHashCodeCalledCount += 1;
             return 0;
         }
 
-        protected override IAtomicExpression GenAtomicExpression()
+        protected override IExpression GenAtomicExpression()
         {
             GenAtomicExpressionCalledCount += 1;
             return this;

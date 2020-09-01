@@ -103,17 +103,6 @@ namespace Algebra
                 return Add(derivatives);
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Sum sum))
-                {
-                    return false;
-                }
-
-                // Check for commutativity
-                return OperandsExactlyEquals(sum._arguments);
-            }
-
             public override int IdentityValue()
             {
                 return 0;

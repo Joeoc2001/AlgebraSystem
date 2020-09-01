@@ -39,7 +39,7 @@ namespace Algebra
         /// Instead, this form is used as an intermediate form for performing simplifications.
         /// </summary>
         /// <returns>An expression in atomic form</returns>
-        IAtomicExpression GetAtomicExpression();
+        IExpression GetAtomicExpression();
 
         /// <summary>
         /// Checks if this expression is in atomic form, i.e. has no function calls. 
@@ -65,6 +65,9 @@ namespace Algebra
         /// </summary>
         /// <returns>A queriable equivalence class for this expression</returns>
         IEquivalenceClass GetEquivalenceClass();
+
+        bool Equals(object obj);
+        // new bool Equals(IExpression obj);
 
         /// <summary>
         /// Checks if an expression is equal to this on a variable level.

@@ -28,16 +28,6 @@ namespace Algebra
                 return derivative * CosOf(_argument);
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Sin sin))
-                {
-                    return false;
-                }
-
-                return _argument.Equals(sin._argument);
-            }
-
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
             {
                 return SinOf;

@@ -81,16 +81,6 @@ namespace Algebra
                 return _term;
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Exponent exponent))
-                {
-                    return false;
-                }
-
-                return _term.Equals(exponent._term) && _power.Equals(exponent._power);
-            }
-
             protected override int GenHashCode()
             {
                 return (65 * _term.GetHashCode() - _power.GetHashCode()) ^ 642859777;
@@ -131,11 +121,11 @@ namespace Algebra
                 return evaluator.EvaluateOthers(this, otherExpression);
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            protected override IExpression GenAtomicExpression()
             {
-                IAtomicExpression baseAtomic = _term.GetAtomicExpression();
-                IAtomicExpression powerAtomic = _term.GetAtomicExpression();
-                return AtomicExpression.GetAtomicExpression(Expression.Pow(baseAtomic, powerAtomic));
+                IExpression baseAtomic = _term.GetAtomicExpression();
+                IExpression powerAtomic = _term.GetAtomicExpression();
+                return Expression.Pow(baseAtomic, powerAtomic);
             }
         }
     }

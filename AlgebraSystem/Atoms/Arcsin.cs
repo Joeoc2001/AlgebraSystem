@@ -28,16 +28,6 @@ namespace Algebra
                 return derivative * (1 / Pow(1 - Pow(_argument, ConstantFrom(2)), ConstantFrom(0.5)));
             }
 
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Arcsin arcsin))
-                {
-                    return false;
-                }
-
-                return _argument.Equals(arcsin._argument);
-            }
-
             public override Func<IExpression, IExpression> GetSimplifyingConstructor()
             {
                 return ArcsinOf;

@@ -7,7 +7,7 @@ namespace Algebra
 {
     public interface IFunctionIdentity : IFunctionGenerator
     {
-        IAtomicExpression GetBodyAsAtomicExpression();
+        IExpression GetBodyAsAtomicExpression();
         int GetHashSeed();
     }
 }
