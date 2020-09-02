@@ -27,7 +27,7 @@ namespace Algebra
                 this._value = value;
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
                 return Expression.Zero;
             }
@@ -62,7 +62,7 @@ namespace Algebra
                 return evaluator.EvaluateConstant(this, _value);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Constant other)
                 {
@@ -71,7 +71,7 @@ namespace Algebra
                 return evaluator.EvaluateOthers(this, otherExpression);
             }
 
-            protected override IExpression GenAtomicExpression()
+            protected override Expression GenAtomicExpression()
             {
                 return this;
             }

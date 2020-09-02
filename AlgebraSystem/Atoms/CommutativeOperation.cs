@@ -12,11 +12,11 @@ namespace Algebra
     {
         internal abstract class CommutativeOperation : Expression
         {
-            protected readonly ReadOnlyCollection<IExpression> _arguments;
+            protected readonly ReadOnlyCollection<Expression> _arguments;
 
-            public CommutativeOperation(IList<IExpression> eqs)
+            public CommutativeOperation(IList<Expression> eqs)
             {
-                this._arguments = new ReadOnlyCollection<IExpression>(eqs);
+                this._arguments = new ReadOnlyCollection<Expression>(eqs);
             }
 
             public abstract int IdentityValue();
@@ -24,26 +24,26 @@ namespace Algebra
             public delegate Rational Operation(Rational a, Rational b);
             public abstract string EmptyName();
             public abstract string OperationSymbol();
-            public abstract Func<List<IExpression>, IExpression> GetSimplifyingConstructor();
+            public abstract Func<List<Expression>, Expression> GetSimplifyingConstructor();
 
             protected override int GenHashCode()
             {
                 int value = -1906136416 * OperationSymbol().GetHashCode();
-                foreach (IExpression eq in _arguments)
+                foreach (Expression eq in _arguments)
                 {
                     value ^= eq.GetHashCode(); // This is bad practice but it will have to do
                 }
                 return value;
             }
 
-            protected static List<IExpression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : IExpression
+            protected static List<Expression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : Expression
             {
-                List<IExpression> newEqs = new List<IExpression>(eqs.Count);
+                List<Expression> newEqs = new List<Expression>(eqs.Count);
 
                 Rational collectedConstants = identity;
 
                 // Loop & simplify
-                foreach (IExpression eq in eqs)
+                foreach (Expression eq in eqs)
                 {
                     if (eq is Constant constEq)
                     {
@@ -83,10 +83,10 @@ namespace Algebra
                 return builder.ToString();
             }
 
-            protected override IExpression GenAtomicExpression()
+            protected override Expression GenAtomicExpression()
             {
                 // Replace variables with their expressions
-                List<IExpression> atomicArguments = new List<IExpression>();
+                List<Expression> atomicArguments = new List<Expression>();
                 foreach (var argument in _arguments)
                 {
                     atomicArguments.Add(argument.GetAtomicExpression());

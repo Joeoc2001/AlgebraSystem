@@ -11,7 +11,7 @@ namespace Algebra
     {
         internal class Sign : AtomicMonad
         {
-            new public static IExpression SignOf(IExpression argument)
+            new public static Expression SignOf(Expression argument)
             {
                 if (argument is Sign s)
                 {
@@ -37,18 +37,18 @@ namespace Algebra
                 return new Sign(argument);
             }
 
-            private Sign(IExpression argument)
+            private Sign(Expression argument)
                 : base(argument)
             {
 
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
                 return Zero; // Not always true, but true 100% of the time :P
             }
 
-            public override Func<IExpression, IExpression> GetSimplifyingConstructor()
+            public override Func<Expression, Expression> GetSimplifyingConstructor()
             {
                 return SignOf;
             }
@@ -73,7 +73,7 @@ namespace Algebra
                 return evaluator.EvaluateSign(this, _argument);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Sign other)
                 {

@@ -19,7 +19,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression expression = Expression.LnOf(Expression.VarX);
+            Expression expression = Expression.LnOf(Expression.VarX);
 
             // ASSERT
             Assert.AreEqual(0, expression.GetOrderIndex());
@@ -29,7 +29,7 @@ namespace AtomTests
         public void Log_EvaluatesCorrectly([Range(1, 100)] int v)
         {
             // ARANGE
-            IExpression expression = Expression.LnOf(v);
+            Expression expression = Expression.LnOf(v);
 
             // ACT
             float value = expression.EvaluateOnce(new VariableInputSet<float>());
@@ -45,8 +45,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression argument = Expression.VarY;
-            IExpression expression = Expression.LnOf(argument);
+            Expression argument = Expression.VarY;
+            Expression expression = Expression.LnOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
 
@@ -61,7 +61,7 @@ namespace AtomTests
 
             // ACT
             Expression argument = 2;
-            IExpression expression = Expression.LnOf(argument);
+            Expression expression = Expression.LnOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
 
@@ -75,8 +75,8 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression argument = Expression.VarX + 1;
-            IExpression expression = Expression.LnOf(argument);
+            Expression argument = Expression.VarX + 1;
+            Expression expression = Expression.LnOf(argument);
             int hash1 = argument.GetHashCode();
             int hash2 = expression.GetHashCode();
 
@@ -90,9 +90,9 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            IExpression argument = Expression.VarX;
-            IExpression ln = Expression.LnOf(argument);
-            IExpression sign = Expression.SignOf(argument);
+            Expression argument = Expression.VarX;
+            Expression ln = Expression.LnOf(argument);
+            Expression sign = Expression.SignOf(argument);
             int hash1 = ln.GetHashCode();
             int hash2 = sign.GetHashCode();
 
@@ -107,7 +107,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = Expression.LnOf(dummy1);
+            Expression _ = Expression.LnOf(dummy1);
 
             // ASSERT
             Assert.IsFalse(dummy1.GenAtomicExpressionCalled);
@@ -120,7 +120,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = Expression.LnOf(dummy1);
+            Expression _ = Expression.LnOf(dummy1);
 
             // ASSERT
             Assert.IsFalse(dummy1.ToStringCalled);
@@ -133,7 +133,7 @@ namespace AtomTests
             DummyExpression dummy1 = new DummyExpression();
 
             // ACT
-            IExpression _ = Expression.LnOf(dummy1);
+            Expression _ = Expression.LnOf(dummy1);
 
             // ASSERT
             Assert.IsFalse(dummy1.EvaluateCalled);

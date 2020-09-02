@@ -11,24 +11,24 @@ namespace Algebra
     {
         internal class Arcsin : AtomicMonad
         {
-            new public static IExpression ArcsinOf(IExpression argument)
+            new public static Expression ArcsinOf(Expression argument)
             {
                 return new Arcsin(argument);
             }
 
-            public Arcsin(IExpression argument)
+            public Arcsin(Expression argument)
                 : base(argument)
             {
 
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
-                IExpression derivative = _argument.GetDerivative(wrt);
+                Expression derivative = _argument.GetDerivative(wrt);
                 return derivative * (1 / Pow(1 - Pow(_argument, ConstantFrom(2)), ConstantFrom(0.5)));
             }
 
-            public override Func<IExpression, IExpression> GetSimplifyingConstructor()
+            public override Func<Expression, Expression> GetSimplifyingConstructor()
             {
                 return ArcsinOf;
             }
@@ -53,7 +53,7 @@ namespace Algebra
                 return evaluator.EvaluateArcsin(this, _argument);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Arcsin other)
                 {

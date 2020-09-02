@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,15 +10,15 @@ namespace Algebra
     {
         T EvaluateConstants(Rational value1, Rational value2);
         T EvaluateVariables(string name1, string name2);
-        T EvaluateSums(ICollection<IExpression> arguments1, ICollection<IExpression> arguments2);
-        T EvaluateProducts(ICollection<IExpression> arguments1, ICollection<IExpression> arguments2);
-        T EvaluateExponents(IExpression baseArgument1, IExpression powerArgument1, IExpression baseArgument2, IExpression powerArgument2);
-        T EvaluateLns(IExpression argument1, IExpression argument2);
-        T EvaluateSigns(IExpression argument1, IExpression argument2);
-        T EvaluateSins(IExpression argument1, IExpression argument2);
-        T EvaluateArcsins(IExpression argument1, IExpression argument2);
-        T EvaluateArctans(IExpression argument1, IExpression argument2);
-        T EvaluateFunctions(IFunction function1, IFunction function2);
-        T EvaluateOthers(IExpression expression1, IExpression expression2);
+        T EvaluateSums(ICollection<Expression> arguments1, ICollection<Expression> arguments2);
+        T EvaluateProducts(ICollection<Expression> arguments1, ICollection<Expression> arguments2);
+        T EvaluateExponents(Expression baseArgument1, Expression powerArgument1, Expression baseArgument2, Expression powerArgument2);
+        T EvaluateLns(Expression argument1, Expression argument2);
+        T EvaluateSigns(Expression argument1, Expression argument2);
+        T EvaluateSins(Expression argument1, Expression argument2);
+        T EvaluateArcsins(Expression argument1, Expression argument2);
+        T EvaluateArctans(Expression argument1, Expression argument2);
+        T EvaluateFunctions(Function function1, Function function2);
+        T EvaluateOthers(Expression expression1, Expression expression2);
     }
 }

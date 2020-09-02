@@ -7,31 +7,31 @@ using System.Text;
 
 namespace Algebra.PatternMatching
 {
-    public class PatternMatchingResult : IReadOnlyDictionary<string, IExpression>, IEquatable<PatternMatchingResult>
+    public class PatternMatchingResult : IReadOnlyDictionary<string, Expression>, IEquatable<PatternMatchingResult>
     {
-        public static PatternMatchingResult Empty = new PatternMatchingResult(new Dictionary<string, IExpression>());
+        public static PatternMatchingResult Empty = new PatternMatchingResult(new Dictionary<string, Expression>());
 
-        private readonly ReadOnlyDictionary<string, IExpression> _matches;
+        private readonly ReadOnlyDictionary<string, Expression> _matches;
 
-        public PatternMatchingResult(string name, IExpression match)
-            : this(new Dictionary<string, IExpression>() { { name, match } })
+        public PatternMatchingResult(string name, Expression match)
+            : this(new Dictionary<string, Expression>() { { name, match } })
         {
 
         }
 
-        public PatternMatchingResult(IDictionary<string, IExpression> matches)
+        public PatternMatchingResult(IDictionary<string, Expression> matches)
         {
-            this._matches = new ReadOnlyDictionary<string, IExpression>(matches);
+            this._matches = new ReadOnlyDictionary<string, Expression>(matches);
         }
 
         public PatternMatchingResult CalculateJoin(PatternMatchingResult other)
         {
-            Dictionary<string, IExpression> join = new Dictionary<string, IExpression>();
+            Dictionary<string, Expression> join = new Dictionary<string, Expression>();
 
-            foreach ((string matchVar, IExpression matchValue1) in this)
+            foreach ((string matchVar, Expression matchValue1) in this)
             {
                 // If there is a match for the given variable in both results
-                if (other.TryGetValue(matchVar, out IExpression matchValue2))
+                if (other.TryGetValue(matchVar, out Expression matchValue2))
                 {
                     if (!matchValue1.Equals(matchValue2))
                     {
@@ -43,7 +43,7 @@ namespace Algebra.PatternMatching
                 join.Add(matchVar, matchValue1);
             }
 
-            foreach ((string matchVar, IExpression matchValue2) in other)
+            foreach ((string matchVar, Expression matchValue2) in other)
             {
                 // If there is a match for the given variable in both results then it was already dealt with in the above loop
                 if (other.ContainsKey(matchVar))
@@ -58,7 +58,7 @@ namespace Algebra.PatternMatching
             return new PatternMatchingResult(join);
         }
 
-        public IExpression this[string key]
+        public Expression this[string key]
         {
             get
             {
@@ -70,15 +70,15 @@ namespace Algebra.PatternMatching
         {
             get
             {
-                return ((IReadOnlyDictionary<string, IExpression>)_matches).Keys;
+                return ((IReadOnlyDictionary<string, Expression>)_matches).Keys;
             }
         }
 
-        public IEnumerable<IExpression> Values
+        public IEnumerable<Expression> Values
         {
             get
             {
-                return ((IReadOnlyDictionary<string, IExpression>)_matches).Values;
+                return ((IReadOnlyDictionary<string, Expression>)_matches).Values;
             }
         }
 
@@ -95,12 +95,12 @@ namespace Algebra.PatternMatching
             return _matches.ContainsKey(key);
         }
 
-        public IEnumerator<KeyValuePair<string, IExpression>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, Expression>> GetEnumerator()
         {
             return _matches.GetEnumerator();
         }
 
-        public bool TryGetValue(string key, out IExpression value)
+        public bool TryGetValue(string key, out Expression value)
         {
             return _matches.TryGetValue(key, out value);
         }

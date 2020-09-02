@@ -7,8 +7,8 @@ namespace Algebra
     {
         public static implicit operator ExpressionMapping(ExpressionMap map) => new ExpressionMapping() { Map = map };
 
-        public delegate IExpression ExpressionMap(IExpression a);
-        public delegate bool ExpressionFilter(IExpression a);
+        public delegate Expression ExpressionMap(Expression a);
+        public delegate bool ExpressionFilter(Expression a);
 
         public ExpressionMap Map = (a => a);
         public ExpressionFilter ShouldMapChildren = (a => true);

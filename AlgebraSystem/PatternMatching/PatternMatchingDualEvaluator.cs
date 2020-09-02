@@ -1,4 +1,5 @@
 ﻿using Algebra.Evaluators;
+using Algebra.Functions;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -27,32 +28,32 @@ namespace Algebra.PatternMatching
             return PatternMatchingResultSet.None;
         }
 
-        public PatternMatchingResultSet EvaluateArcsins(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateArcsins(Expression argumentPattern, Expression argumentToBeMatched)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateArctans(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateArctans(Expression argumentPattern, Expression argumentToBeMatched)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateLns(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateLns(Expression argumentPattern, Expression argumentToBeMatched)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateSigns(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateSigns(Expression argumentPattern, Expression argumentToBeMatched)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateSins(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateSins(Expression argumentPattern, Expression argumentToBeMatched)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateExponents(IExpression baseArgumentPattern, IExpression powerArgumentPattern, IExpression baseArgumentToBeMatched, IExpression powerArgumentToBeMatched)
+        public PatternMatchingResultSet EvaluateExponents(Expression baseArgumentPattern, Expression powerArgumentPattern, Expression baseArgumentToBeMatched, Expression powerArgumentToBeMatched)
         {
             PatternMatchingResultSet baseInputs = baseArgumentPattern.Evaluate(baseArgumentToBeMatched, this);
 
@@ -67,7 +68,7 @@ namespace Algebra.PatternMatching
             return baseInputs.Intersect(powerInputs);
         }
 
-        public PatternMatchingResultSet EvaluateFunctions(IFunction functionPattern, IFunction functionToBeMatched)
+        public PatternMatchingResultSet EvaluateFunctions(Function functionPattern, Function functionToBeMatched)
         {
             if (!functionPattern.GetIdentity().Equals(functionToBeMatched.GetIdentity()))
             {
@@ -78,9 +79,9 @@ namespace Algebra.PatternMatching
             var parametersToBeMatched = functionPattern.GetParameters();
 
             PatternMatchingResultSet resultSet = PatternMatchingResultSet.All;
-            foreach ((string parameterName, IExpression parameterPattern) in parametersPattern)
+            foreach ((string parameterName, Expression parameterPattern) in parametersPattern)
             {
-                if (!parametersToBeMatched.TryGetValue(parameterName, out IExpression parameterToBeMatched))
+                if (!parametersToBeMatched.TryGetValue(parameterName, out Expression parameterToBeMatched))
                 {
                     throw new NotSupportedException("Two functions with the same identity should always have the same parameter names");
                 }
@@ -151,11 +152,11 @@ namespace Algebra.PatternMatching
             }
         }
 
-        protected PatternMatchingResultSet GetResultsForSets(ICollection<IExpression> argumentsPattern, ICollection<IExpression> argumentsToBeMatched, Func<ICollection<IExpression>, IExpression> builder)
+        protected PatternMatchingResultSet GetResultsForSets(ICollection<Expression> argumentsPattern, ICollection<Expression> argumentsToBeMatched, Func<ICollection<Expression>, Expression> builder)
         {
             PatternMatchingResultSet results = PatternMatchingResultSet.None;
 
-            foreach (var item in GetAllPartitions(new List<IExpression>(argumentsToBeMatched), argumentsToBeMatched.Count))
+            foreach (var item in GetAllPartitions(new List<Expression>(argumentsToBeMatched), argumentsToBeMatched.Count))
             {
                 // This can be done way faster but I can't find an algorithm online
                 // TODO: Stop being an idiot and figure out an algorithm for myself
@@ -171,9 +172,9 @@ namespace Algebra.PatternMatching
 
                     PatternMatchingResultSet permResults = PatternMatchingResultSet.All;
 
-                    foreach (List<IExpression> part in permutation)
+                    foreach (List<Expression> part in permutation)
                     {
-                        IExpression partExpression = builder(part);
+                        Expression partExpression = builder(part);
                         PatternMatchingResultSet partResults = patternEnumerator.Current.Evaluate(partExpression, this);
                         permResults.Intersect(partResults);
                     }
@@ -185,12 +186,12 @@ namespace Algebra.PatternMatching
             return results;
         }
 
-        public PatternMatchingResultSet EvaluateProducts(ICollection<IExpression> argumentsPattern, ICollection<IExpression> argumentsToBeMatched)
+        public PatternMatchingResultSet EvaluateProducts(ICollection<Expression> argumentsPattern, ICollection<Expression> argumentsToBeMatched)
         {
             return GetResultsForSets(argumentsPattern, argumentsToBeMatched, Expression.Multiply);
         }
 
-        public PatternMatchingResultSet EvaluateSums(ICollection<IExpression> argumentsPattern, ICollection<IExpression> argumentsToBeMatched)
+        public PatternMatchingResultSet EvaluateSums(ICollection<Expression> argumentsPattern, ICollection<Expression> argumentsToBeMatched)
         {
             return GetResultsForSets(argumentsPattern, argumentsToBeMatched, Expression.Add);
         }
@@ -200,7 +201,7 @@ namespace Algebra.PatternMatching
             return new PatternMatchingResultSet(new PatternMatchingResult(namePattern, Expression.VariableFrom(nameToBeMatched)));
         }
 
-        public PatternMatchingResultSet EvaluateOthers(IExpression expressionPattern, IExpression expressionToBeMatched)
+        public PatternMatchingResultSet EvaluateOthers(Expression expressionPattern, Expression expressionToBeMatched)
         {
             IsVariableEvaluator.Result result = expressionPattern.Evaluate(IsVariableEvaluator.Instance);
             if (result.IsVariable())

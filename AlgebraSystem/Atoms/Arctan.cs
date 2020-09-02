@@ -11,24 +11,24 @@ namespace Algebra
     {
         internal class Arctan : AtomicMonad
         {
-            new public static IExpression ArctanOf(IExpression argument)
+            new public static Expression ArctanOf(Expression argument)
             {
                 return new Arctan(argument);
             }
 
-            public Arctan(IExpression argument)
+            public Arctan(Expression argument)
                 : base(argument)
             {
 
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
-                IExpression derivative = _argument.GetDerivative(wrt);
+                Expression derivative = _argument.GetDerivative(wrt);
                 return derivative / (1 + Pow(_argument, ConstantFrom(2)));
             }
 
-            public override Func<IExpression, IExpression> GetSimplifyingConstructor()
+            public override Func<Expression, Expression> GetSimplifyingConstructor()
             {
                 return ArctanOf;
             }
@@ -53,7 +53,7 @@ namespace Algebra
                 return evaluator.EvaluateArctan(this, _argument);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Arctan other)
                 {

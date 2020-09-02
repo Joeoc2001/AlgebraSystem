@@ -10,7 +10,7 @@ namespace Algebra
     {
         internal static class DivIdentity
         {
-            private static readonly IExpression _atomicExpression = Expression.VarA * Expression.Pow(Expression.VarB, Expression.MinusOne);
+            private static readonly Expression _atomicExpression = Expression.VarA * Expression.Pow(Expression.VarB, Expression.MinusOne);
             private static readonly int _hashSeed = -1042411579;
             private static readonly string _name = "div";
 

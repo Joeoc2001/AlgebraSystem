@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Algebra.Evaluators
 {
-    public class GetOrderingDualEvaluator : IDualEvaluator<int>, IComparer<IExpression>
+    public class GetOrderingDualEvaluator : IDualEvaluator<int>, IComparer<Expression>
     {
         public static readonly GetOrderingDualEvaluator Instance = new GetOrderingDualEvaluator();
 
@@ -15,16 +16,16 @@ namespace Algebra.Evaluators
 
         }
 
-        public int Compare(IExpression x, IExpression y)
+        public int Compare(Expression x, Expression y)
         {
             return x.Evaluate(y, this);
         }
 
-        private int CompareCommutative(ICollection<IExpression> a, ICollection<IExpression> b)
+        private int CompareCommutative(ICollection<Expression> a, ICollection<Expression> b)
         {
             // Compare based on lowest component of each, break ties on later terms
-            List<IExpression> aSorted = new List<IExpression>(a);
-            List<IExpression> bSorted = new List<IExpression>(b);
+            List<Expression> aSorted = new List<Expression>(a);
+            List<Expression> bSorted = new List<Expression>(b);
             aSorted.Sort(this);
             bSorted.Sort(this);
 
@@ -42,12 +43,12 @@ namespace Algebra.Evaluators
             return a.Count.CompareTo(b.Count);
         }
 
-        public int EvaluateArcsins(IExpression argument1, IExpression argument2)
+        public int EvaluateArcsins(Expression argument1, Expression argument2)
         {
             return argument1.Evaluate(argument2, this);
         }
 
-        public int EvaluateArctans(IExpression argument1, IExpression argument2)
+        public int EvaluateArctans(Expression argument1, Expression argument2)
         {
             return argument1.Evaluate(argument2, this);
         }
@@ -57,7 +58,7 @@ namespace Algebra.Evaluators
             return value1.CompareTo(value2);
         }
 
-        public int EvaluateExponents(IExpression baseArgument1, IExpression powerArgument1, IExpression baseArgument2, IExpression powerArgument2)
+        public int EvaluateExponents(Expression baseArgument1, Expression powerArgument1, Expression baseArgument2, Expression powerArgument2)
         {
             int comp1 = baseArgument1.Evaluate(baseArgument2, this);
             if (comp1 != 0)
@@ -67,11 +68,11 @@ namespace Algebra.Evaluators
             return powerArgument1.Evaluate(powerArgument2, this);
         }
 
-        public int EvaluateFunctions(IFunction function1, IFunction function2)
+        public int EvaluateFunctions(Function function1, Function function2)
         {
             // Sort by name first, then each parameter
-            IFunctionIdentity aId = function1.GetIdentity();
-            IFunctionIdentity bId = function2.GetIdentity();
+            FunctionIdentity aId = function1.GetIdentity();
+            FunctionIdentity bId = function2.GetIdentity();
             ReadOnlyCollection<string> aReq = aId.GetRequiredParameters();
             ReadOnlyCollection<string> bReq = bId.GetRequiredParameters();
             if (aId != bId)
@@ -96,12 +97,12 @@ namespace Algebra.Evaluators
             // ASSERT: Function types are the same
             // Therefore parameter keys are the same
             // Sort on parameter values
-            IDictionary<string, IExpression> aParams = function1.GetParameters();
-            IDictionary<string, IExpression> bParams = function2.GetParameters();
+            IDictionary<string, Expression> aParams = function1.GetParameters();
+            IDictionary<string, Expression> bParams = function2.GetParameters();
             foreach (string parameterName in aReq)
             {
-                IExpression aExp = aParams[parameterName];
-                IExpression bExp = bParams[parameterName];
+                Expression aExp = aParams[parameterName];
+                Expression bExp = bParams[parameterName];
                 int cmp3 = Compare(aExp, bExp);
                 if (cmp3 != 0)
                 {
@@ -113,34 +114,34 @@ namespace Algebra.Evaluators
             return 0;
         }
 
-        public int EvaluateLns(IExpression argument1, IExpression argument2)
+        public int EvaluateLns(Expression argument1, Expression argument2)
         {
             return argument1.Evaluate(argument2, this);
         }
 
-        public int EvaluateOthers(IExpression expression1, IExpression expression2)
+        public int EvaluateOthers(Expression expression1, Expression expression2)
         {
             int a = expression1.Evaluate(RankEvaluator.Instance);
             int b = expression1.Evaluate(RankEvaluator.Instance);
             return a.CompareTo(b);
         }
 
-        public int EvaluateProducts(ICollection<IExpression> arguments1, ICollection<IExpression> arguments2)
+        public int EvaluateProducts(ICollection<Expression> arguments1, ICollection<Expression> arguments2)
         {
             return CompareCommutative(arguments1, arguments2);
         }
 
-        public int EvaluateSigns(IExpression argument1, IExpression argument2)
+        public int EvaluateSigns(Expression argument1, Expression argument2)
         {
             return argument1.Evaluate(argument2, this);
         }
 
-        public int EvaluateSins(IExpression argument1, IExpression argument2)
+        public int EvaluateSins(Expression argument1, Expression argument2)
         {
             return argument1.Evaluate(argument2, this);
         }
 
-        public int EvaluateSums(ICollection<IExpression> arguments1, ICollection<IExpression> arguments2)
+        public int EvaluateSums(ICollection<Expression> arguments1, ICollection<Expression> arguments2)
         {
             return CompareCommutative(arguments1, arguments2);
         }

@@ -6,13 +6,13 @@ using Algebra.Functions.HardcodedFunctionIdentities;
 
 namespace Algebra.Functions
 {
-    public class FunctionGeneratorSet : IEnumerable<IFunctionGenerator>
+    public class FunctionGeneratorSet : IEnumerable<FunctionGenerator>
     {
-        private static readonly IFunctionGenerator _sinFunctionGenerator = new AtomicFunctionGenerator("sin", 1, list => Expression.SinOf(list[0]));
-        private static readonly IFunctionGenerator _arcsinFunctionGenerator = new AtomicFunctionGenerator("arcsin", 1, list => Expression.ArcsinOf(list[0]));
-        private static readonly IFunctionGenerator _arctanFunctionGenerator = new AtomicFunctionGenerator("arctan", 1, list => Expression.ArctanOf(list[0]));
-        private static readonly IFunctionGenerator _lnFunctionGenerator = new AtomicFunctionGenerator("ln", 1, list => Expression.LnOf(list[0]));
-        private static readonly IFunctionGenerator _signFunctionGenerator = new AtomicFunctionGenerator("sign", 1, list => Expression.SignOf(list[0]));
+        private static readonly FunctionGenerator _sinFunctionGenerator = new AtomicFunctionGenerator("sin", 1, list => Expression.SinOf(list[0]));
+        private static readonly FunctionGenerator _arcsinFunctionGenerator = new AtomicFunctionGenerator("arcsin", 1, list => Expression.ArcsinOf(list[0]));
+        private static readonly FunctionGenerator _arctanFunctionGenerator = new AtomicFunctionGenerator("arctan", 1, list => Expression.ArctanOf(list[0]));
+        private static readonly FunctionGenerator _lnFunctionGenerator = new AtomicFunctionGenerator("ln", 1, list => Expression.LnOf(list[0]));
+        private static readonly FunctionGenerator _signFunctionGenerator = new AtomicFunctionGenerator("sign", 1, list => Expression.SignOf(list[0]));
 
         public static readonly FunctionGeneratorSet DefaultFunctions = new FunctionGeneratorSet()
         {
@@ -38,10 +38,10 @@ namespace Algebra.Functions
             { SqrtIdentity.Instance },
         };
 
-        private readonly Dictionary<string, IFunctionGenerator> _generators;
+        private readonly Dictionary<string, FunctionGenerator> _generators;
 
         public FunctionGeneratorSet()
-            : this(new Dictionary<string, IFunctionGenerator>())
+            : this(new Dictionary<string, FunctionGenerator>())
         {
 
         }
@@ -52,24 +52,24 @@ namespace Algebra.Functions
 
         }
 
-        public FunctionGeneratorSet(IDictionary<string, IFunctionGenerator> generators)
+        public FunctionGeneratorSet(IDictionary<string, FunctionGenerator> generators)
         {
-            this._generators = new Dictionary<string, IFunctionGenerator>(generators);
+            this._generators = new Dictionary<string, FunctionGenerator>(generators);
         }
 
         public ICollection<string> Names { get => _generators.Keys; }
 
-        public IFunctionGenerator this[string name]
+        public FunctionGenerator this[string name]
         {
             get => _generators[name];
         }
 
-        public void Add(IFunctionGenerator generator)
+        public void Add(FunctionGenerator generator)
         {
             _generators.Add(generator.GetName(), generator);
         }
 
-        public IEnumerator<IFunctionGenerator> GetEnumerator()
+        public IEnumerator<FunctionGenerator> GetEnumerator()
         {
             return _generators.Values.GetEnumerator();
         }

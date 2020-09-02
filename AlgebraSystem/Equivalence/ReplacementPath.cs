@@ -9,12 +9,12 @@ namespace Algebra.Equivalence
     {
         private readonly ReplaceEvaluator _evaluator;
 
-        public ReplacementPath(IExpression pattern, IExpression replacement)
+        public ReplacementPath(Expression pattern, Expression replacement)
         {
             _evaluator = new ReplaceEvaluator(pattern, replacement);
         }
 
-        public override IEnumerable<IExpression> GetAllFrom(IExpression expression)
+        public override IEnumerable<Expression> GetAllFrom(Expression expression)
         {
             return expression.Evaluate(_evaluator);
         }

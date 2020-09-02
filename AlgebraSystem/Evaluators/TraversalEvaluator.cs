@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Algebra.Evaluators
 
         protected abstract T Pow(T b, T e);
 
-        public T EvaluateExponent(IExpression baseExpression, IExpression powerExpression)
+        public T EvaluateExponent(Expression baseExpression, Expression powerExpression)
         {
             T baseValue = baseExpression.Evaluate(this);
             T powerValue = powerExpression.Evaluate(this);
@@ -19,14 +20,14 @@ namespace Algebra.Evaluators
             return Pow(baseValue, powerValue);
         }
 
-        protected abstract T EvaluateFunction(IFunction function, IList<T> parameters);
+        protected abstract T EvaluateFunction(Function function, IList<T> parameters);
 
-        public T EvaluateFunction(IFunction function)
+        public T EvaluateFunction(Function function)
         {
             // Evaluate parameters
-            IList<IExpression> parameters = function.GetParameterList();
+            IList<Expression> parameters = function.GetParameterList();
             List<T> evaluated = new List<T>();
-            foreach (IExpression expression in parameters)
+            foreach (Expression expression in parameters)
             {
                 evaluated.Add(expression.Evaluate(this));
             }
@@ -36,17 +37,17 @@ namespace Algebra.Evaluators
 
         protected abstract T Ln(T expression);
 
-        public T EvaluateLn(IExpression argumentExpression)
+        public T EvaluateLn(Expression argumentExpression)
         {
             return Ln(argumentExpression.Evaluate(this));
         }
 
         protected abstract T Product(ICollection<T> expressions);
 
-        public T EvaluateProduct(ICollection<IExpression> expressions)
+        public T EvaluateProduct(ICollection<Expression> expressions)
         {
             List<T> evaluated = new List<T>();
-            foreach (IExpression expression in expressions)
+            foreach (Expression expression in expressions)
             {
                 evaluated.Add(expression.Evaluate(this));
             }
@@ -55,24 +56,24 @@ namespace Algebra.Evaluators
 
         protected abstract T Sign(T expression);
 
-        public T EvaluateSign(IExpression argumentExpression)
+        public T EvaluateSign(Expression argumentExpression)
         {
             return Sign(argumentExpression.Evaluate(this));
         }
 
         protected abstract T Sin(T expression);
 
-        public T EvaluateSin(IExpression argumentExpression)
+        public T EvaluateSin(Expression argumentExpression)
         {
             return Sin(argumentExpression.Evaluate(this));
         }
 
         protected abstract T Sum(ICollection<T> expressions);
 
-        public T EvaluateSum(ICollection<IExpression> expressions)
+        public T EvaluateSum(ICollection<Expression> expressions)
         {
             List<T> evaluated = new List<T>();
-            foreach (IExpression expression in expressions)
+            foreach (Expression expression in expressions)
             {
                 evaluated.Add(expression.Evaluate(this));
             }
@@ -83,18 +84,18 @@ namespace Algebra.Evaluators
 
         protected abstract T Arcsin(T expression);
 
-        public T EvaluateArcsin(IExpression argumentExpression)
+        public T EvaluateArcsin(Expression argumentExpression)
         {
             return Arcsin(argumentExpression.Evaluate(this));
         }
 
         protected abstract T Arctan(T expression);
 
-        public T EvaluateArctan(IExpression argumentExpression)
+        public T EvaluateArctan(Expression argumentExpression)
         {
             return Arctan(argumentExpression.Evaluate(this));
         }
 
-        public abstract T EvaluateOther(IExpression other);
+        public abstract T EvaluateOther(Expression other);
     }
 }

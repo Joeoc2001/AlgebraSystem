@@ -11,10 +11,10 @@ namespace Algebra
     {
         internal class Exponent : Expression
         {
-            private readonly IExpression _term;
-            private readonly IExpression _power;
+            private readonly Expression _term;
+            private readonly Expression _power;
 
-            new public static IExpression Pow(IExpression term, IExpression power)
+            new public static Expression Pow(Expression term, Expression power)
             {
                 if (power.Equals(One))
                 {
@@ -43,40 +43,40 @@ namespace Algebra
                 return new Exponent(term, power);
             }
 
-            public Exponent(IExpression term, IExpression power)
+            public Exponent(Expression term, Expression power)
             {
                 this._term = term;
                 this._power = power;
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
                 // Check for common cases
                 if (_power is Constant powerConst)
                 {
-                    IExpression baseDerivative = _term.GetDerivative(wrt);
+                    Expression baseDerivative = _term.GetDerivative(wrt);
                     return _power * baseDerivative * Pow(_term, ConstantFrom(powerConst.GetValue() - 1));
                 }
 
                 if (_term is Constant)
                 {
-                    IExpression exponentDerivative = _power.GetDerivative(wrt);
+                    Expression exponentDerivative = _power.GetDerivative(wrt);
                     return LnOf(_term) * exponentDerivative * this;
                 }
 
                 // Big derivative (u^v)'=(u^v)(vu'/u + v'ln(u))
                 // Alternatively  (u^v)'=(u^(v-1))(vu' + uv'ln(u)) but I find the first form simplifies faster
-                IExpression baseDeriv = _term.GetDerivative(wrt);
-                IExpression expDeriv = _power.GetDerivative(wrt);
+                Expression baseDeriv = _term.GetDerivative(wrt);
+                Expression expDeriv = _power.GetDerivative(wrt);
                 return this * ((_power * baseDeriv / _term) + (expDeriv * LnOf(_term)));
             }
 
-            public IExpression GetPower()
+            public Expression GetPower()
             {
                 return _power;
             }
 
-            public IExpression GetTerm()
+            public Expression GetTerm()
             {
                 return _term;
             }
@@ -112,7 +112,7 @@ namespace Algebra
                 return evaluator.EvaluateExponent(this, _term, _power);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Exponent other)
                 {
@@ -121,10 +121,10 @@ namespace Algebra
                 return evaluator.EvaluateOthers(this, otherExpression);
             }
 
-            protected override IExpression GenAtomicExpression()
+            protected override Expression GenAtomicExpression()
             {
-                IExpression baseAtomic = _term.GetAtomicExpression();
-                IExpression powerAtomic = _term.GetAtomicExpression();
+                Expression baseAtomic = _term.GetAtomicExpression();
+                Expression powerAtomic = _term.GetAtomicExpression();
                 return Expression.Pow(baseAtomic, powerAtomic);
             }
         }

@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,12 +10,12 @@ namespace Algebra.Evaluators
     {
         public delegate T FunctionEvaluator(ICollection<T> argumentExpressions);
 
-        private readonly IDictionary<IFunctionIdentity, FunctionEvaluator> _functionEvaluators;
+        private readonly IDictionary<FunctionIdentity, FunctionEvaluator> _functionEvaluators;
         private readonly VariableInputSet<T> _variableInputs;
 
-        public ValueEvaluator(VariableInputSet<T> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators)
+        public ValueEvaluator(VariableInputSet<T> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators)
         {
-            this._functionEvaluators = functionEvaluators ?? new Dictionary<IFunctionIdentity, FunctionEvaluator>();
+            this._functionEvaluators = functionEvaluators ?? new Dictionary<FunctionIdentity, FunctionEvaluator>();
             this._variableInputs = variableInputs;
         }
 
@@ -40,11 +41,11 @@ namespace Algebra.Evaluators
             return Map(PowOf(baseValue, powerValue));
         }
 
-        protected abstract TraversalEvaluator<T> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<T> variableInputs);
+        protected abstract TraversalEvaluator<T> Construct(IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<T> variableInputs);
 
-        protected override sealed T EvaluateFunction(IFunction function, IList<T> evaluated)
+        protected override sealed T EvaluateFunction(Function function, IList<T> evaluated)
         {
-            IFunctionIdentity identity = function.GetIdentity();
+            FunctionIdentity identity = function.GetIdentity();
 
             // Check for a faster method
             if (_functionEvaluators.TryGetValue(identity, out FunctionEvaluator evaluator))

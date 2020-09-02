@@ -12,11 +12,11 @@ namespace Algebra
     {
         internal class Product : CommutativeOperation
         {
-            new public static IExpression Multiply<T>(IEnumerable<T> eqs) where T : IExpression
+            new public static Expression Multiply<T>(IEnumerable<T> eqs) where T : Expression
             {
                 // Collate multiplications into one big multiplication
-                List<IExpression> collatedEqs = new List<IExpression>();
-                foreach (IExpression eq in eqs)
+                List<Expression> collatedEqs = new List<Expression>();
+                foreach (Expression eq in eqs)
                 {
                     if (eq is Product multeq)
                     {
@@ -27,7 +27,7 @@ namespace Algebra
                     collatedEqs.Add(eq);
                 }
 
-                List<IExpression> newEqs = SimplifyArguments(collatedEqs, 1, (x, y) => x * y);
+                List<Expression> newEqs = SimplifyArguments(collatedEqs, 1, (x, y) => x * y);
 
                 if (newEqs.Count == 0)
                 {
@@ -38,7 +38,7 @@ namespace Algebra
                     return newEqs[0];
                 }
 
-                foreach (IExpression eq in newEqs)
+                foreach (Expression eq in newEqs)
                 {
                     if (eq.Equals(Zero))
                     {
@@ -47,11 +47,11 @@ namespace Algebra
                 }
 
                 // Collate exponents
-                Dictionary<IExpression, List<IExpression>> exponents = new Dictionary<IExpression, List<IExpression>>();
-                foreach (IExpression eq in newEqs)
+                Dictionary<Expression, List<Expression>> exponents = new Dictionary<Expression, List<Expression>>();
+                foreach (Expression eq in newEqs)
                 {
-                    IExpression baseEq;
-                    IExpression exponentEq;
+                    Expression baseEq;
+                    Expression exponentEq;
                     if (eq is Exponent expeq)
                     {
                         baseEq = expeq.GetTerm();
@@ -63,18 +63,18 @@ namespace Algebra
                         exponentEq = One;
                     }
 
-                    if (!exponents.TryGetValue(baseEq, out List<IExpression> exponentList))
+                    if (!exponents.TryGetValue(baseEq, out List<Expression> exponentList))
                     {
-                        exponentList = new List<IExpression>();
+                        exponentList = new List<Expression>();
                         exponents.Add(baseEq, exponentList);
                     }
                     exponentList.Add(exponentEq);
                 }
                 // Put back into exponent form
                 newEqs.Clear();
-                foreach ((IExpression eq, List<IExpression> powers) in exponents)
+                foreach ((Expression eq, List<Expression> powers) in exponents)
                 {
-                    IExpression newEq = Pow(eq, Add(powers));
+                    Expression newEq = Pow(eq, Add(powers));
 
                     if (newEq.Equals(One))
                     {
@@ -96,26 +96,26 @@ namespace Algebra
                 return new Product(newEqs);
             }
 
-            private Product(IList<IExpression> eqs)
+            private Product(IList<Expression> eqs)
                 : base(eqs)
             {
 
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
                 // Get all derivatives
-                List<IExpression> derivatives = new List<IExpression>(_arguments.Count);
-                foreach (IExpression eq in _arguments)
+                List<Expression> derivatives = new List<Expression>(_arguments.Count);
+                foreach (Expression eq in _arguments)
                 {
                     derivatives.Add(eq.GetDerivative(wrt));
                 }
 
                 // Collate into multi term product rule
-                List<IExpression> terms = new List<IExpression>();
+                List<Expression> terms = new List<Expression>();
                 for (int iDerivative = 0; iDerivative < _arguments.Count; iDerivative++)
                 {
-                    List<IExpression> term = new List<IExpression>()
+                    List<Expression> term = new List<Expression>()
                     {
                         derivatives[iDerivative]
                     };
@@ -156,7 +156,7 @@ namespace Algebra
             // Finds the first constant in the multiplication, or returns 1 if there are none
             public Constant GetConstantCoefficient()
             {
-                foreach (IExpression eq in _arguments)
+                foreach (Expression eq in _arguments)
                 {
                     if (eq is Constant c)
                     {
@@ -167,13 +167,13 @@ namespace Algebra
             }
 
             // Gets a multiplication term of all of the terms minus the first constant, or this if there are no constants
-            public IExpression GetVariable()
+            public Expression GetVariable()
             {
-                foreach (IExpression eq in _arguments)
+                foreach (Expression eq in _arguments)
                 {
                     if (eq is Constant)
                     {
-                        List<IExpression> others = new List<IExpression>(_arguments);
+                        List<Expression> others = new List<Expression>(_arguments);
                         others.Remove(eq);
                         if (others.Count == 1)
                         {
@@ -190,7 +190,7 @@ namespace Algebra
                 return 20;
             }
 
-            public override Func<List<IExpression>, IExpression> GetSimplifyingConstructor()
+            public override Func<List<Expression>, Expression> GetSimplifyingConstructor()
             {
                 return Multiply;
             }
@@ -205,7 +205,7 @@ namespace Algebra
                 return evaluator.EvaluateProduct(this, _arguments);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Product other)
                 {

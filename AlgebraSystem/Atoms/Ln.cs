@@ -11,24 +11,24 @@ namespace Algebra
     {
         internal class Ln : AtomicMonad
         {
-            new public static IExpression LnOf(IExpression argument)
+            new public static Expression LnOf(Expression argument)
             {
                 return new Ln(argument);
             }
 
-            public Ln(IExpression argument)
+            public Ln(Expression argument)
                 : base(argument)
             {
 
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
-                IExpression derivative = _argument.GetDerivative(wrt);
+                Expression derivative = _argument.GetDerivative(wrt);
                 return derivative / _argument;
             }
 
-            public override Func<IExpression, IExpression> GetSimplifyingConstructor()
+            public override Func<Expression, Expression> GetSimplifyingConstructor()
             {
                 return LnOf;
             }
@@ -53,7 +53,7 @@ namespace Algebra
                 return evaluator.EvaluateLn(this, _argument);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Ln other)
                 {

@@ -7,19 +7,19 @@ using System.Text;
 
 namespace Algebra.Functions
 {
-    public class FunctionIdentity : FunctionGenerator, IFunctionIdentity
+    public class FunctionIdentity : FunctionGenerator
     {
         private readonly int _hashSeed;
-        private readonly IExpression _atomicExpression;
+        private readonly Expression _atomicExpression;
 
-        public FunctionIdentity(string name, int hashSeed, IExpression alternateExpression)
+        public FunctionIdentity(string name, int hashSeed, Expression alternateExpression)
             : base(name, alternateExpression.GetVariables())
         {
             _hashSeed = hashSeed;
             _atomicExpression = alternateExpression.GetAtomicExpression();
         }
 
-        protected override IExpression CreateExpressionImpl(IDictionary<string, IExpression> nodes)
+        protected override Expression CreateExpressionImpl(IDictionary<string, Expression> nodes)
         {
             return new Function(this, nodes);
         }
@@ -29,7 +29,7 @@ namespace Algebra.Functions
             return _hashSeed;
         }
 
-        public IExpression GetBodyAsAtomicExpression()
+        public Expression GetBodyAsAtomicExpression()
         {
             return _atomicExpression;
         }

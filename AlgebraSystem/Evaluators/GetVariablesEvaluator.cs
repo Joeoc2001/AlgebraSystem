@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -44,7 +45,7 @@ namespace Algebra.Evaluators
             return expression;
         }
 
-        protected override HashSet<string> EvaluateFunction(IFunction function, IList<HashSet<string>> parameters)
+        protected override HashSet<string> EvaluateFunction(Function function, IList<HashSet<string>> parameters)
         {
             return Combine(parameters);
         }
@@ -79,7 +80,7 @@ namespace Algebra.Evaluators
             return Combine(expressions);
         }
 
-        public override HashSet<string> EvaluateOther(IExpression other)
+        public override HashSet<string> EvaluateOther(Expression other)
         {
             throw new NotImplementedException($"Cannot get variables for unknown expression {other}. Override {typeof(GetVariablesEvaluator).Name} to add functionality for your new class.");
         }

@@ -1,4 +1,5 @@
 ﻿using Algebra.Atoms;
+using Algebra.Functions;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -8,17 +9,17 @@ namespace Algebra
 {
     public interface IExpandedEvaluator<T>
     {
-        T EvaluateConstant(IExpression expression, Rational value);
-        T EvaluateVariable(IExpression expression, string name);
-        T EvaluateSum(IExpression expression, ICollection<IExpression> expressions);
-        T EvaluateProduct(IExpression expression, ICollection<IExpression> expressions);
-        T EvaluateExponent(IExpression expression, IExpression baseExpression, IExpression powerExpression);
-        T EvaluateLn(IExpression expression, IExpression argumentExpression);
-        T EvaluateSign(IExpression expression, IExpression argumentExpression);
-        T EvaluateSin(IExpression expression, IExpression argumentExpression);
-        T EvaluateArcsin(IExpression expression, IExpression argumentExpression);
-        T EvaluateArctan(IExpression expression, IExpression argumentExpression);
-        T EvaluateFunction(IFunction function);
-        T EvaluateOther(IExpression other);
+        T EvaluateConstant(Expression expression, Rational value);
+        T EvaluateVariable(Expression expression, string name);
+        T EvaluateSum(Expression expression, ICollection<Expression> expressions);
+        T EvaluateProduct(Expression expression, ICollection<Expression> expressions);
+        T EvaluateExponent(Expression expression, Expression baseExpression, Expression powerExpression);
+        T EvaluateLn(Expression expression, Expression argumentExpression);
+        T EvaluateSign(Expression expression, Expression argumentExpression);
+        T EvaluateSin(Expression expression, Expression argumentExpression);
+        T EvaluateArcsin(Expression expression, Expression argumentExpression);
+        T EvaluateArctan(Expression expression, Expression argumentExpression);
+        T EvaluateFunction(Function function);
+        T EvaluateOther(Expression other);
     }
 }
