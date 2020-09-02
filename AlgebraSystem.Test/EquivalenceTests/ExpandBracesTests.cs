@@ -12,21 +12,25 @@ namespace EquivalenceTests
     {
         private static readonly EquivalencePath _expandBracesPath = EquivalencePaths.ExpandBraces;
 
+        private bool AreInSameClass(IExpression start, IExpression end)
+        {
+            IEquivalenceClass equivalence = start.GetEquivalenceClass();
+            return equivalence.IsInClass(end, -1, new List<EquivalencePath>() { _expandBracesPath });
+        }
+
+
         [Test]
         public void ExpandBraces_Expands_DOTS()
         {
             // ARANGE
             IExpression eq = (Expression.VarX + 1) * (Expression.VarX - 1);
-            List<IExpression> expected = new List<IExpression>()
-            {
-                (Expression.VarX * Expression.VarX) - 1
-            };
+            IExpression expected = (Expression.VarX * Expression.VarX) - 1;
 
             // ACT
-            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
+            bool contained = AreInSameClass(eq, expected);
 
             // ASSERT
-            Assert.That(actual, Is.EquivalentTo(expected));
+            Assert.IsTrue(contained);
         }
 
         [Test]
@@ -34,20 +38,17 @@ namespace EquivalenceTests
         {
             // ARANGE
             IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2);
-            List<IExpression> expected = new List<IExpression>()
-            {
-                (Expression.VarX * Expression.VarX) + 3 * Expression.VarX + 2
-            };
+            IExpression expected = (Expression.VarX * Expression.VarX) + 3 * Expression.VarX + 2;
 
             // ACT
-            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
+            bool contained = AreInSameClass(eq, expected);
 
             // ASSERT
-            Assert.That(actual, Is.EquivalentTo(expected));
+            Assert.IsTrue(contained);
         }
 
         [Test]
-        public void ExpandBraces_Expands_AllThreeOfCubic()
+        public void ExpandBraces_Expands_AllThreePairsOfCubic([Range(0, 2)] int index)
         {
             // ARANGE
             IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
@@ -59,31 +60,31 @@ namespace EquivalenceTests
             };
 
             // ACT
-            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
+            bool contained = AreInSameClass(eq, expected[index]);
 
             // ASSERT
-            Assert.That(actual, Is.EquivalentTo(expected));
+            Assert.IsTrue(contained);
         }
 
         [Test]
-        public void ExpandBraces_DoesntExpandAllOfCubicAtOnce()
+        public void ExpandBraces_Expands_AllOfCubic()
         {
             // ARANGE
             IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
-            IExpression nonexpected = Expression.VarX * Expression.VarX * Expression.VarX
+            IExpression expected = Expression.VarX * Expression.VarX * Expression.VarX
                 + 6 * Expression.VarX * Expression.VarX
                 + 11 * Expression.VarX
                 + 6;
 
             // ACT
-            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
+            bool contained = AreInSameClass(eq, expected);
 
             // ASSERT
-            Assert.IsFalse(actual.Contains(nonexpected));
+            Assert.IsTrue(contained);
         }
 
         [Test]
-        public void ExpandBraces_Expands_Nested()
+        public void ExpandBraces_Expands_Nested([Range(0, 1)] int index)
         {
             // ARANGE
             IExpression eq = ((Expression.VarX + 1) * (Expression.VarX + 2) + 1) * (Expression.VarX + 3);
@@ -94,23 +95,25 @@ namespace EquivalenceTests
             };
 
             // ACT
-            List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
+            bool contained = AreInSameClass(eq, expected[index]);
 
             // ASSERT
-            Assert.That(actual, Is.EquivalentTo(expected));
+            Assert.IsTrue(contained);
         }
 
         [Test]
-        public void ExpandBraces_DoesntDistribute()
+        public void ExpandBraces_Distributes()
         {
             // ARANGE
             IExpression eq = (Expression.VarX + 1) * 3;
+            IExpression expected = Expression.VarX * 3 + 3;
 
             // ACT
             List<IExpression> actual = new List<IExpression>(_expandBracesPath.GetAllFrom(eq));
 
             // ASSERT
-            Assert.That(actual, Has.Count.EqualTo(0));
+            Assert.That(actual, Has.Count.EqualTo(1));
+            Assert.AreEqual(expected, actual[0]);
         }
 
         [Test]
@@ -127,39 +130,6 @@ namespace EquivalenceTests
         }
 
         [Test]
-        public void ExpandBraces_EquivalenceClass_ExpandsAllThreeOfCubic()
-        {
-            // ARANGE
-            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
-            IExpression expected = Expression.VarX * Expression.VarX * Expression.VarX
-                + 6 * Expression.VarX * Expression.VarX
-                + 11 * Expression.VarX
-                + 6;
-
-            // ACT
-            IEquivalenceClass equivalenceClass = eq.GetEquivalenceClass();
-            bool contained = equivalenceClass.IsInClass(expected);
-
-            // ASSERT
-            Assert.IsTrue(contained);
-        }
-
-        [Test]
-        public void ExpandBraces_EquivalenceClass_ExpandsTwoOfCubic()
-        {
-            // ARANGE
-            IExpression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
-            IExpression expected = ((Expression.VarX * Expression.VarX) + 4 * Expression.VarX + 3) * (Expression.VarX + 2);
-
-            // ACT
-            IEquivalenceClass equivalenceClass = eq.GetEquivalenceClass();
-            bool contained = equivalenceClass.IsInClass(expected);
-
-            // ASSERT
-            Assert.IsTrue(contained);
-        }
-
-        [Test]
         public void ExpandBraces_EquivalenceClass_IsFalseWhenExpansionIsntEqual()
         {
             // ARANGE
@@ -167,8 +137,7 @@ namespace EquivalenceTests
             IExpression notExpected = ((Expression.VarX * Expression.VarX) + 5 * Expression.VarX + 3) * (Expression.VarX + 2);
 
             // ACT
-            IEquivalenceClass equivalenceClass = eq.GetEquivalenceClass();
-            bool contained = equivalenceClass.IsInClass(notExpected);
+            bool contained = AreInSameClass(eq, notExpected);
 
             // ASSERT
             Assert.IsFalse(contained);

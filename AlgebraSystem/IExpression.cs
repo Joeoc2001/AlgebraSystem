@@ -1,7 +1,4 @@
-﻿using Algebra.Atoms;
-using Algebra.Equivalence;
-using Algebra.Evaluators;
-using Algebra.Functions.HardcodedFunctionIdentities;
+﻿using Algebra.Evaluators;
 using Rationals;
 using System;
 using System.Collections.Generic;

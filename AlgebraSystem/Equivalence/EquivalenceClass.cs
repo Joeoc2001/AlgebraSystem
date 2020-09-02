@@ -9,11 +9,6 @@ namespace Algebra.Equivalence
 {
     internal class EquivalenceClass : IEquivalenceClass
     {
-        public static readonly List<EquivalencePath> DEFAULT_PATHS = new List<EquivalencePath> {
-            EquivalencePaths.ExpandBraces,
-            EquivalencePaths.FactorBraces
-        };
-
         private readonly IExpression _anchorExpression; // The expression used to define the equivalence class
 
         public EquivalenceClass(IExpression anchorExpression)
@@ -36,7 +31,7 @@ namespace Algebra.Equivalence
                 return true;
             }
 
-            paths ??= DEFAULT_PATHS;
+            paths ??= EquivalencePaths.DefaultPaths;
 
             // Which expressions are not equivalent and have been checked
             HashSet<IExpression> checkedExpressions = new HashSet<IExpression>() { _anchorExpression };

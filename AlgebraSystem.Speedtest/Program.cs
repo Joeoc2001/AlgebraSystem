@@ -8,8 +8,10 @@ namespace AlgebraSystem.Speedtest
         static void Main(string[] args)
         {
             IExpression expression1 = Expression.Multiply(Expression.VarX, 2);
-            IExpression expression2 = Expression.Multiply(Expression.VarX, 2);
-            bool equal = expression1.Equals(expression2, EqualityLevel.Atomic);
+            foreach (var item in expression1.Evaluate())
+            {
+
+            }
             Console.WriteLine(equal);
         }
     }

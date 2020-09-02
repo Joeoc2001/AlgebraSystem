@@ -5,6 +5,11 @@ namespace Algebra.Equivalence
 {
     public static class EquivalencePaths
     {
+        public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath> {
+            EquivalencePaths.ExpandBraces,
+            EquivalencePaths.FactorBraces
+        };
+
         public static readonly ReplacementPath ExpandBraces = new ReplacementPath(
                 Expression.VarX * (Expression.VarY + Expression.VarZ),
                 Expression.VarX * Expression.VarY + Expression.VarX * Expression.VarZ
