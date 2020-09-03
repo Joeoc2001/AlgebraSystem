@@ -17,7 +17,7 @@ namespace Algebra
 
             public override Expression GetDerivative(string wrt)
             {
-                if (wrt == _name)
+                if (wrt.ToLower() == _name)
                 {
                     return One;
                 }

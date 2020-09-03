@@ -116,7 +116,8 @@ namespace Algebra.PatternMatching
             {
                 return false;
             }
-            return _matches.Count == other._matches.Count && !_matches.Except(other._matches).Any();
+            return _matches.Count == other._matches.Count
+                && !_matches.Except(other._matches).Any();
         }
 
         public override bool Equals(object obj)

@@ -2,6 +2,7 @@
 using Algebra.Equivalence;
 using Algebra.Evaluators;
 using Algebra.Functions.HardcodedFunctionIdentities;
+using Algebra.PatternMatching;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -215,6 +216,26 @@ namespace Algebra
         public HashSet<string> GetVariables()
         {
             return Evaluate(GetVariablesEvaluator.Instance);
+        }
+
+        public PatternMatchingResultSet Match(Expression pattern)
+        {
+            return Evaluate(pattern, PatternMatchingDualEvaluator.Instance);
+        }
+
+        /// <summary>
+        /// Returns a set of expressions where all instance of a pattern have been replaced with a replacement expression.
+        /// All of the variables in the replacement expression must be contained in the pattern expression.
+        /// For example, if 3 * (x + y) + 2 is evaluated with an instance of this with pattern a + b and replacement a * b,
+        /// the resulting expression set will be {6 * (x + y), 3 * x * y + 2}.
+        /// This is useful for equality axioms, e.g. x * (y + z) == x * y + x * z
+        /// </summary>
+        /// <param name="pattern">The pattern to search this expression for</param>
+        /// <param name="replacement">The expression to replace the found pattern with</param>
+        /// <returns>A set of expressions where all instance of the pattern have been replaced with the replacement expression</returns>
+        public IEnumerable<Expression> Replace(Expression pattern, Expression replacement)
+        {
+            return Evaluate(new ReplaceEvaluator(pattern, replacement));
         }
 
         public static bool operator ==(Expression left, Expression right)

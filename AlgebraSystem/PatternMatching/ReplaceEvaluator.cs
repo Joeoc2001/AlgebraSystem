@@ -8,6 +8,13 @@ using System.Text;
 
 namespace Algebra.PatternMatching
 {
+    /// <summary>
+    /// Returns a set of expressions where all instance of a pattern have been replaced with a replacement expression.
+    /// All of the variables in the replacement expression must be contained in the pattern expression.
+    /// For example, if 3 * (x + y) + 2 is evaluated with an instance of this with pattern a + b and replacement a * b,
+    /// the resulting expression set will be {6 * (x + y), 3 * x * y + 2}.
+    /// This is useful for equality axioms, e.g. x * (y + z) == x * y + x * z
+    /// </summary>
     public class ReplaceEvaluator : IExpandedEvaluator<IEnumerable<Expression>>
     {
         private readonly Expression _patternExpression;
@@ -18,9 +25,9 @@ namespace Algebra.PatternMatching
             this._patternExpression = patternExpression ?? throw new ArgumentNullException();
             this._replacementExpression = replacementExpression ?? throw new ArgumentNullException();
 
-            if (patternExpression.GetVariables().Except(replacementExpression.GetVariables()).Any())
+            if (replacementExpression.GetVariables().Except(patternExpression.GetVariables()).Any())
             {
-                throw new ArgumentException($"Expression {nameof(replacementExpression)} does not have all variables used within {nameof(replacementExpression)}");
+                throw new ArgumentException($"Expression {patternExpression} does not have all variables used within {replacementExpression}");
             }
         }
 

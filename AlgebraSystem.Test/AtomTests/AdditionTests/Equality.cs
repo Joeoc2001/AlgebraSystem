@@ -9,9 +9,10 @@ using System.Text;
 
 namespace AlgebraSystem.Test.AtomTests.AdditionTests
 {
+    [Timeout(1000)]
     class Equality
     {
-        [Test, Timeout(100)]
+        [Test]
         public void TrueFor_XPlus1_SingleInstance([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
@@ -24,7 +25,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
             Assert.IsTrue(areEqual);
         }
 
-        [Test, Timeout(100)]
+        [Test]
         public void TrueFor_XPlus1_TwoInstances([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
@@ -38,7 +39,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
             Assert.IsTrue(areEqual);
         }
 
-        [Test, Timeout(100)]
+        [Test]
         public void FalseFor_XPlus1_And_XPlus2([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
@@ -52,7 +53,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
             Assert.IsFalse(areEqual);
         }
 
-        [Test, Timeout(100)]
+        [Test]
         public void TrueFor_YPlusZ_TwoInstances([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
@@ -66,7 +67,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
             Assert.IsTrue(areEqual);
         }
 
-        [Test, Timeout(100)]
+        [Test]
         public void FalseFor_XPlusY_And_XPlusZ([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
@@ -80,7 +81,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
             Assert.IsFalse(areEqual);
         }
 
-        [Test, Timeout(100)]
+        [Test]
         public void TrueFor_YPlusZ_Commuted([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange
@@ -94,7 +95,7 @@ namespace AlgebraSystem.Test.AtomTests.AdditionTests
             Assert.IsTrue(areEqual);
         }
 
-        [Test, Timeout(100)]
+        [Test]
         public void TrueFor_YPlus5_Commuted([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
         {
             // Arrange

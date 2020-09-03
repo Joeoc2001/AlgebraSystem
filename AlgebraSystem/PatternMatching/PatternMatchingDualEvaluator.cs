@@ -10,6 +10,11 @@ using System.Xml.Schema;
 
 namespace Algebra.PatternMatching
 {
+    /// <summary>
+    /// Finds all matches between an expression (1st argument) and a pattern (2nd argument).
+    /// For example, x + y matches (2 * a) + b with both (x, y) = (2 * a, b) and (x, y) = (b, 2 * a).
+    /// x + y however does not match 2 * (a + b) as it only checks the root node.
+    /// </summary>
     public class PatternMatchingDualEvaluator : IDualEvaluator<PatternMatchingResultSet>
     {
         public static readonly PatternMatchingDualEvaluator Instance = new PatternMatchingDualEvaluator();
@@ -19,7 +24,7 @@ namespace Algebra.PatternMatching
 
         }
 
-        public PatternMatchingResultSet EvaluateConstants(Rational valuePattern, Rational valueToBeMatched)
+        public PatternMatchingResultSet EvaluateConstants(Rational valueToBeMatched, Rational valuePattern)
         {
             if (valuePattern.Equals(valueToBeMatched))
             {
@@ -28,32 +33,32 @@ namespace Algebra.PatternMatching
             return PatternMatchingResultSet.None;
         }
 
-        public PatternMatchingResultSet EvaluateArcsins(Expression argumentPattern, Expression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateArcsins(Expression argumentToBeMatched, Expression argumentPattern)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateArctans(Expression argumentPattern, Expression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateArctans(Expression argumentToBeMatched, Expression argumentPattern)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateLns(Expression argumentPattern, Expression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateLns(Expression argumentToBeMatched, Expression argumentPattern)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateSigns(Expression argumentPattern, Expression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateSigns(Expression argumentToBeMatched, Expression argumentPattern)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateSins(Expression argumentPattern, Expression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateSins(Expression argumentToBeMatched, Expression argumentPattern)
         {
             return argumentPattern.Evaluate(argumentToBeMatched, this);
         }
 
-        public PatternMatchingResultSet EvaluateExponents(Expression baseArgumentPattern, Expression powerArgumentPattern, Expression baseArgumentToBeMatched, Expression powerArgumentToBeMatched)
+        public PatternMatchingResultSet EvaluateExponents(Expression baseArgumentToBeMatched, Expression powerArgumentToBeMatched, Expression baseArgumentPattern, Expression powerArgumentPattern)
         {
             PatternMatchingResultSet baseInputs = baseArgumentPattern.Evaluate(baseArgumentToBeMatched, this);
 
@@ -68,7 +73,7 @@ namespace Algebra.PatternMatching
             return baseInputs.Intersect(powerInputs);
         }
 
-        public PatternMatchingResultSet EvaluateFunctions(Function functionPattern, Function functionToBeMatched)
+        public PatternMatchingResultSet EvaluateFunctions(Function functionToBeMatched, Function functionPattern)
         {
             if (!functionPattern.GetIdentity().Equals(functionToBeMatched.GetIdentity()))
             {
@@ -152,7 +157,7 @@ namespace Algebra.PatternMatching
             }
         }
 
-        protected PatternMatchingResultSet GetResultsForSets(ICollection<Expression> argumentsPattern, ICollection<Expression> argumentsToBeMatched, Func<ICollection<Expression>, Expression> builder)
+        protected PatternMatchingResultSet GetResultsForSets(ICollection<Expression> argumentsToBeMatched, ICollection<Expression> argumentsPattern, Func<ICollection<Expression>, Expression> builder)
         {
             PatternMatchingResultSet results = PatternMatchingResultSet.None;
 
@@ -186,22 +191,22 @@ namespace Algebra.PatternMatching
             return results;
         }
 
-        public PatternMatchingResultSet EvaluateProducts(ICollection<Expression> argumentsPattern, ICollection<Expression> argumentsToBeMatched)
+        public PatternMatchingResultSet EvaluateProducts(ICollection<Expression> argumentsToBeMatched, ICollection<Expression> argumentsPattern)
         {
-            return GetResultsForSets(argumentsPattern, argumentsToBeMatched, Expression.Multiply);
+            return GetResultsForSets(argumentsToBeMatched, argumentsPattern, Expression.Multiply);
         }
 
-        public PatternMatchingResultSet EvaluateSums(ICollection<Expression> argumentsPattern, ICollection<Expression> argumentsToBeMatched)
+        public PatternMatchingResultSet EvaluateSums(ICollection<Expression> argumentsToBeMatched, ICollection<Expression> argumentsPattern)
         {
-            return GetResultsForSets(argumentsPattern, argumentsToBeMatched, Expression.Add);
+            return GetResultsForSets(argumentsToBeMatched, argumentsPattern, Expression.Add);
         }
 
-        public PatternMatchingResultSet EvaluateVariables(string namePattern, string nameToBeMatched)
+        public PatternMatchingResultSet EvaluateVariables(string nameToBeMatched, string namePattern)
         {
             return new PatternMatchingResultSet(new PatternMatchingResult(namePattern, Expression.VariableFrom(nameToBeMatched)));
         }
 
-        public PatternMatchingResultSet EvaluateOthers(Expression expressionPattern, Expression expressionToBeMatched)
+        public PatternMatchingResultSet EvaluateOthers(Expression expressionToBeMatched, Expression expressionPattern)
         {
             IsVariableEvaluator.Result result = expressionPattern.Evaluate(IsVariableEvaluator.Instance);
             if (result.IsVariable())

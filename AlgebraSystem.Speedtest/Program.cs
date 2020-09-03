@@ -7,8 +7,11 @@ namespace AlgebraSystem.Speedtest
     {
         static void Main(string[] args)
         {
-            Expression expression1 = Expression.Multiply(Expression.VarX, 2);
-            Console.WriteLine(expression1);
+            Expression expression1 = 3 * (Expression.VarY + Expression.VarX) + 2;
+            foreach (Expression replaced in expression1.Replace(Expression.VarX + Expression.VarY, Expression.VarX * Expression.VarY))
+            {
+                Console.WriteLine(replaced);
+            }
         }
     }
 }
