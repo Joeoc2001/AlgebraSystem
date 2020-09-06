@@ -131,5 +131,15 @@ namespace Algebra.PatternMatching
         {
             return Equals(obj as PatternMatchingResultSet);
         }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append(nameof(PatternMatchingResultSet));
+            builder.Append("[");
+            builder.Append(string.Join(", ", _results));
+            builder.Append("]");
+            return builder.ToString();
+        }
     }
 }

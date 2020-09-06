@@ -320,7 +320,7 @@ namespace Algebra
 
         public static Expression ArctanOf(Expression eq) => Arctan.ArctanOf(eq);
 
-        public static Expression Abs(Expression eq) => AbsIdentity.Instance.CreateExpression(eq);
+        public static Expression AbsOf(Expression eq) => AbsIdentity.Instance.CreateExpression(eq);
 
         public static Expression Min(Expression a, Expression b) => MinIdentity.Instance.CreateExpression(a, b);
 

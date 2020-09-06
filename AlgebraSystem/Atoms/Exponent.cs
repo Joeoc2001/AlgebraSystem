@@ -29,14 +29,10 @@ namespace Algebra
                 {
                     Rational numerator = exponentConstant.GetValue().Numerator;
                     Rational denominator = exponentConstant.GetValue().Denominator;
-                    if (numerator > -10 && numerator < 10) // Bounds for sanity sake
+                    if (denominator == 1 && numerator > 0 && numerator < 10) // Bounds for sanity sake
                     {
                         Rational value = Rational.Pow(termConstant.GetValue(), (int)numerator);
-                        if (value >= 0)
-                        {
-                            value = Rational.RationalRoot(value, (int)denominator);
-                            return ConstantFrom(value);
-                        }
+                        return ConstantFrom(value);
                     }
                 }
 

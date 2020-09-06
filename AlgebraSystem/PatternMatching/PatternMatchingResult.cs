@@ -19,6 +19,24 @@ namespace Algebra.PatternMatching
 
         }
 
+        private static Dictionary<string, Expression> Build((string name, Expression expr)[] matches)
+        {
+            Dictionary<string, Expression> dict = new Dictionary<string, Expression>();
+
+            foreach (var item in matches)
+            {
+                dict.Add(item.name, item.expr);
+            }
+
+            return dict;
+        }
+
+        public PatternMatchingResult(params (string, Expression)[] matches)
+            : this(Build(matches))
+        {
+
+        }
+
         public PatternMatchingResult(IDictionary<string, Expression> matches)
         {
             this._matches = new ReadOnlyDictionary<string, Expression>(matches);
@@ -135,6 +153,16 @@ namespace Algebra.PatternMatching
                 v ^= (result.Value.GetHashCode() * 65);
             }
             return v;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append(nameof(PatternMatchingResult));
+            builder.Append("{");
+            builder.Append(string.Join(", ", _matches.Select((pair, i) => $"{pair.Key}: {pair.Value}")));
+            builder.Append("}");
+            return builder.ToString();
         }
     }
 }
