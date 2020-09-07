@@ -123,13 +123,22 @@ namespace Algebra.PatternMatching
         {
             // Get this
             IEnumerable<Expression> results = EvaluateExpression(expression);
+            foreach (Expression result in results)
+            {
+                yield return result;
+            }
 
             // Get arguments
             IEnumerable<Expression> baseResults = EvaluateArgument(baseExpression, mapped => Expression.Pow(mapped, powerExpression));
+            foreach (Expression result in baseResults)
+            {
+                yield return result;
+            }
             IEnumerable<Expression> powerResults = EvaluateArgument(powerExpression, mapped => Expression.Pow(baseExpression, mapped));
-
-            // Return all
-            return results.Concat(baseResults).Concat(powerResults);
+            foreach (Expression result in powerResults)
+            {
+                yield return result;
+            }
         }
 
         public IEnumerable<Expression> EvaluateFunction(Function function)
@@ -137,35 +146,39 @@ namespace Algebra.PatternMatching
             FunctionIdentity identity = function.GetIdentity();
 
             // Get this
-            IEnumerable<Expression> results = EvaluateExpression(function);
+            foreach (Expression expression in EvaluateExpression(function))
+            {
+                yield return expression;
+            }
 
             // Get arguments
             foreach ((var one, var others) in TakeOne(function.GetParameters()))
             {
                 Expression map(Expression mapped) => identity.CreateExpression(new Dictionary<string, Expression>(others) { { one.Key, mapped } });
-                IEnumerable<Expression> argumentResults = EvaluateArgument(one.Value, map);
-                results = results.Concat(argumentResults);
+                foreach (Expression result in EvaluateArgument(one.Value, map))
+                {
+                    yield return result;
+                }
             }
-
-            // Return all
-            return results;
         }
 
         protected IEnumerable<Expression> EvaluateCommutative(Expression expression, ICollection<Expression> expressions, Func<ICollection<Expression>, Expression> builder)
         {
             // Get this
-            IEnumerable<Expression> results = EvaluateExpression(expression);
+            foreach (Expression result in EvaluateExpression(expression))
+            {
+                yield return result;
+            }
 
             // Get arguments
             foreach ((var one, var others) in TakeOne(expressions))
             {
                 Expression map(Expression mapped) => builder(new List<Expression>(others) { { mapped } });
-                IEnumerable<Expression> argumentResults = EvaluateArgument(one, map);
-                results = results.Concat(argumentResults);
+                foreach (Expression result in EvaluateArgument(one, map))
+                {
+                    yield return result;
+                }
             }
-
-            // Return all
-            return results;
         }
 
         public IEnumerable<Expression> EvaluateProduct(Expression expression, ICollection<Expression> expressions)

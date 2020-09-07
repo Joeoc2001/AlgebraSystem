@@ -55,9 +55,9 @@ namespace EquivalenceTests
             Expression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
             List<Expression> expected = new List<Expression>()
             {
-                ((Expression.VarX * Expression.VarX) + 3 * Expression.VarX + 2) * (Expression.VarX + 3),
-                ((Expression.VarX * Expression.VarX) + 4 * Expression.VarX + 3) * (Expression.VarX + 2),
-                ((Expression.VarX * Expression.VarX) + 5 * Expression.VarX + 6) * (Expression.VarX + 1)
+                (Expression.VarX * (Expression.VarX + 2) * (Expression.VarX + 3)) + (1 * (Expression.VarX + 2) * (Expression.VarX + 3)),
+                (Expression.VarX * (Expression.VarX + 1) * (Expression.VarX + 3)) + (2 * (Expression.VarX + 1) * (Expression.VarX + 3)),
+                (Expression.VarX * (Expression.VarX + 1) * (Expression.VarX + 2)) + (3 * (Expression.VarX + 1) * (Expression.VarX + 2)),
             };
 
             // ACT
