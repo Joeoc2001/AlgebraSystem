@@ -9,7 +9,6 @@ namespace AlgebraSystem.Test.Libs
     {
         public enum Monad
         {
-            Negation,
             Arcsin,
             Arccos,
             Arctan,
@@ -31,8 +30,6 @@ namespace AlgebraSystem.Test.Libs
         {
             switch (monad)
             {
-                case Monad.Negation:
-                    return -arg;
                 case Monad.Arcsin:
                     return Expression.ArcsinOf(arg);
                 case Monad.Arccos:

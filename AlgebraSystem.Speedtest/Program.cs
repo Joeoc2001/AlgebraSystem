@@ -1,17 +1,31 @@
 ﻿using Algebra;
+using Algebra.Equivalence;
 using System;
+using System.Collections.Generic;
 
 namespace AlgebraSystem.Speedtest
 {
     class Program
     {
+        private static bool AreInSameClass(Expression start, Expression end)
+        {
+            EquivalenceClass equivalence = start.GetEquivalenceClass();
+            return equivalence.IsInClass(end, -1);
+        }
+
         static void Main(string[] args)
         {
-            Expression expression1 = 3 * (Expression.VarY + Expression.VarX) + 2;
-            foreach (Expression replaced in expression1.Replace(Expression.VarX + Expression.VarY, Expression.VarX * Expression.VarY))
-            {
-                Console.WriteLine(replaced);
-            }
+            // ARANGE
+            Expression eq = (Expression.VarX + 2) * (Expression.VarX + 3);
+            Expression expected = Expression.VarX * Expression.VarX
+                + 5 * Expression.VarX
+                + 6;
+
+            // ACT
+            bool contained = AreInSameClass(eq, expected);
+
+            // ASSERT
+            Console.Out.WriteLine(contained);
         }
     }
 }
