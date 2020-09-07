@@ -10,12 +10,12 @@ namespace Algebra
 {
     namespace Functions
     {
-        internal class Function : Expression, IFunction
+        public class Function : Expression, IEquatable<Function>
         {
-            private readonly IFunctionIdentity _identity;
-            private readonly ReadOnlyDictionary<string, IExpression> _parameters;
+            private readonly FunctionIdentity _identity;
+            private readonly ReadOnlyDictionary<string, Expression> _parameters;
 
-            public Function(IFunctionIdentity identity, IDictionary<string, IExpression> parameters)
+            public Function(FunctionIdentity identity, IDictionary<string, Expression> parameters)
             {
                 // Ensure that all required parameters are filled
                 if (!identity.AreParametersSatisfied(parameters))
@@ -24,17 +24,17 @@ namespace Algebra
                 }
 
                 this._identity = identity;
-                this._parameters = new ReadOnlyDictionary<string, IExpression>(parameters);
+                this._parameters = new ReadOnlyDictionary<string, Expression>(parameters);
             }
 
-            public ReadOnlyDictionary<string, IExpression> GetParameters()
+            public ReadOnlyDictionary<string, Expression> GetParameters()
             {
                 return _parameters;
             }
 
-            public ReadOnlyCollection<IExpression> GetParameterList()
+            public ReadOnlyCollection<Expression> GetParameterList()
             {
-                List<IExpression> parameterList = new List<IExpression>();
+                List<Expression> parameterList = new List<Expression>();
 
                 foreach (string name in _identity.GetRequiredParameters())
                 {
@@ -43,58 +43,22 @@ namespace Algebra
 
                 return parameterList.AsReadOnly();
             }
-
-            public IFunctionIdentity GetIdentity()
+            
+            public FunctionIdentity GetIdentity()
             {
                 return _identity;
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
                 return GetAtomicExpression().GetDerivative(wrt);
-            }
-
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Function function))
-                {
-                    return false;
-                }
-
-                if (!_identity.Equals(function._identity))
-                {
-                    return false;
-                }
-
-                IDictionary<string, IExpression> p1 = GetParameters();
-                IDictionary<string, IExpression> p2 = function.GetParameters();
-
-                if (p1.Count != p2.Count)
-                {
-                    return false;
-                }
-
-                foreach (string parameterName in p1.Keys)
-                {
-                    if (!p2.TryGetValue(parameterName, out IExpression expression2))
-                    {
-                        return false; // The parameter with given name doesn't exist in p2
-                    }
-                    IExpression expression1 = p1[parameterName];
-                    if (!expression1.Equals(expression2, EqualityLevel.Exactly))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
             }
 
             protected override int GenHashCode()
             {
                 int value = _identity.GetHashSeed();
 
-                IDictionary<string, IExpression> parameters = GetParameters();
+                IDictionary<string, Expression> parameters = GetParameters();
                 List<string> parameterNames = parameters.Keys.ToList();
                 parameterNames.Sort(StringComparer.CurrentCulture);
 
@@ -133,19 +97,17 @@ namespace Algebra
                 return builder.ToString();
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            protected override Expression GenAtomicExpression()
             {
-                IExpression atomicVariabledExpression = _identity.GetBodyAsAtomicExpression();
+                Expression atomicVariabledExpression = _identity.GetBodyAsAtomicExpression();
 
                 // Replace variables with their expressions
-                Dictionary<string, IExpression> atomicReplacements = new Dictionary<string, IExpression>();
+                Dictionary<string, Expression> atomicReplacements = new Dictionary<string, Expression>();
                 foreach (var parameter in _parameters)
                 {
                     atomicReplacements.Add(parameter.Key, parameter.Value.GetAtomicExpression());
                 }
-                IExpression atomicExpression = atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(atomicReplacements));
-
-                return AtomicExpression.GetAtomicExpression(atomicExpression);
+                return atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(atomicReplacements));
             }
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
@@ -158,7 +120,7 @@ namespace Algebra
                 return evaluator.EvaluateFunction(this);
             }
 
-            public override T Evaluate<T>(IExpression other, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression other, IDualEvaluator<T> evaluator)
             {
                 if (other is Function function)
                 {
@@ -167,9 +129,9 @@ namespace Algebra
                 return evaluator.EvaluateOthers(this, other);
             }
 
-            public bool Equals(IFunction other)
+            public bool Equals(Function other)
             {
-                return Equals((IExpression)other);
+                return Equals((Expression)other);
             }
         }
     }

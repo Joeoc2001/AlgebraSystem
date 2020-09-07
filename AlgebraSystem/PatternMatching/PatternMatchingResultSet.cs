@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Algebra.PatternMatching
 {
-    public class PatternMatchingResultSet : IReadOnlyCollection<PatternMatchingResult>
+    public class PatternMatchingResultSet : IReadOnlyCollection<PatternMatchingResult>, IEquatable<PatternMatchingResultSet>
     {
         public static PatternMatchingResultSet None = new PatternMatchingResultSet(new HashSet<PatternMatchingResult>());
         public static PatternMatchingResultSet All = new PatternMatchingResultSet(PatternMatchingResult.Empty);
@@ -46,7 +46,7 @@ namespace Algebra.PatternMatching
             {
                 foreach (PatternMatchingResult result2 in other)
                 {
-                    PatternMatchingResult intersection = result1.CalculateJoin(result2);
+                    PatternMatchingResult intersection = result1.Intersect(result2);
                     if (intersection != null)
                     {
                         intersections.Add(intersection);
@@ -97,6 +97,49 @@ namespace Algebra.PatternMatching
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _results.GetEnumerator();
+        }
+
+        public override int GetHashCode()
+        {
+            // Use ^ because it is commutative, even though it results in a worse hash
+            int v = -1945848553;
+            foreach (var result in _results)
+            {
+                v ^= result.GetHashCode();
+            }
+            return v;
+        }
+
+        public bool Equals(PatternMatchingResultSet other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (_results.Count != other._results.Count)
+            {
+                return false;
+            }
+
+            var difference = new HashSet<PatternMatchingResult>(_results);
+            difference.ExceptWith(other._results);
+            return difference.Count == 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as PatternMatchingResultSet);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append(nameof(PatternMatchingResultSet));
+            builder.Append("[");
+            builder.Append(string.Join(", ", _results));
+            builder.Append("]");
+            return builder.ToString();
         }
     }
 }

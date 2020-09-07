@@ -1,4 +1,5 @@
 ﻿using Algebra.Evaluators;
+using Algebra.Functions;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -7,23 +8,30 @@ using System.Text;
 
 namespace Algebra.PatternMatching
 {
-    public class ReplaceEvaluator : IExpandedEvaluator<IEnumerable<IExpression>>
+    /// <summary>
+    /// Returns a set of expressions where all instance of a pattern have been replaced with a replacement expression.
+    /// All of the variables in the replacement expression must be contained in the pattern expression.
+    /// For example, if 3 * (x + y) + 2 is evaluated with an instance of this with pattern a + b and replacement a * b,
+    /// the resulting expression set will be {6 * (x + y), 3 * x * y + 2}.
+    /// This is useful for equality axioms, e.g. x * (y + z) == x * y + x * z
+    /// </summary>
+    public class ReplaceEvaluator : IExpandedEvaluator<IEnumerable<Expression>>
     {
-        private readonly IExpression _patternExpression;
-        private readonly IExpression _replacementExpression;
+        private readonly Expression _patternExpression;
+        private readonly Expression _replacementExpression;
 
-        public ReplaceEvaluator(IExpression patternExpression, IExpression replacementExpression)
+        public ReplaceEvaluator(Expression patternExpression, Expression replacementExpression)
         {
             this._patternExpression = patternExpression ?? throw new ArgumentNullException();
             this._replacementExpression = replacementExpression ?? throw new ArgumentNullException();
 
-            if (patternExpression.GetVariables().Except(replacementExpression.GetVariables()).Any())
+            if (replacementExpression.GetVariables().Except(patternExpression.GetVariables()).Any())
             {
-                throw new ArgumentException($"Expression {nameof(replacementExpression)} does not have all variables used within {nameof(replacementExpression)}");
+                throw new ArgumentException($"Expression {patternExpression} does not have all variables used within {replacementExpression}");
             }
         }
 
-        protected IEnumerable<IExpression> EvaluateExpression(IExpression expression)
+        protected IEnumerable<Expression> EvaluateExpression(Expression expression)
         {
             PatternMatchingResultSet matches = expression.Evaluate(_patternExpression, PatternMatchingDualEvaluator.Instance);
 
@@ -34,9 +42,9 @@ namespace Algebra.PatternMatching
             }
         }
 
-        protected IEnumerable<IExpression> EvaluateArgument(IExpression argument, Func<IExpression, IExpression> argumentMap)
+        protected IEnumerable<Expression> EvaluateArgument(Expression argument, Func<Expression, Expression> argumentMap)
         {
-            IEnumerable<IExpression> unmappedArgumentResults = argument.Evaluate(this);
+            IEnumerable<Expression> unmappedArgumentResults = argument.Evaluate(this);
 
             // Map
             foreach (var unmappedArgument in unmappedArgumentResults)
@@ -45,16 +53,16 @@ namespace Algebra.PatternMatching
             }
         }
 
-        protected IEnumerable<IExpression> EvaluateMonad(IExpression expression, IExpression argumentExpression, Func<IExpression, IExpression> argumentMap)
+        protected IEnumerable<Expression> EvaluateMonad(Expression expression, Expression argumentExpression, Func<Expression, Expression> argumentMap)
         {
             // Get this
-            foreach (IExpression result in EvaluateExpression(expression))
+            foreach (Expression result in EvaluateExpression(expression))
             {
                 yield return result;
             }
 
             // Get arguments
-            foreach (IExpression result in EvaluateArgument(argumentExpression, argumentMap))
+            foreach (Expression result in EvaluateArgument(argumentExpression, argumentMap))
             {
                 yield return result;
             }
@@ -76,101 +84,114 @@ namespace Algebra.PatternMatching
             }
         }
 
-        public IEnumerable<IExpression> EvaluateConstant(IExpression expression, Rational value)
+        public IEnumerable<Expression> EvaluateConstant(Expression expression, Rational value)
         {
             return EvaluateExpression(expression);
         }
 
-        public IEnumerable<IExpression> EvaluateVariable(IExpression expression, string name)
+        public IEnumerable<Expression> EvaluateVariable(Expression expression, string name)
         {
             return EvaluateExpression(expression);
         }
 
-        public IEnumerable<IExpression> EvaluateArcsin(IExpression expression, IExpression argumentExpression)
+        public IEnumerable<Expression> EvaluateArcsin(Expression expression, Expression argumentExpression)
         {
             return EvaluateMonad(expression, argumentExpression, Expression.ArcsinOf);
         }
 
-        public IEnumerable<IExpression> EvaluateArctan(IExpression expression, IExpression argumentExpression)
+        public IEnumerable<Expression> EvaluateArctan(Expression expression, Expression argumentExpression)
         {
             return EvaluateMonad(expression, argumentExpression, Expression.ArctanOf);
         }
 
-        public IEnumerable<IExpression> EvaluateLn(IExpression expression, IExpression argumentExpression)
+        public IEnumerable<Expression> EvaluateLn(Expression expression, Expression argumentExpression)
         {
             return EvaluateMonad(expression, argumentExpression, Expression.LnOf);
         }
 
-        public IEnumerable<IExpression> EvaluateSign(IExpression expression, IExpression argumentExpression)
+        public IEnumerable<Expression> EvaluateSign(Expression expression, Expression argumentExpression)
         {
             return EvaluateMonad(expression, argumentExpression, Expression.SignOf);
         }
 
-        public IEnumerable<IExpression> EvaluateSin(IExpression expression, IExpression argumentExpression)
+        public IEnumerable<Expression> EvaluateSin(Expression expression, Expression argumentExpression)
         {
             return EvaluateMonad(expression, argumentExpression, Expression.SinOf);
         }
 
-        public IEnumerable<IExpression> EvaluateExponent(IExpression expression, IExpression baseExpression, IExpression powerExpression)
+        public IEnumerable<Expression> EvaluateExponent(Expression expression, Expression baseExpression, Expression powerExpression)
         {
             // Get this
-            IEnumerable<IExpression> results = EvaluateExpression(expression);
+            IEnumerable<Expression> results = EvaluateExpression(expression);
+            foreach (Expression result in results)
+            {
+                yield return result;
+            }
 
             // Get arguments
-            IEnumerable<IExpression> baseResults = EvaluateArgument(baseExpression, mapped => Expression.Pow(mapped, powerExpression));
-            IEnumerable<IExpression> powerResults = EvaluateArgument(powerExpression, mapped => Expression.Pow(baseExpression, mapped));
-
-            // Return all
-            return results.Concat(baseResults).Concat(powerResults);
+            IEnumerable<Expression> baseResults = EvaluateArgument(baseExpression, mapped => Expression.Pow(mapped, powerExpression));
+            foreach (Expression result in baseResults)
+            {
+                yield return result;
+            }
+            IEnumerable<Expression> powerResults = EvaluateArgument(powerExpression, mapped => Expression.Pow(baseExpression, mapped));
+            foreach (Expression result in powerResults)
+            {
+                yield return result;
+            }
         }
 
-        public IEnumerable<IExpression> EvaluateFunction(IFunction function)
+        public IEnumerable<Expression> EvaluateFunction(Function function)
         {
-            IFunctionIdentity identity = function.GetIdentity();
+            FunctionIdentity identity = function.GetIdentity();
 
             // Get this
-            IEnumerable<IExpression> results = EvaluateExpression(function);
+            foreach (Expression expression in EvaluateExpression(function))
+            {
+                yield return expression;
+            }
 
             // Get arguments
             foreach ((var one, var others) in TakeOne(function.GetParameters()))
             {
-                IExpression map(IExpression mapped) => identity.CreateExpression(new Dictionary<string, IExpression>(others) { { one.Key, mapped } });
-                IEnumerable<IExpression> argumentResults = EvaluateArgument(one.Value, map);
-                results = results.Concat(argumentResults);
+                Expression map(Expression mapped) => identity.CreateExpression(new Dictionary<string, Expression>(others) { { one.Key, mapped } });
+                foreach (Expression result in EvaluateArgument(one.Value, map))
+                {
+                    yield return result;
+                }
             }
-
-            // Return all
-            return results;
         }
 
-        protected IEnumerable<IExpression> EvaluateCommutative(IExpression expression, ICollection<IExpression> expressions, Func<ICollection<IExpression>, IExpression> builder)
+        protected IEnumerable<Expression> EvaluateCommutative(Expression expression, ICollection<Expression> expressions, Func<ICollection<Expression>, Expression> builder)
         {
             // Get this
-            IEnumerable<IExpression> results = EvaluateExpression(expression);
+            foreach (Expression result in EvaluateExpression(expression))
+            {
+                yield return result;
+            }
 
             // Get arguments
             foreach ((var one, var others) in TakeOne(expressions))
             {
-                IExpression map(IExpression mapped) => builder(new List<IExpression>(others) { { mapped } });
-                IEnumerable<IExpression> argumentResults = EvaluateArgument(one, map);
-                results = results.Concat(argumentResults);
+                Expression map(Expression mapped) => builder(new List<Expression>(others) { { mapped } });
+                foreach (Expression result in EvaluateArgument(one, map))
+                {
+                    yield return result;
+                }
             }
-
-            // Return all
-            return results;
         }
 
-        public IEnumerable<IExpression> EvaluateProduct(IExpression expression, ICollection<IExpression> expressions)
+        public IEnumerable<Expression> EvaluateProduct(Expression expression, ICollection<Expression> expressions)
         {
             return EvaluateCommutative(expression, expressions, Expression.Multiply);
         }
 
-        public IEnumerable<IExpression> EvaluateSum(IExpression expression, ICollection<IExpression> expressions)
+        public IEnumerable<Expression> EvaluateSum(Expression expression, ICollection<Expression> expressions)
         {
             return EvaluateCommutative(expression, expressions, Expression.Add);
         }
 
-        public virtual IEnumerable<IExpression> EvaluateOther(IExpression other)
+        public virtual IEnumerable<Expression> EvaluateOther(Expression other)
         {
             throw new NotImplementedException($"Cannot replace for unknown expression {other}. Override {typeof(ReplaceEvaluator).Name} to add functionality for your new class.");
         }

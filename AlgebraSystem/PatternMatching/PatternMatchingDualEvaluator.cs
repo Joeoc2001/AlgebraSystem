@@ -1,4 +1,5 @@
 ﻿using Algebra.Evaluators;
+using Algebra.Functions;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,11 @@ using System.Xml.Schema;
 
 namespace Algebra.PatternMatching
 {
+    /// <summary>
+    /// Finds all matches between an expression (1st argument) and a pattern (2nd argument).
+    /// For example, x + y matches (2 * a) + b with both (x, y) = (2 * a, b) and (x, y) = (b, 2 * a).
+    /// x + y however does not match 2 * (a + b) as it only checks the root node.
+    /// </summary>
     public class PatternMatchingDualEvaluator : IDualEvaluator<PatternMatchingResultSet>
     {
         public static readonly PatternMatchingDualEvaluator Instance = new PatternMatchingDualEvaluator();
@@ -18,7 +24,7 @@ namespace Algebra.PatternMatching
 
         }
 
-        public PatternMatchingResultSet EvaluateConstants(Rational valuePattern, Rational valueToBeMatched)
+        public PatternMatchingResultSet EvaluateConstants(Rational valueToBeMatched, Rational valuePattern)
         {
             if (valuePattern.Equals(valueToBeMatched))
             {
@@ -27,34 +33,34 @@ namespace Algebra.PatternMatching
             return PatternMatchingResultSet.None;
         }
 
-        public PatternMatchingResultSet EvaluateArcsins(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateArcsins(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
-        public PatternMatchingResultSet EvaluateArctans(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateArctans(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
-        public PatternMatchingResultSet EvaluateLns(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateLns(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
-        public PatternMatchingResultSet EvaluateSigns(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateSigns(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
-        public PatternMatchingResultSet EvaluateSins(IExpression argumentPattern, IExpression argumentToBeMatched)
+        public PatternMatchingResultSet EvaluateSins(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
-        public PatternMatchingResultSet EvaluateExponents(IExpression baseArgumentPattern, IExpression powerArgumentPattern, IExpression baseArgumentToBeMatched, IExpression powerArgumentToBeMatched)
+        public PatternMatchingResultSet EvaluateExponents(Expression baseArgumentToBeMatched, Expression powerArgumentToBeMatched, Expression baseArgumentPattern, Expression powerArgumentPattern)
         {
-            PatternMatchingResultSet baseInputs = baseArgumentPattern.Evaluate(baseArgumentToBeMatched, this);
+            PatternMatchingResultSet baseInputs = baseArgumentToBeMatched.Evaluate(baseArgumentPattern, this);
 
             // Short circuit if we can before we pattern match power inputs
             if (baseInputs.IsNone)
@@ -62,12 +68,12 @@ namespace Algebra.PatternMatching
                 return baseInputs;
             }
 
-            PatternMatchingResultSet powerInputs = powerArgumentPattern.Evaluate(powerArgumentToBeMatched, this);
+            PatternMatchingResultSet powerInputs = powerArgumentToBeMatched.Evaluate(powerArgumentPattern, this);
 
             return baseInputs.Intersect(powerInputs);
         }
 
-        public PatternMatchingResultSet EvaluateFunctions(IFunction functionPattern, IFunction functionToBeMatched)
+        public PatternMatchingResultSet EvaluateFunctions(Function functionToBeMatched, Function functionPattern)
         {
             if (!functionPattern.GetIdentity().Equals(functionToBeMatched.GetIdentity()))
             {
@@ -75,17 +81,17 @@ namespace Algebra.PatternMatching
             }
 
             var parametersPattern = functionPattern.GetParameters();
-            var parametersToBeMatched = functionPattern.GetParameters();
+            var parametersToBeMatched = functionToBeMatched.GetParameters();
 
             PatternMatchingResultSet resultSet = PatternMatchingResultSet.All;
-            foreach ((string parameterName, IExpression parameterPattern) in parametersPattern)
+            foreach ((string parameterName, Expression parameterPattern) in parametersPattern)
             {
-                if (!parametersToBeMatched.TryGetValue(parameterName, out IExpression parameterToBeMatched))
+                if (!parametersToBeMatched.TryGetValue(parameterName, out Expression parameterToBeMatched))
                 {
                     throw new NotSupportedException("Two functions with the same identity should always have the same parameter names");
                 }
 
-                PatternMatchingResultSet parameterInputs = parameterPattern.Evaluate(parameterToBeMatched, this);
+                PatternMatchingResultSet parameterInputs = parameterToBeMatched.Evaluate(parameterPattern, this);
 
                 resultSet = resultSet.Intersect(parameterInputs);
 
@@ -151,56 +157,53 @@ namespace Algebra.PatternMatching
             }
         }
 
-        protected PatternMatchingResultSet GetResultsForSets(ICollection<IExpression> argumentsPattern, ICollection<IExpression> argumentsToBeMatched, Func<ICollection<IExpression>, IExpression> builder)
+        protected PatternMatchingResultSet GetResultsForSets(ICollection<Expression> argumentsToBeMatched, ICollection<Expression> argumentsPattern, Func<ICollection<Expression>, Expression> builder)
         {
             PatternMatchingResultSet results = PatternMatchingResultSet.None;
 
-            foreach (var item in GetAllPartitions(new List<IExpression>(argumentsToBeMatched), argumentsToBeMatched.Count))
+            foreach (var toBeMatchedPartitioning in GetAllPartitions(new List<Expression>(argumentsToBeMatched), argumentsToBeMatched.Count))
             {
                 // This can be done way faster but I can't find an algorithm online
                 // TODO: Stop being an idiot and figure out an algorithm for myself
-                if (item.Count != argumentsPattern.Count)
+                if (toBeMatchedPartitioning.Count != argumentsPattern.Count)
                 {
                     continue;
                 }
 
-                var patternEnumerator = argumentsPattern.GetEnumerator();
-                foreach (var permutation in GetPermutations(item))
+                foreach (var toMatchPartitionPerm in GetPermutations(toBeMatchedPartitioning))
                 {
-                    patternEnumerator.MoveNext();
-
                     PatternMatchingResultSet permResults = PatternMatchingResultSet.All;
 
-                    foreach (List<IExpression> part in permutation)
+                    foreach ((List<Expression> toBeMatchedPartition, Expression argumentPattern) in toMatchPartitionPerm.Zip(argumentsPattern, (a, b) => (a, b)))
                     {
-                        IExpression partExpression = builder(part);
-                        PatternMatchingResultSet partResults = patternEnumerator.Current.Evaluate(partExpression, this);
-                        permResults.Intersect(partResults);
+                        Expression partitionExpression = builder(toBeMatchedPartition);
+                        PatternMatchingResultSet partitionResults = partitionExpression.Evaluate(argumentPattern, this);
+                        permResults = permResults.Intersect(partitionResults);
                     }
 
-                    results.Union(permResults);
+                    results = results.Union(permResults);
                 }
             }
 
             return results;
         }
 
-        public PatternMatchingResultSet EvaluateProducts(ICollection<IExpression> argumentsPattern, ICollection<IExpression> argumentsToBeMatched)
+        public PatternMatchingResultSet EvaluateProducts(ICollection<Expression> argumentsToBeMatched, ICollection<Expression> argumentsPattern)
         {
-            return GetResultsForSets(argumentsPattern, argumentsToBeMatched, Expression.Multiply);
+            return GetResultsForSets(argumentsToBeMatched, argumentsPattern, Expression.Multiply);
         }
 
-        public PatternMatchingResultSet EvaluateSums(ICollection<IExpression> argumentsPattern, ICollection<IExpression> argumentsToBeMatched)
+        public PatternMatchingResultSet EvaluateSums(ICollection<Expression> argumentsToBeMatched, ICollection<Expression> argumentsPattern)
         {
-            return GetResultsForSets(argumentsPattern, argumentsToBeMatched, Expression.Add);
+            return GetResultsForSets(argumentsToBeMatched, argumentsPattern, Expression.Add);
         }
 
-        public PatternMatchingResultSet EvaluateVariables(string namePattern, string nameToBeMatched)
+        public PatternMatchingResultSet EvaluateVariables(string nameToBeMatched, string namePattern)
         {
             return new PatternMatchingResultSet(new PatternMatchingResult(namePattern, Expression.VariableFrom(nameToBeMatched)));
         }
 
-        public PatternMatchingResultSet EvaluateOthers(IExpression expressionPattern, IExpression expressionToBeMatched)
+        public PatternMatchingResultSet EvaluateOthers(Expression expressionToBeMatched, Expression expressionPattern)
         {
             IsVariableEvaluator.Result result = expressionPattern.Evaluate(IsVariableEvaluator.Instance);
             if (result.IsVariable())

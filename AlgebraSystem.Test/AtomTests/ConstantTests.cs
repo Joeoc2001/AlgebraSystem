@@ -54,10 +54,10 @@ namespace AtomTests
         public void Constant_Derivative_IsZero([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            IExpression value = Expression.ConstantFrom(v);
+            Expression value = Expression.ConstantFrom(v);
 
             // ACT
-            IExpression derivative = value.GetDerivative("x");
+            Expression derivative = value.GetDerivative("x");
 
             // ASSERT
             Assert.AreEqual(Expression.ConstantFrom(0), derivative);
@@ -67,7 +67,7 @@ namespace AtomTests
         public void Constant_EvaluatesCorrectly([Range(-100, 100, 10)] int v)
         {
             // ARANGE
-            IExpression expression = Expression.ConstantFrom(v);
+            Expression expression = Expression.ConstantFrom(v);
 
             // ACT
             float value = expression.EvaluateOnce(new VariableInputSet<float>());

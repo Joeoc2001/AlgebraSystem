@@ -9,7 +9,7 @@ namespace Algebra
     {
         internal static class MaxIdentity
         {
-            private static readonly IExpression _atomicExpression = 0.5 * (Expression.VarA + Expression.VarB + Expression.Abs(Expression.VarA - Expression.VarB));
+            private static readonly Expression _atomicExpression = 0.5 * (Expression.VarA + Expression.VarB + Expression.AbsOf(Expression.VarA - Expression.VarB));
             private static readonly int _hashSeed = -1121236537;
             private static readonly string _name = "max";
 

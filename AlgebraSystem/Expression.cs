@@ -2,6 +2,7 @@
 using Algebra.Equivalence;
 using Algebra.Evaluators;
 using Algebra.Functions.HardcodedFunctionIdentities;
+using Algebra.PatternMatching;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace Algebra
 {
-    public abstract class Expression : IExpression
+    public abstract class Expression
     {
         public static implicit operator Expression(int r) => (Constant)r;
         public static implicit operator Expression(long r) => (Constant)r;
@@ -49,15 +50,34 @@ namespace Algebra
             return new Variable(name);
         }
 
-        public abstract IExpression GetDerivative(string wrt);
+        public abstract Expression GetDerivative(string wrt);
         protected abstract int GenHashCode();
-        protected abstract bool ExactlyEquals(IExpression expression);
+        protected abstract Expression GenAtomicExpression();
         public abstract T Evaluate<T>(IEvaluator<T> evaluator);
         public abstract T Evaluate<T>(IExpandedEvaluator<T> evaluator);
-        public abstract T Evaluate<T>(IExpression other, IDualEvaluator<T> evaluator);
+        public abstract T Evaluate<T>(Expression other, IDualEvaluator<T> evaluator);
+
+        /* Used for displaying braces when printing a human-readable string
+         * Should be:
+         * 0 -> Node (eg. x, 12, function)
+         * 10 -> Indeces
+         * 20 -> Multiplication
+         * 30 -> Addition
+         * Used to determine order of operations
+         * Less => Higher priority
+         */
         public abstract int GetOrderIndex();
 
-        private int? _hashCode = null;
+        // Generated on demand
+        private int? _hashCode;
+        private bool? _isAtomic;
+        private Expression _atomicExpression; 
+
+        public Expression()
+        {
+
+        }
+
         public override int GetHashCode()
         {
             if (!_hashCode.HasValue)
@@ -67,7 +87,98 @@ namespace Algebra
             return _hashCode.Value;
         }
 
-        public bool Equals(IExpression e, EqualityLevel level)
+        /// <summary>
+        /// Checks if this expression is in atomic form, i.e. has no function calls. 
+        /// </summary>
+        /// <returns>True if this is atomic</returns>
+        public bool IsAtomic()
+        {
+            if (!_isAtomic.HasValue)
+            {
+                _isAtomic = Evaluate(IsAtomicEvaluator.Instance);
+            }
+            return _isAtomic.Value;
+        }
+
+        /// <summary>
+        /// Replaces all non-atomic operations with their atomic counterparts.
+        /// The resulting expressions should not be executed as it will be far slower.
+        /// Instead, this form is used as an intermediate form for performing simplifications.
+        /// </summary>
+        /// <returns>An expression in atomic form</returns>
+        public Expression GetAtomicExpression()
+        {
+            if (IsAtomic())
+            {
+                return this;
+            }
+
+            if (_atomicExpression is null)
+            {
+                _atomicExpression = GenAtomicExpression();
+            }
+
+            return _atomicExpression;
+        }
+
+        public float EvaluateOnce(float variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable } });
+        public float EvaluateOnce(Vector2 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y } });
+        public float EvaluateOnce(Vector3 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y }, { "z", variable.Z } });
+        public float EvaluateOnce(VariableInputSet<float> variables)
+        {
+            return Evaluate(new FloatEvaluator(variables));
+        }
+
+        public static bool ShouldParenthesise(Expression parent, Expression child)
+        {
+            return parent.GetOrderIndex() <= child.GetOrderIndex();
+        }
+
+        public static string ToParenthesisedString(Expression parent, Expression child)
+        {
+            if (ShouldParenthesise(parent, child))
+            {
+                return $"({child})";
+            }
+
+            return child.ToString();
+        }
+
+        /// <summary>
+        /// Creates a new Equivalence Class used for proving equivalence and for finding alternate forms of an equation.
+        /// </summary>
+        /// <returns>A queriable equivalence class for this expression</returns>
+        public EquivalenceClass GetEquivalenceClass()
+        {
+            return new EquivalenceClass(this);
+        }
+
+        public int CompareTo(Expression other)
+        {
+            return Evaluate(other, GetOrderingDualEvaluator.Instance);
+        }
+
+        public override sealed bool Equals(object obj)
+        {
+            return Equals(obj as Expression);
+        }
+
+        public bool Equals(Expression obj)
+        {
+            return Equals(obj, EqualityLevel.Exactly);
+        }
+
+        /// <summary>
+        /// Checks if an expression is equal to this on a variable level.
+        /// Each <see cref="EqualityLevel"/> gives a different level of effort to put in to calculate equality.
+        /// Note that the problem of expression equality is undecidable, so with the deepest setting it is not guaranteed that this method will terminate.
+        /// This method will however terminate on all other levels.
+        /// Also note that a return of false does not ever guarantee that two expressions are not equal, however a return of true guarantees that they are equal.
+        /// </summary>
+        /// <param name="e">The expression to check against this</param>
+        /// <param name="level">The level of effort to put in to calculate equality</param>
+        /// <returns>True if the equations are equal, false if equality could not be proven, or if e is null.</returns>
+        public bool Equals(Expression e, EqualityLevel level)
         {
             if (e is null)
             {
@@ -85,8 +196,8 @@ namespace Algebra
                     return ExactlyEquals(e);
                 case EqualityLevel.Atomic:
                     // Get atomic expressions and check if they are equal on the mimimum level
-                    IExpression atomicA = this.GetAtomicExpression();
-                    IExpression atomicB = e.GetAtomicExpression();
+                    Expression atomicA = this.GetAtomicExpression();
+                    Expression atomicB = e.GetAtomicExpression();
                     return atomicA.Equals(atomicB, EqualityLevel.Exactly);
                 case EqualityLevel.Deep:
                     return GetEquivalenceClass().IsInClass(e, 3);
@@ -97,50 +208,34 @@ namespace Algebra
             }
         }
 
-        protected abstract IAtomicExpression GenAtomicExpression();
-        private IAtomicExpression _atomicExpression = null;
-        public IAtomicExpression GetAtomicExpression()
+        protected bool ExactlyEquals(Expression expression)
         {
-            if (_atomicExpression is null)
-            {
-                _atomicExpression = GenAtomicExpression();
-            }
-            return _atomicExpression;
+            return Evaluate(expression, ExactlyEqualsDualEvaluator.Instance);
         }
 
-        public static bool ShouldParenthesise(IExpression parent, IExpression child)
+        public HashSet<string> GetVariables()
         {
-            return parent.GetOrderIndex() <= child.GetOrderIndex();
+            return Evaluate(GetVariablesEvaluator.Instance);
         }
 
-        public static string ToParenthesisedString(IExpression parent, IExpression child)
+        public PatternMatchingResultSet Match(Expression pattern)
         {
-            if (ShouldParenthesise(parent, child))
-            {
-                return $"({child})";
-            }
-
-            return child.ToString();
+            return Evaluate(pattern, PatternMatchingDualEvaluator.Instance);
         }
 
-        public IEquivalenceClass GetEquivalenceClass()
+        /// <summary>
+        /// Returns a set of expressions where all instance of a pattern have been replaced with a replacement expression.
+        /// All of the variables in the replacement expression must be contained in the pattern expression.
+        /// For example, if 3 * (x + y) + 2 is evaluated with an instance of this with pattern a + b and replacement a * b,
+        /// the resulting expression set will be {6 * (x + y), 3 * x * y + 2}.
+        /// This is useful for equality axioms, e.g. x * (y + z) == x * y + x * z
+        /// </summary>
+        /// <param name="pattern">The pattern to search this expression for</param>
+        /// <param name="replacement">The expression to replace the found pattern with</param>
+        /// <returns>A set of expressions where all instance of the pattern have been replaced with the replacement expression</returns>
+        public IEnumerable<Expression> Replace(Expression pattern, Expression replacement)
         {
-            return new EquivalenceClass(this);
-        }
-
-        public bool IsAtomic()
-        {
-            return Evaluate(IsAtomicEvaluator.Instance);
-        }
-
-        public int CompareTo(IExpression other)
-        {
-            return Evaluate(other, GetOrderingDualEvaluator.Instance);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as IExpression);
+            return Evaluate(new ReplaceEvaluator(pattern, replacement));
         }
 
         public static bool operator ==(Expression left, Expression right)
@@ -163,108 +258,86 @@ namespace Algebra
             return !(left == right);
         }
 
-        public static IExpression operator +(Expression left, IExpression right) => (IExpression)left + right;
-        public static IExpression operator +(IExpression left, Expression right) => left + (IExpression)right;
-        public static IExpression operator +(Expression left, Expression right) => Add(new List<IExpression>() { left, right });
+        public static Expression operator +(Expression left, Expression right)
+        {
+            return Expression.Add(new List<Expression>() { left, right });
+        }
+        public static Expression operator +(double left, Expression right) => Expression.ConstantFrom(left) + right;
+        public static Expression operator +(Expression left, double right) => left + Expression.ConstantFrom(right);
 
-        public static IExpression operator -(Expression left, IExpression right) => (IExpression)left - right;
-        public static IExpression operator -(IExpression left, Expression right) => left - (IExpression)right;
-        public static IExpression operator -(Expression left, Expression right) => Add(new List<IExpression>() { left, -right });
+        public static Expression operator -(Expression left, Expression right)
+        {
+            return Expression.Add(new List<Expression>() { left, -right });
+        }
+        public static Expression operator -(double left, Expression right) => Expression.ConstantFrom(left) - right;
+        public static Expression operator -(Expression left, double right) => left - Expression.ConstantFrom(right);
 
-        public static IExpression operator -(Expression a) => MinusOne * a;
+        public static Expression operator -(Expression a)
+        {
+            return Expression.MinusOne * a;
+        }
 
-        public static IExpression operator *(Expression left, IExpression right) => (IExpression)left * right;
-        public static IExpression operator *(IExpression left, Expression right) => left * (IExpression)right;
-        public static IExpression operator *(Expression left, Expression right) => Multiply(new List<IExpression>() { left, right });
+        public static Expression operator *(Expression left, Expression right)
+        {
+            return Expression.Multiply(new List<Expression>() { left, right });
+        }
+        public static Expression operator *(double left, Expression right) => Expression.ConstantFrom(left) * right;
+        public static Expression operator *(Expression left, double right) => left * Expression.ConstantFrom(right);
 
-        public static IExpression operator /(Expression left, IExpression right) => (IExpression)left / right;
-        public static IExpression operator /(IExpression left, Expression right) => left / (IExpression)right;
-        public static IExpression operator /(Expression left, Expression right) => Divide(left, right);
+        public static Expression operator /(Expression left, Expression right)
+        {
+            return Expression.Divide(left, right);
+        }
+        public static Expression operator /(double left, Expression right) => Expression.ConstantFrom(left) / right;
+        public static Expression operator /(Expression left, double right) => left / Expression.ConstantFrom(right);
 
+        public static Expression Add<T>(params T[] eqs) where T : Expression => Add(new List<T>(eqs));
+        public static Expression Add<T>(IEnumerable<T> eqs) where T : Expression => Sum.Add(eqs);
+        public static Expression Multiply<T>(params T[] eqs) where T : Expression => Multiply(new List<T>(eqs));
+        public static Expression Multiply<T>(IEnumerable<T> eqs) where T : Expression => Product.Multiply(eqs);
 
-        public static IExpression Add<T>(IEnumerable<T> eqs) where T : IExpression => Sum.Add(eqs);
-        public static IExpression Multiply<T>(IEnumerable<T> eqs) where T : IExpression => Product.Multiply(eqs);
+        public static Expression Divide(Expression left, Expression right) => DivIdentity.Instance.CreateExpression(left, right);
 
-        public static IExpression Divide(Expression left, Expression right) => Divide((IExpression)left, (IExpression)right);
-        public static IExpression Divide(Expression left, IExpression right) => Divide((IExpression)left, right);
-        public static IExpression Divide(IExpression left, Expression right) => Divide(left, (IExpression)right);
-        public static IExpression Divide(IExpression left, IExpression right) => DivIdentity.Instance.CreateExpression(left, right);
+        public static Expression Pow(Expression left, Expression right) => Exponent.Pow(left, right);
 
-        public static IExpression Pow(Expression left, Expression right) => Pow((IExpression)left, (IExpression)right);
-        public static IExpression Pow(Expression left, IExpression right) => Pow((IExpression)left, right);
-        public static IExpression Pow(IExpression left, Expression right) => Pow(left, (IExpression)right);
-        public static IExpression Pow(IExpression left, IExpression right) => Exponent.Pow(left, right);
+        public static Expression Sqrt(Expression expression) => SqrtIdentity.Instance.CreateExpression(expression);
 
-        public static IExpression Sqrt(Expression eq) => Sqrt((IExpression)eq);
-        public static IExpression Sqrt(IExpression expression) => SqrtIdentity.Instance.CreateExpression(expression);
+        public static Expression LnOf(Expression eq) => Ln.LnOf(eq);
 
-        public static IExpression LnOf(Expression eq) => LnOf((IExpression)eq);
-        public static IExpression LnOf(IExpression eq) => Ln.LnOf(eq);
+        public static Expression LogOf(Expression a, Expression b) => LogIdentity.Instance.CreateExpression(a, b);
 
-        public static IExpression LogOf(Expression left, Expression right) => LogOf((IExpression)left, (IExpression)right);
-        public static IExpression LogOf(Expression left, IExpression right) => LogOf((IExpression)left, right);
-        public static IExpression LogOf(IExpression left, Expression right) => LogOf(left, (IExpression)right);
-        public static IExpression LogOf(IExpression a, IExpression b) => LogIdentity.Instance.CreateExpression(a, b);
+        public static Expression SignOf(Expression eq) => Sign.SignOf(eq);
 
-        public static IExpression SignOf(Expression eq) => SignOf((IExpression)eq);
-        public static IExpression SignOf(IExpression eq) => Sign.SignOf(eq);
+        public static Expression SinOf(Expression eq) => Sin.SinOf(eq);
 
-        public static IExpression SinOf(Expression eq) => SinOf((IExpression)eq);
-        public static IExpression SinOf(IExpression eq) => Sin.SinOf(eq);
+        public static Expression CosOf(Expression eq) => CosIdentity.Instance.CreateExpression(eq);
 
-        public static IExpression CosOf(Expression eq) => CosOf((IExpression)eq);
-        public static IExpression CosOf(IExpression eq) => CosIdentity.Instance.CreateExpression(eq);
+        public static Expression TanOf(Expression eq) => TanIdentity.Instance.CreateExpression(eq);
 
-        public static IExpression TanOf(Expression eq) => TanOf((IExpression)eq);
-        public static IExpression TanOf(IExpression eq) => TanIdentity.Instance.CreateExpression(eq);
+        public static Expression ArcsinOf(Expression eq) => Arcsin.ArcsinOf(eq);
 
-        public static IExpression ArcsinOf(Expression eq) => ArcsinOf((IExpression)eq);
-        public static IExpression ArcsinOf(IExpression eq) => Arcsin.ArcsinOf(eq);
+        public static Expression ArccosOf(Expression eq) => ArccosIdentity.Instance.CreateExpression(eq);
 
-        public static IExpression ArccosOf(Expression eq) => ArccosOf((IExpression)eq);
-        public static IExpression ArccosOf(IExpression eq) => ArccosIdentity.Instance.CreateExpression(eq);
+        public static Expression ArctanOf(Expression eq) => Arctan.ArctanOf(eq);
 
-        public static IExpression ArctanOf(Expression eq) => ArctanOf((IExpression)eq);
-        public static IExpression ArctanOf(IExpression eq) => Arctan.ArctanOf(eq);
+        public static Expression AbsOf(Expression eq) => AbsIdentity.Instance.CreateExpression(eq);
 
-        public static IExpression Abs(Expression eq) => Abs((IExpression)eq);
-        public static IExpression Abs(IExpression eq) => AbsIdentity.Instance.CreateExpression(eq);
+        public static Expression Min(Expression a, Expression b) => MinIdentity.Instance.CreateExpression(a, b);
 
-        public static IExpression Min(Expression left, Expression right) => Min((IExpression)left, (IExpression)right);
-        public static IExpression Min(Expression left, IExpression right) => Min((IExpression)left, right);
-        public static IExpression Min(IExpression left, Expression right) => Min(left, (IExpression)right);
-        public static IExpression Min(IExpression a, IExpression b) => MinIdentity.Instance.CreateExpression(a, b);
+        public static Expression Max(Expression a, Expression b) => MaxIdentity.Instance.CreateExpression(a, b);
 
-        public static IExpression Max(Expression left, Expression right) => Max((IExpression)left, (IExpression)right);
-        public static IExpression Max(Expression left, IExpression right) => Max((IExpression)left, right);
-        public static IExpression Max(IExpression left, Expression right) => Max(left, (IExpression)right);
-        public static IExpression Max(IExpression a, IExpression b) => MaxIdentity.Instance.CreateExpression(a, b);
+        public static Expression SelectOn(Expression lt, Expression gt, Expression condition) => SelectIdentity.Instance.CreateExpression(lt, gt, condition);
 
-        public static IExpression SelectOn(Expression lt, Expression gt, Expression condition) => SelectOn((IExpression)lt, (IExpression)gt, (IExpression)condition);
-        public static IExpression SelectOn(Expression lt, IExpression gt, Expression condition) => SelectOn((IExpression)lt, gt, (IExpression)condition);
-        public static IExpression SelectOn(IExpression lt, Expression gt, Expression condition) => SelectOn(lt, (IExpression)gt, (IExpression)condition);
-        public static IExpression SelectOn(IExpression lt, IExpression gt, Expression condition) => SelectOn(lt, gt, (IExpression)condition);
-        public static IExpression SelectOn(Expression lt, Expression gt, IExpression condition) => SelectOn((IExpression)lt, (IExpression)gt, condition);
-        public static IExpression SelectOn(Expression lt, IExpression gt, IExpression condition) => SelectOn((IExpression)lt, gt, condition);
-        public static IExpression SelectOn(IExpression lt, Expression gt, IExpression condition) => SelectOn(lt, (IExpression)gt, condition);
-        public static IExpression SelectOn(IExpression lt, IExpression gt, IExpression condition) => SelectIdentity.Instance.CreateExpression(lt, gt, condition);
+        public static Expression SinhOf(Expression a) => SinhIdentity.Instance.CreateExpression(a);
 
-        public static IExpression SinhOf(Expression eq) => SinhOf((IExpression)eq);
-        public static IExpression SinhOf(IExpression a) => SinhIdentity.Instance.CreateExpression(a);
+        public static Expression CoshOf(Expression a) => CoshIdentity.Instance.CreateExpression(a);
 
-        public static IExpression CoshOf(Expression eq) => CoshOf((IExpression)eq);
-        public static IExpression CoshOf(IExpression a) => CoshIdentity.Instance.CreateExpression(a);
+        public static Expression TanhOf(Expression a) => TanhIdentity.Instance.CreateExpression(a);
 
-        public static IExpression TanhOf(Expression eq) => TanhOf((IExpression)eq);
-        public static IExpression TanhOf(IExpression a) => TanhIdentity.Instance.CreateExpression(a);
+        public static Expression ArsinhOf(Expression a) => ArsinhIdentity.Instance.CreateExpression(a);
 
-        public static IExpression ArsinhOf(Expression eq) => ArsinhOf((IExpression)eq);
-        public static IExpression ArsinhOf(IExpression a) => ArsinhIdentity.Instance.CreateExpression(a);
+        public static Expression ArcoshOf(Expression a) => ArcoshIdentity.Instance.CreateExpression(a);
 
-        public static IExpression ArcoshOf(Expression eq) => ArcoshOf((IExpression)eq);
-        public static IExpression ArcoshOf(IExpression a) => ArcoshIdentity.Instance.CreateExpression(a);
-
-        public static IExpression ArtanhOf(Expression eq) => ArtanhOf((IExpression)eq);
-        public static IExpression ArtanhOf(IExpression a) => ArtanhIdentity.Instance.CreateExpression(a);
+        public static Expression ArtanhOf(Expression a) => ArtanhIdentity.Instance.CreateExpression(a);
     }
 }

@@ -50,9 +50,9 @@ namespace AlgebraTests
 
             // ACT
             VariableInputSet<float> set1 = new VariableInputSet<float>();
-            set1.AddOrSet("x", 1);
+            set1.Set("x", 1);
             VariableInputSet<float> set2 = new VariableInputSet<float>();
-            set2.AddOrSet("x", 1.00001f);
+            set2.Set("x", 1.00001f);
 
             // ASSERT
             Assert.IsFalse(set1.Equals(set2));

@@ -9,7 +9,7 @@ namespace Algebra
     {
         internal static class ArcoshIdentity
         {
-            private static readonly IExpression _atomicExpression = Expression.LnOf(Expression.VarA + Expression.Sqrt(Expression.VarA * Expression.VarA - 1));
+            private static readonly Expression _atomicExpression = Expression.LnOf(Expression.VarA + Expression.Sqrt(Expression.VarA * Expression.VarA - 1));
             private static readonly int _hashSeed = 615814358;
             private static readonly string _name = "arcosh";
 

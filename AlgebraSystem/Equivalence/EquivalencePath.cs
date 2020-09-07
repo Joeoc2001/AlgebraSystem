@@ -4,12 +4,12 @@ namespace Algebra.Equivalence
 {
     public abstract class EquivalencePath
     {
-        public abstract IEnumerable<IExpression> GetAllFrom(IExpression expression);
-        public IEnumerable<IExpression> GetAllFrom(IEnumerable<IExpression> expressions)
+        public abstract IEnumerable<Expression> GetAllFrom(Expression expression);
+        public IEnumerable<Expression> GetAllFrom(IEnumerable<Expression> expressions)
         {
-            foreach (IExpression expression in expressions)
+            foreach (Expression expression in expressions)
             {
-                foreach (IExpression result in GetAllFrom(expression))
+                foreach (Expression result in GetAllFrom(expression))
                 {
                     yield return result;
                 }

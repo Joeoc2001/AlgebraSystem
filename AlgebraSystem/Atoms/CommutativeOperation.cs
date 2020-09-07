@@ -12,11 +12,11 @@ namespace Algebra
     {
         internal abstract class CommutativeOperation : Expression
         {
-            protected readonly ReadOnlyCollection<IExpression> _arguments;
+            protected readonly ReadOnlyCollection<Expression> _arguments;
 
-            public CommutativeOperation(IList<IExpression> eqs)
+            public CommutativeOperation(IList<Expression> eqs)
             {
-                this._arguments = new ReadOnlyCollection<IExpression>(eqs);
+                this._arguments = new ReadOnlyCollection<Expression>(eqs);
             }
 
             public abstract int IdentityValue();
@@ -24,74 +24,26 @@ namespace Algebra
             public delegate Rational Operation(Rational a, Rational b);
             public abstract string EmptyName();
             public abstract string OperationSymbol();
-            public abstract Func<List<IExpression>, IExpression> GetSimplifyingConstructor();
-
-            protected bool OperandsExactlyEquals(IList<IExpression> otherArgs)
-            {
-                // Check for commutativity
-                // Add all parameters to dict by hash
-                Dictionary<int, List<IExpression>> expressionsByHashes = new Dictionary<int, List<IExpression>>();
-                foreach (IExpression otherArg in otherArgs)
-                {
-                    int hash = otherArg.GetHashCode();
-                    if (!expressionsByHashes.TryGetValue(hash, out List<IExpression> expressions))
-                    {
-                        expressions = new List<IExpression>();
-                        expressionsByHashes.Add(hash, expressions);
-                    }
-                    expressions.Add(otherArg);
-                }
-
-                // Check all parameters in this are present
-                IList<IExpression> thisArgs = _arguments;
-                foreach (IExpression thisArg in thisArgs)
-                {
-                    int hash = thisArg.GetHashCode();
-                    if (!expressionsByHashes.TryGetValue(hash, out List<IExpression> expressions))
-                    {
-                        return false;
-                    }
-
-                    // Perform linear search on all equations with same hash
-                    bool found = false;
-                    foreach (IExpression otherArg in expressions)
-                    {
-                        if (otherArg.Equals(thisArg, EqualityLevel.Exactly))
-                        {
-                            found = true;
-                            expressions.Remove(otherArg);
-                            break;
-                        }
-                    }
-
-                    // If linear search failed then args are different
-                    if (!found)
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
+            public abstract Func<List<Expression>, Expression> GetSimplifyingConstructor();
 
             protected override int GenHashCode()
             {
                 int value = -1906136416 * OperationSymbol().GetHashCode();
-                foreach (IExpression eq in _arguments)
+                foreach (Expression eq in _arguments)
                 {
                     value ^= eq.GetHashCode(); // This is bad practice but it will have to do
                 }
                 return value;
             }
 
-            protected static List<IExpression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : IExpression
+            protected static List<Expression> SimplifyArguments<T>(List<T> eqs, Rational identity, Operation operation) where T : Expression
             {
-                List<IExpression> newEqs = new List<IExpression>(eqs.Count);
+                List<Expression> newEqs = new List<Expression>(eqs.Count);
 
                 Rational collectedConstants = identity;
 
                 // Loop & simplify
-                foreach (IExpression eq in eqs)
+                foreach (Expression eq in eqs)
                 {
                     if (eq is Constant constEq)
                     {
@@ -131,17 +83,15 @@ namespace Algebra
                 return builder.ToString();
             }
 
-            protected override IAtomicExpression GenAtomicExpression()
+            protected override Expression GenAtomicExpression()
             {
                 // Replace variables with their expressions
-                List<IExpression> atomicArguments = new List<IExpression>();
+                List<Expression> atomicArguments = new List<Expression>();
                 foreach (var argument in _arguments)
                 {
                     atomicArguments.Add(argument.GetAtomicExpression());
                 }
-                IExpression atomicExpression = GetSimplifyingConstructor()(atomicArguments);
-
-                return AtomicExpression.GetAtomicExpression(atomicExpression);
+                return GetSimplifyingConstructor()(atomicArguments);
             }
         }
     }

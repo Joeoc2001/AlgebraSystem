@@ -1,4 +1,5 @@
 ﻿using Algebra.Atoms;
+using Algebra.Functions;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,15 @@ namespace Algebra
     {
         T EvaluateConstant(Rational value);
         T EvaluateVariable(string name);
-        T EvaluateSum(ICollection<IExpression> expressions);
-        T EvaluateProduct(ICollection<IExpression> expressions);
-        T EvaluateExponent(IExpression baseExpression, IExpression powerExpression);
-        T EvaluateLn(IExpression argumentExpression);
-        T EvaluateSign(IExpression argumentExpression);
-        T EvaluateSin(IExpression argumentExpression);
-        T EvaluateArcsin(IExpression argumentExpression);
-        T EvaluateArctan(IExpression argumentExpression);
-        T EvaluateFunction(IFunction function);
-        T EvaluateOther(IExpression other);
+        T EvaluateSum(ICollection<Expression> expressions);
+        T EvaluateProduct(ICollection<Expression> expressions);
+        T EvaluateExponent(Expression baseExpression, Expression powerExpression);
+        T EvaluateLn(Expression argumentExpression);
+        T EvaluateSign(Expression argumentExpression);
+        T EvaluateSin(Expression argumentExpression);
+        T EvaluateArcsin(Expression argumentExpression);
+        T EvaluateArctan(Expression argumentExpression);
+        T EvaluateFunction(Function function);
+        T EvaluateOther(Expression other);
     }
 }

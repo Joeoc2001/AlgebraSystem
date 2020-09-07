@@ -6,16 +6,13 @@ using System.Text;
 
 namespace AlgebraSystem.Test
 {
-    class DummyExpression : Expression, IAtomicExpression
+    class DummyExpression : Expression
     {
         public bool DerivativeGot { get => DerivativeGotCount > 0; }
         public int DerivativeGotCount { get; private set; } = 0;
 
         public bool OrderIndexGot { get => OrderIndexGotCount > 0; }
         public int OrderIndexGotCount { get; private set; } = 0;
-
-        public bool ExactlyEqualsCalled { get => ExactlyEqualsCalledCount > 0; }
-        public int ExactlyEqualsCalledCount { get; private set; } = 0;
 
         public bool GenHashCodeCalled { get => GenHashCodeCalledCount > 0; }
         public int GenHashCodeCalledCount { get; private set; } = 0;
@@ -33,9 +30,9 @@ namespace AlgebraSystem.Test
         /// The expression used when <see cref="GetDerivative(Variable)"/> is called.
         /// If kept at default of null, a new dummy expression will be generated if <see cref="GetDerivative(Variable)"/> is called.
         /// </summary>
-        public IExpression Derivative { get; set; } = null;
+        public Expression Derivative { get; set; } = null;
 
-        public override IExpression GetDerivative(string wrt)
+        public override Expression GetDerivative(string wrt)
         {
             DerivativeGotCount += 1;
             if (Derivative is null)
@@ -51,19 +48,13 @@ namespace AlgebraSystem.Test
             return 0;
         }
 
-        protected override bool ExactlyEquals(IExpression expression)
-        {
-            ExactlyEqualsCalledCount += 1;
-            return ReferenceEquals(this, expression);
-        }
-
         protected override int GenHashCode()
         {
             GenHashCodeCalledCount += 1;
             return 0;
         }
 
-        protected override IAtomicExpression GenAtomicExpression()
+        protected override Expression GenAtomicExpression()
         {
             GenAtomicExpressionCalledCount += 1;
             return this;
@@ -87,7 +78,7 @@ namespace AlgebraSystem.Test
             return default;
         }
 
-        public override T Evaluate<T>(IExpression other, IDualEvaluator<T> evaluator)
+        public override T Evaluate<T>(Expression other, IDualEvaluator<T> evaluator)
         {
             EvaluateCalledCount += 1;
             return default;

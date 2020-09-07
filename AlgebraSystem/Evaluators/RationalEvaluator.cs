@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -18,11 +19,11 @@ namespace Algebra.Evaluators
             : this(variableInputs, null, maxSize)
         { }
 
-        public RationalEvaluator(VariableInputSet<Rational> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators)
+        public RationalEvaluator(VariableInputSet<Rational> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators)
             : this(variableInputs, functionEvaluators, null)
         { }
 
-        public RationalEvaluator(VariableInputSet<Rational> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, BigInteger? maxSize)
+        public RationalEvaluator(VariableInputSet<Rational> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators, BigInteger? maxSize)
             : base(variableInputs, functionEvaluators)
         {
             this._maxSize = maxSize;
@@ -62,7 +63,7 @@ namespace Algebra.Evaluators
             return Rational.RationalRoot(finalValue, (int)powerValue.Denominator);
         }
 
-        protected override TraversalEvaluator<Rational> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<Rational> variableInputs)
+        protected override TraversalEvaluator<Rational> Construct(IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<Rational> variableInputs)
         {
             return new RationalEvaluator(variableInputs, functionEvaluators, _maxSize);
         }
@@ -112,7 +113,7 @@ namespace Algebra.Evaluators
             return (Rational)Math.Atan((double)v);
         }
 
-        public override Rational EvaluateOther(IExpression other)
+        public override Rational EvaluateOther(Expression other)
         {
             throw new NotImplementedException($"Cannot evaluate {other}. Override {typeof(RationalEvaluator).Name} to add functionality for your new class.");
         }

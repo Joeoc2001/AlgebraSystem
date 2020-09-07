@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,24 +19,24 @@ namespace Algebra.Evaluators
             return true;
         }
 
-        public bool EvaluateExponent(IExpression baseExpression, IExpression powerExpression)
+        public bool EvaluateExponent(Expression baseExpression, Expression powerExpression)
         {
             return baseExpression.Evaluate(this) && powerExpression.Evaluate(this);
         }
 
-        public bool EvaluateFunction(IFunction function)
+        public bool EvaluateFunction(Function function)
         {
             return false;
         }
 
-        public bool EvaluateLn(IExpression argumentExpression)
+        public bool EvaluateLn(Expression argumentExpression)
         {
             return argumentExpression.Evaluate(this);
         }
 
-        public bool EvaluateSet(ICollection<IExpression> expressions)
+        public bool EvaluateSet(ICollection<Expression> expressions)
         {
-            foreach (IExpression expression in expressions)
+            foreach (Expression expression in expressions)
             {
                 if (!expression.Evaluate(this))
                 {
@@ -45,22 +46,22 @@ namespace Algebra.Evaluators
             return true;
         }
 
-        public bool EvaluateProduct(ICollection<IExpression> expressions)
+        public bool EvaluateProduct(ICollection<Expression> expressions)
         {
             return EvaluateSet(expressions);
         }
 
-        public bool EvaluateSign(IExpression argumentExpression)
+        public bool EvaluateSign(Expression argumentExpression)
         {
             return argumentExpression.Evaluate(this);
         }
 
-        public bool EvaluateSin(IExpression argumentExpression)
+        public bool EvaluateSin(Expression argumentExpression)
         {
             return argumentExpression.Evaluate(this);
         }
 
-        public bool EvaluateSum(ICollection<IExpression> expressions)
+        public bool EvaluateSum(ICollection<Expression> expressions)
         {
             return EvaluateSet(expressions);
         }
@@ -70,17 +71,17 @@ namespace Algebra.Evaluators
             return true;
         }
 
-        public bool EvaluateArcsin(IExpression argumentExpression)
+        public bool EvaluateArcsin(Expression argumentExpression)
         {
             return argumentExpression.Evaluate(this);
         }
 
-        public bool EvaluateArctan(IExpression argumentExpression)
+        public bool EvaluateArctan(Expression argumentExpression)
         {
             return argumentExpression.Evaluate(this);
         }
 
-        public bool EvaluateOther(IExpression other)
+        public bool EvaluateOther(Expression other)
         {
             throw new NotImplementedException($"Cannot check if {other} is atomic. Override {typeof(IsAtomicEvaluator).Name} to add functionality for your new class.");
         }

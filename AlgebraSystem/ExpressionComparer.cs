@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Algebra
 {
-    public class ExpressionComparer : IComparer<IExpression>
+    public class ExpressionComparer : IComparer<Expression>
     {
         public static readonly ExpressionComparer Instance = new ExpressionComparer();
 
@@ -14,7 +14,7 @@ namespace Algebra
 
         }
 
-        public int Compare(IExpression x, IExpression y)
+        public int Compare(Expression x, Expression y)
         {
             return x.Evaluate(y, GetOrderingDualEvaluator.Instance);
         }

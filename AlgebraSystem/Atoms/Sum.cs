@@ -10,11 +10,11 @@ namespace Algebra
     {
         internal class Sum : CommutativeOperation
         {
-            new public static IExpression Add<T>(IEnumerable<T> eqs) where T : IExpression
+            new public static Expression Add<T>(IEnumerable<T> eqs) where T : Expression
             {
                 // Loop and find all other addition nodes and put them into this one
-                List<IExpression> collatedEqs = new List<IExpression>();
-                foreach (IExpression eq in eqs)
+                List<Expression> collatedEqs = new List<Expression>();
+                foreach (Expression eq in eqs)
                 {
                     if (eq is Sum addeq)
                     {
@@ -27,7 +27,7 @@ namespace Algebra
                 }
 
                 // Put all of the constants together, and other generic commutative operations
-                List<IExpression> newEqs = SimplifyArguments(collatedEqs, 0, (x, y) => x + y);
+                List<Expression> newEqs = SimplifyArguments(collatedEqs, 0, (x, y) => x + y);
 
                 if (newEqs.Count() == 0)
                 {
@@ -39,10 +39,10 @@ namespace Algebra
                 }
 
                 // Collate Multiplication terms
-                Dictionary<IExpression, Constant> terms = new Dictionary<IExpression, Constant>();
-                foreach (IExpression eq in newEqs)
+                Dictionary<Expression, Constant> terms = new Dictionary<Expression, Constant>();
+                foreach (Expression eq in newEqs)
                 {
-                    IExpression baseEq;
+                    Expression baseEq;
                     Constant newCoefficient;
                     if (eq is Product multeq)
                     {
@@ -63,11 +63,11 @@ namespace Algebra
                 }
                 // Put back into exponent form
                 newEqs.Clear();
-                foreach (IExpression eq in terms.Keys)
+                foreach ((Expression eq, Constant coefficient) in terms)
                 {
-                    IExpression newEq = eq * terms[eq];
+                    Expression newEq = eq * coefficient;
 
-                    if (newEq.Equals(Constant.Zero))
+                    if (newEq.Equals(Zero))
                     {
                         continue;
                     }
@@ -87,31 +87,20 @@ namespace Algebra
                 return new Sum(newEqs);
             }
 
-            private Sum(IList<IExpression> eqs)
+            private Sum(IList<Expression> eqs)
                 : base(eqs)
             {
 
             }
 
-            public override IExpression GetDerivative(string wrt)
+            public override Expression GetDerivative(string wrt)
             {
-                List<IExpression> derivatives = new List<IExpression>();
-                foreach (IExpression e in _arguments)
+                List<Expression> derivatives = new List<Expression>();
+                foreach (Expression e in _arguments)
                 {
                     derivatives.Add(e.GetDerivative(wrt));
                 }
                 return Add(derivatives);
-            }
-
-            protected override bool ExactlyEquals(IExpression expression)
-            {
-                if (!(expression is Sum sum))
-                {
-                    return false;
-                }
-
-                // Check for commutativity
-                return OperandsExactlyEquals(sum._arguments);
             }
 
             public override int IdentityValue()
@@ -139,7 +128,7 @@ namespace Algebra
                 return 30;
             }
 
-            public override Func<List<IExpression>, IExpression> GetSimplifyingConstructor()
+            public override Func<List<Expression>, Expression> GetSimplifyingConstructor()
             {
                 return Add;
             }
@@ -154,7 +143,7 @@ namespace Algebra
                 return evaluator.EvaluateSum(this, _arguments);
             }
 
-            public override T Evaluate<T>(IExpression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Sum other)
                 {

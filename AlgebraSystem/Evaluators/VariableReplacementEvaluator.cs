@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,25 +7,25 @@ using System.Text;
 
 namespace Algebra.Evaluators
 {
-    class VariableReplacementEvaluator : TraversalEvaluator<IExpression>
+    class VariableReplacementEvaluator : TraversalEvaluator<Expression>
     {
-        private readonly IReadOnlyDictionary<string, IExpression> _substitutions;
+        private readonly IReadOnlyDictionary<string, Expression> _substitutions;
         private readonly bool _exceptionOnVariableMissing;
 
-        public VariableReplacementEvaluator(IReadOnlyDictionary<string, IExpression> substitutions, bool exceptionOnVariableMissing = true)
+        public VariableReplacementEvaluator(IReadOnlyDictionary<string, Expression> substitutions, bool exceptionOnVariableMissing = true)
         {
             this._substitutions = substitutions;
             this._exceptionOnVariableMissing = exceptionOnVariableMissing;
         }
 
-        public override IExpression EvaluateConstant(Rational value)
+        public override Expression EvaluateConstant(Rational value)
         {
             return Expression.ConstantFrom(value);
         }
 
-        public override IExpression EvaluateVariable(string name)
+        public override Expression EvaluateVariable(string name)
         {
-            if (_substitutions.TryGetValue(name, out IExpression expression))
+            if (_substitutions.TryGetValue(name, out Expression expression))
             {
                 return expression;
             }
@@ -38,52 +39,52 @@ namespace Algebra.Evaluators
             }
         }
 
-        protected override IExpression Pow(IExpression b, IExpression e)
+        protected override Expression Pow(Expression b, Expression e)
         {
             return Expression.Pow(b, e);
         }
 
-        protected override IExpression EvaluateFunction(IFunction function, IList<IExpression> parameters)
+        protected override Expression EvaluateFunction(Function function, IList<Expression> parameters)
         {
             return function.GetIdentity().CreateExpression(parameters);
         }
 
-        protected override IExpression Ln(IExpression v)
+        protected override Expression Ln(Expression v)
         {
             return Expression.LnOf(v);
         }
 
-        protected override IExpression Product(ICollection<IExpression> expressions)
+        protected override Expression Product(ICollection<Expression> expressions)
         {
             return Expression.Multiply(expressions);
         }
 
-        protected override IExpression Sign(IExpression v)
+        protected override Expression Sign(Expression v)
         {
             return Expression.SignOf(v);
         }
 
-        protected override IExpression Sin(IExpression v)
+        protected override Expression Sin(Expression v)
         {
             return Expression.SinOf(v);
         }
 
-        protected override IExpression Sum(ICollection<IExpression> expressions)
+        protected override Expression Sum(ICollection<Expression> expressions)
         {
             return Expression.Add(expressions);
         }
 
-        protected override IExpression Arcsin(IExpression expression)
+        protected override Expression Arcsin(Expression expression)
         {
             return Expression.ArcsinOf(expression);
         }
 
-        protected override IExpression Arctan(IExpression expression)
+        protected override Expression Arctan(Expression expression)
         {
             return Expression.ArctanOf(expression);
         }
 
-        public override IExpression EvaluateOther(IExpression other)
+        public override Expression EvaluateOther(Expression other)
         {
             throw new NotImplementedException($"Cannot replace variables of unknown expression {other}. Override {typeof(VariableReplacementEvaluator).Name} to add functionality for your new class.");
         }

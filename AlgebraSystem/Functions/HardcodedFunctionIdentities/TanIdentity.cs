@@ -9,7 +9,7 @@ namespace Algebra
     {
         internal static class TanIdentity
         {
-            private static readonly IExpression _atomicExpression = Expression.SinOf(Expression.VarA) / Expression.CosOf(Expression.VarA);
+            private static readonly Expression _atomicExpression = Expression.SinOf(Expression.VarA) / Expression.CosOf(Expression.VarA);
             private static readonly int _hashSeed = 220126551;
             private static readonly string _name = "tan";
 

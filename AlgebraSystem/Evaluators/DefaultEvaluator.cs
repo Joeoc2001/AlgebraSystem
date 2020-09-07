@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,12 +10,12 @@ namespace Algebra.Evaluators
     {
         public abstract T Default();
 
-        public virtual T EvaluateArcsin(IExpression argumentExpression)
+        public virtual T EvaluateArcsin(Expression argumentExpression)
         {
             return Default();
         }
 
-        public virtual T EvaluateArctan(IExpression argumentExpression)
+        public virtual T EvaluateArctan(Expression argumentExpression)
         {
             return Default();
         }
@@ -24,42 +25,42 @@ namespace Algebra.Evaluators
             return Default();
         }
 
-        public virtual T EvaluateExponent(IExpression baseExpression, IExpression powerExpression)
+        public virtual T EvaluateExponent(Expression baseExpression, Expression powerExpression)
         {
             return Default();
         }
 
-        public virtual T EvaluateFunction(IFunction function)
+        public virtual T EvaluateFunction(Function function)
         {
             return Default();
         }
 
-        public virtual T EvaluateLn(IExpression argumentExpression)
+        public virtual T EvaluateLn(Expression argumentExpression)
         {
             return Default();
         }
 
-        public T EvaluateOther(IExpression other)
+        public T EvaluateOther(Expression other)
         {
             return Default();
         }
 
-        public virtual T EvaluateProduct(ICollection<IExpression> expressions)
+        public virtual T EvaluateProduct(ICollection<Expression> expressions)
         {
             return Default();
         }
 
-        public virtual T EvaluateSign(IExpression argumentExpression)
+        public virtual T EvaluateSign(Expression argumentExpression)
         {
             return Default();
         }
 
-        public virtual T EvaluateSin(IExpression argumentExpression)
+        public virtual T EvaluateSin(Expression argumentExpression)
         {
             return Default();
         }
 
-        public virtual T EvaluateSum(ICollection<IExpression> expressions)
+        public virtual T EvaluateSum(ICollection<Expression> expressions)
         {
             return Default();
         }

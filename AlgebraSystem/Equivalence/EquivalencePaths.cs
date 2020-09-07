@@ -13,5 +13,10 @@ namespace Algebra.Equivalence
                 Expression.VarX * Expression.VarY + Expression.VarX * Expression.VarZ,
                 Expression.VarX * (Expression.VarY + Expression.VarZ)
             );
+
+        public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath> {
+            ExpandBraces,
+            FactorBraces
+        };
     }
 }

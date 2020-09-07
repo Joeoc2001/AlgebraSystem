@@ -9,7 +9,7 @@ namespace Algebra
     {
         internal static class LogIdentity
         {
-            private static readonly IExpression _atomicExpression = Expression.LnOf(Expression.VarA) / Expression.LnOf(Expression.VarB);
+            private static readonly Expression _atomicExpression = Expression.LnOf(Expression.VarA) / Expression.LnOf(Expression.VarB);
             private static readonly int _hashSeed = 1441075845;
             private static readonly string _name = "log";
 

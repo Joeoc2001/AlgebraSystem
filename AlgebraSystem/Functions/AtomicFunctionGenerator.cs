@@ -12,7 +12,7 @@ namespace Algebra
         /// </summary>
         internal class AtomicFunctionGenerator : FunctionGenerator
         {
-            public delegate IExpression AtomicFunctionGeneratorDelegate(List<IExpression> parameters);
+            public delegate Expression AtomicFunctionGeneratorDelegate(List<Expression> parameters);
 
             private readonly AtomicFunctionGeneratorDelegate _gen;
 
@@ -34,10 +34,10 @@ namespace Algebra
                 return names.AsReadOnly();
             }
 
-            protected override IExpression CreateExpressionImpl(IDictionary<string, IExpression> parameters)
+            protected override Expression CreateExpressionImpl(IDictionary<string, Expression> parameters)
             {
                 IList<string> names = GetRequiredParameters();
-                List<IExpression> orderedParameters = new List<IExpression>();
+                List<Expression> orderedParameters = new List<Expression>();
 
                 foreach (string name in names)
                 {

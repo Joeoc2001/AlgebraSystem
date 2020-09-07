@@ -73,28 +73,11 @@ namespace Algebra
         }
 
         /// <summary>
-        /// Sets a variable input with the given name and value in this variable input set.
-        /// This method throws if the given string is not present
-        /// </summary>
-        /// <param name="name">The name of the variable to set</param>
-        /// <param name="value">The value to set the variable to</param>
-        /// <exception cref="ArgumentException">Thrown if a variable input with the given name is not present</exception>
-        public void Set(string name, T value)
-        {
-            string lowerName = name.ToLower();
-            if (!_values.TryGetValue(lowerName, out VariableInput<T> variableInput))
-            {
-                throw new ArgumentException($"No variable exists in this set with name {lowerName}");
-            }
-            variableInput.Value = value;
-        }
-
-        /// <summary>
         /// Sets a variable input with the given name and value in this variable input set, or adds it if a variable is not already present with the given name
         /// </summary>
         /// <param name="name">The name of the variable to set</param>
         /// <param name="value">The value to set the variable to</param>
-        public void AddOrSet(string name, T value)
+        public void Set(string name, T value)
         {
             string lowerName = name.ToLower();
             if (!_values.TryGetValue(lowerName, out VariableInput<T> variableInput))

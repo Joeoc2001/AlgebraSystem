@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Functions;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -12,7 +13,7 @@ namespace Algebra.Evaluators
             : this(variableInputs, null)
         { }
 
-        public FloatEvaluator(VariableInputSet<float> variableInputs, IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators)
+        public FloatEvaluator(VariableInputSet<float> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators)
             : base(variableInputs, functionEvaluators)
         {
 
@@ -28,7 +29,7 @@ namespace Algebra.Evaluators
             return MathF.Pow(baseValue, powerValue);
         }
 
-        protected override TraversalEvaluator<float> Construct(IDictionary<IFunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<float> variableInputs)
+        protected override TraversalEvaluator<float> Construct(IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<float> variableInputs)
         {
             return new FloatEvaluator(variableInputs, functionEvaluators);
         }
@@ -78,7 +79,7 @@ namespace Algebra.Evaluators
             return MathF.Atan(v);
         }
 
-        public override float EvaluateOther(IExpression other)
+        public override float EvaluateOther(Expression other)
         {
             throw new NotImplementedException($"Cannot evaluate {other}");
         }

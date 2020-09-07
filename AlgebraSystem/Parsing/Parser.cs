@@ -17,19 +17,19 @@ namespace Algebra.Parsing
             this._functions = functions;
         }
 
-        public static IExpression Parse(string s)
+        public static Expression Parse(string s)
         {
             HashSet<string> variables = new HashSet<string>() { "x", "y", "z" };
             return Parse(s, variables);
         }
 
-        public static IExpression Parse(string s, ICollection<string> variables)
+        public static Expression Parse(string s, ICollection<string> variables)
         {
             FunctionGeneratorSet functions = FunctionGeneratorSet.DefaultFunctions;
             return Parse(s, variables, functions);
         }
 
-        public static IExpression Parse(string s, ICollection<string> variables, FunctionGeneratorSet functions)
+        public static Expression Parse(string s, ICollection<string> variables, FunctionGeneratorSet functions)
         {
             // Ensure that all identifiers are in lower case
             HashSet<string> variablesLower = new HashSet<string>();
@@ -46,7 +46,7 @@ namespace Algebra.Parsing
             return p.Parse();
         }
 
-        public IExpression Parse()
+        public Expression Parse()
         {
             var expr = ParseAddSubtract();
 
@@ -60,10 +60,10 @@ namespace Algebra.Parsing
         }
 
         // Parse an sequence of add/subtract operators
-        IExpression ParseAddSubtract()
+        Expression ParseAddSubtract()
         {
             // Collate all terms into a list
-            List<IExpression> terms = new List<IExpression>
+            List<Expression> terms = new List<Expression>
         {
             ParseMultiply()
         };
@@ -88,7 +88,7 @@ namespace Algebra.Parsing
                 _tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                IExpression rhs = ParseMultiply();
+                Expression rhs = ParseMultiply();
                 if (subtractNext)
                 {
                     if (rhs is Constant constant)
@@ -105,10 +105,10 @@ namespace Algebra.Parsing
         }
 
         // Parse an sequence of multiply operators
-        IExpression ParseMultiply()
+        Expression ParseMultiply()
         {
             // Collate all terms into a list
-            List<IExpression> terms = new List<IExpression>
+            List<Expression> terms = new List<Expression>
             {
                 ParseDivision()
             };
@@ -124,15 +124,15 @@ namespace Algebra.Parsing
                 _tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                IExpression rhs = ParseDivision();
+                Expression rhs = ParseDivision();
                 terms.Add(rhs);
             }
         }
 
         // Parse an sequence of Division operators
-        IExpression ParseDivision()
+        Expression ParseDivision()
         {
-            IExpression lhs = ParseExponent();
+            Expression lhs = ParseExponent();
 
             while (true)
             {
@@ -145,15 +145,15 @@ namespace Algebra.Parsing
                 _tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                IExpression rhs = ParseExponent();
+                Expression rhs = ParseExponent();
                 lhs /= rhs;
             }
         }
 
         // Parse an sequence of exponent operators
-        IExpression ParseExponent()
+        Expression ParseExponent()
         {
-            IExpression lhs = ParseLeaf();
+            Expression lhs = ParseLeaf();
 
             while (true)
             {
@@ -166,13 +166,13 @@ namespace Algebra.Parsing
                 _tokenizer.NextToken();
 
                 // Parse the next term in the expression
-                IExpression rhs = ParseLeaf();
+                Expression rhs = ParseLeaf();
                 lhs = Expression.Pow(lhs, rhs);
             }
         }
 
         // Parse a leaf node (Variable, Constant or Function)
-        IExpression ParseLeaf()
+        Expression ParseLeaf()
         {
             if (_tokenizer.Token == Token.Subtract)
             {
@@ -182,7 +182,7 @@ namespace Algebra.Parsing
 
             if (_tokenizer.Token == Token.Decimal)
             {
-                IExpression node = Constant.ConstantFrom(_tokenizer.Number);
+                Expression node = Constant.ConstantFrom(_tokenizer.Number);
                 _tokenizer.NextToken();
                 return node;
             }
@@ -190,7 +190,7 @@ namespace Algebra.Parsing
             if (_tokenizer.Token == Token.Variable)
             {
                 string name = _tokenizer.TokenSignature;
-                IExpression node = new Variable(name);
+                Expression node = new Variable(name);
                 _tokenizer.NextToken();
                 return node;
             }
@@ -199,7 +199,7 @@ namespace Algebra.Parsing
             {
                 _tokenizer.NextToken();
 
-                IExpression node = ParseAddSubtract();
+                Expression node = ParseAddSubtract();
 
                 if (_tokenizer.Token != Token.CloseBrace)
                 {
@@ -217,11 +217,11 @@ namespace Algebra.Parsing
 
                 _tokenizer.NextToken();
 
-                List<IExpression> nodes;
+                List<Expression> nodes;
                 if (_tokenizer.Token == Token.OpenBrace)
                 {
                     _tokenizer.NextToken();
-                    nodes = new List<IExpression>()
+                    nodes = new List<Expression>()
                     {
                         ParseAddSubtract()
                     };
@@ -241,14 +241,14 @@ namespace Algebra.Parsing
                 }
                 else
                 {
-                    nodes = new List<IExpression>()
+                    nodes = new List<Expression>()
                     {
                         ParseLeaf()
                     };
                 }
 
                 // Create the function
-                IFunctionGenerator factory = _functions[functionName];
+                FunctionGenerator factory = _functions[functionName];
                 try
                 {
                     return factory.CreateExpression(nodes);
