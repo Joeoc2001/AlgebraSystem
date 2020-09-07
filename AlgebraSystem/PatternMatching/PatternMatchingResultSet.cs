@@ -46,7 +46,7 @@ namespace Algebra.PatternMatching
             {
                 foreach (PatternMatchingResult result2 in other)
                 {
-                    PatternMatchingResult intersection = result1.CalculateJoin(result2);
+                    PatternMatchingResult intersection = result1.Intersect(result2);
                     if (intersection != null)
                     {
                         intersections.Add(intersection);

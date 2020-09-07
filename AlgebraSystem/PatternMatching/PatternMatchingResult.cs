@@ -42,9 +42,9 @@ namespace Algebra.PatternMatching
             this._matches = new ReadOnlyDictionary<string, Expression>(matches);
         }
 
-        public PatternMatchingResult CalculateJoin(PatternMatchingResult other)
+        public PatternMatchingResult Intersect(PatternMatchingResult other)
         {
-            Dictionary<string, Expression> join = new Dictionary<string, Expression>();
+            Dictionary<string, Expression> intersection = new Dictionary<string, Expression>();
 
             foreach ((string matchVar, Expression matchValue1) in this)
             {
@@ -53,27 +53,27 @@ namespace Algebra.PatternMatching
                 {
                     if (!matchValue1.Equals(matchValue2))
                     {
-                        return null; // If one of the matches doesn't line up, no join exists
+                        return null; // If one of the matches doesn't line up, no intersection exists
                     }
                 }
 
                 // Add if there is only a match for the given variable in result1 or if the two matches are equal
-                join.Add(matchVar, matchValue1);
+                intersection.Add(matchVar, matchValue1);
             }
 
             foreach ((string matchVar, Expression matchValue2) in other)
             {
                 // If there is a match for the given variable in both results then it was already dealt with in the above loop
-                if (other.ContainsKey(matchVar))
+                if (this.ContainsKey(matchVar))
                 {
                     continue;
                 }
 
                 // Add if there is only a match for the given variable in result2
-                join.Add(matchVar, matchValue2);
+                intersection.Add(matchVar, matchValue2);
             }
 
-            return new PatternMatchingResult(join);
+            return new PatternMatchingResult(intersection);
         }
 
         public Expression this[string key]

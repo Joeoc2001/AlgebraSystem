@@ -35,32 +35,32 @@ namespace Algebra.PatternMatching
 
         public PatternMatchingResultSet EvaluateArcsins(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateArctans(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateLns(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateSigns(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateSins(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentPattern.Evaluate(argumentToBeMatched, this);
+            return argumentToBeMatched.Evaluate(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateExponents(Expression baseArgumentToBeMatched, Expression powerArgumentToBeMatched, Expression baseArgumentPattern, Expression powerArgumentPattern)
         {
-            PatternMatchingResultSet baseInputs = baseArgumentPattern.Evaluate(baseArgumentToBeMatched, this);
+            PatternMatchingResultSet baseInputs = baseArgumentToBeMatched.Evaluate(baseArgumentPattern, this);
 
             // Short circuit if we can before we pattern match power inputs
             if (baseInputs.IsNone)
@@ -68,7 +68,7 @@ namespace Algebra.PatternMatching
                 return baseInputs;
             }
 
-            PatternMatchingResultSet powerInputs = powerArgumentPattern.Evaluate(powerArgumentToBeMatched, this);
+            PatternMatchingResultSet powerInputs = powerArgumentToBeMatched.Evaluate(powerArgumentPattern, this);
 
             return baseInputs.Intersect(powerInputs);
         }
@@ -81,7 +81,7 @@ namespace Algebra.PatternMatching
             }
 
             var parametersPattern = functionPattern.GetParameters();
-            var parametersToBeMatched = functionPattern.GetParameters();
+            var parametersToBeMatched = functionToBeMatched.GetParameters();
 
             PatternMatchingResultSet resultSet = PatternMatchingResultSet.All;
             foreach ((string parameterName, Expression parameterPattern) in parametersPattern)
@@ -91,7 +91,7 @@ namespace Algebra.PatternMatching
                     throw new NotSupportedException("Two functions with the same identity should always have the same parameter names");
                 }
 
-                PatternMatchingResultSet parameterInputs = parameterPattern.Evaluate(parameterToBeMatched, this);
+                PatternMatchingResultSet parameterInputs = parameterToBeMatched.Evaluate(parameterPattern, this);
 
                 resultSet = resultSet.Intersect(parameterInputs);
 
@@ -161,30 +161,27 @@ namespace Algebra.PatternMatching
         {
             PatternMatchingResultSet results = PatternMatchingResultSet.None;
 
-            foreach (var item in GetAllPartitions(new List<Expression>(argumentsToBeMatched), argumentsToBeMatched.Count))
+            foreach (var toBeMatchedPartitioning in GetAllPartitions(new List<Expression>(argumentsToBeMatched), argumentsToBeMatched.Count))
             {
                 // This can be done way faster but I can't find an algorithm online
                 // TODO: Stop being an idiot and figure out an algorithm for myself
-                if (item.Count != argumentsPattern.Count)
+                if (toBeMatchedPartitioning.Count != argumentsPattern.Count)
                 {
                     continue;
                 }
 
-                var patternEnumerator = argumentsPattern.GetEnumerator();
-                foreach (var permutation in GetPermutations(item))
+                foreach (var toMatchPartitionPerm in GetPermutations(toBeMatchedPartitioning))
                 {
-                    patternEnumerator.MoveNext();
-
                     PatternMatchingResultSet permResults = PatternMatchingResultSet.All;
 
-                    foreach (List<Expression> part in permutation)
+                    foreach ((List<Expression> toBeMatchedPartition, Expression argumentPattern) in toMatchPartitionPerm.Zip(argumentsPattern, (a, b) => (a, b)))
                     {
-                        Expression partExpression = builder(part);
-                        PatternMatchingResultSet partResults = patternEnumerator.Current.Evaluate(partExpression, this);
-                        permResults.Intersect(partResults);
+                        Expression partitionExpression = builder(toBeMatchedPartition);
+                        PatternMatchingResultSet partitionResults = partitionExpression.Evaluate(argumentPattern, this);
+                        permResults = permResults.Intersect(partitionResults);
                     }
 
-                    results.Union(permResults);
+                    results = results.Union(permResults);
                 }
             }
 
