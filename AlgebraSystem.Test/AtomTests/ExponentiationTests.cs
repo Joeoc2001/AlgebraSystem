@@ -109,8 +109,8 @@ namespace AtomTests
             Assert.AreEqual(expected, atomicDerivative);
         }
 
-        [Test]
-        public void Exponentiation_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(0, 10)] int b)
+        [Test, Pairwise]
+        public void Exponentiation_EvaluatesCorrectly([Range(-8, 8)] int a, [Range(0, 8)] int b)
         {
             // ARANGE
             Expression expression = Expression.Pow(a, b);

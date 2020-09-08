@@ -85,7 +85,7 @@ namespace AtomTests
             Assert.AreEqual(expected, derivative);
         }
 
-        [Test]
+        [Test, Pairwise]
         public void Multiplication_EvaluatesCorrectly([Range(-10, 10)] int a, [Range(-10, 10)] int b)
         {
             // ARANGE
