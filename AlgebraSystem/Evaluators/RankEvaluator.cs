@@ -62,7 +62,7 @@ namespace Algebra.Evaluators
 
         public int EvaluateSign(Expression argumentExpression)
         {
-            return 800;
+            return 900;
         }
 
         public int EvaluateFunction(Function function)

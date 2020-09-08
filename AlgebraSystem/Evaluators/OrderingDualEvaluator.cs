@@ -122,7 +122,7 @@ namespace Algebra.Evaluators
         public int EvaluateOthers(Expression expression1, Expression expression2)
         {
             int a = expression1.Evaluate(RankEvaluator.Instance);
-            int b = expression1.Evaluate(RankEvaluator.Instance);
+            int b = expression2.Evaluate(RankEvaluator.Instance);
             return a.CompareTo(b);
         }
 
