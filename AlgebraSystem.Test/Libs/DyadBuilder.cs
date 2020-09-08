@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlgebraSystem.Test.Libs
+namespace Libs
 {
     class DyadBuilder
     {

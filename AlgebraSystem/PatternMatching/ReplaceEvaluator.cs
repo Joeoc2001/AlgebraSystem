@@ -68,22 +68,6 @@ namespace Algebra.PatternMatching
             }
         }
 
-        /// <summary>
-        /// Loops over all pairs of values and all other values in a collection
-        /// </summary>
-        protected IEnumerable<(T value, List<T>)> TakeOne<T>(ICollection<T> all)
-        {
-            List<T> vals = new List<T>(all);
-
-            for (int i = 0; i < all.Count; i++)
-            {
-                T val = vals[0];
-                vals.RemoveAt(0);
-                yield return (val, vals);
-                vals.Add(val);
-            }
-        }
-
         public IEnumerable<Expression> EvaluateConstant(Expression expression, Rational value)
         {
             return EvaluateExpression(expression);
@@ -152,7 +136,7 @@ namespace Algebra.PatternMatching
             }
 
             // Get arguments
-            foreach ((var one, var others) in TakeOne(function.GetParameters()))
+            foreach ((var one, var others) in LazyFunctions.TakeOne(function.GetParameters()))
             {
                 Expression map(Expression mapped) => identity.CreateExpression(new Dictionary<string, Expression>(others) { { one.Key, mapped } });
                 foreach (Expression result in EvaluateArgument(one.Value, map))
@@ -171,10 +155,11 @@ namespace Algebra.PatternMatching
             }
 
             // Get arguments
-            foreach ((var one, var others) in TakeOne(expressions))
+            foreach ((var inSet, var outSet) in LazyFunctions.DualPartitionNonEmpty(expressions))
             {
-                Expression map(Expression mapped) => builder(new List<Expression>(others) { { mapped } });
-                foreach (Expression result in EvaluateArgument(one, map))
+                Expression inExpression = builder(inSet);
+                Expression map(Expression mapped) => builder(new List<Expression>(outSet) { { mapped } });
+                foreach (Expression result in EvaluateArgument(inExpression, map))
                 {
                     yield return result;
                 }

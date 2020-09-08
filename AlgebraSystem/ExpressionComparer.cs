@@ -16,7 +16,7 @@ namespace Algebra
 
         public int Compare(Expression x, Expression y)
         {
-            return x.Evaluate(y, GetOrderingDualEvaluator.Instance);
+            return x.Evaluate(y, OrderingDualEvaluator.Instance);
         }
     }
 }

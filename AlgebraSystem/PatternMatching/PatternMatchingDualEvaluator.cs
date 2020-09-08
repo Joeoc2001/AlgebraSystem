@@ -105,63 +105,11 @@ namespace Algebra.PatternMatching
             return resultSet;
         }
 
-        protected static IEnumerable<List<List<T>>> GetAllPartitions<T>(IList<T> elements, int maxlen)
-        {
-            if (maxlen <= 0)
-            {
-                yield return new List<List<T>>();
-            }
-            else
-            {
-                T elem = elements[maxlen - 1];
-                var shorter = GetAllPartitions(elements, maxlen - 1);
-                foreach (var part in shorter)
-                {
-                    foreach (var list in part.ToArray())
-                    {
-                        list.Add(elem);
-                        yield return part;
-                        list.RemoveAt(list.Count - 1);
-                    }
-                    var newlist = new List<T>
-                    {
-                        elem
-                    };
-                    part.Add(newlist);
-                    yield return part;
-                    part.RemoveAt(part.Count - 1);
-                }
-            }
-        }
-
-        protected static IEnumerable<List<T>> GetPermutations<T>(IList<T> elements)
-        {
-            if (elements.Count == 0)
-            {
-                yield return new List<T>();
-            }
-
-            for (int i = 0; i < elements.Count; i++)
-            {
-                T other = elements[0];
-                elements.RemoveAt(0);
-
-                foreach (List<T> otherPerm in GetPermutations(elements))
-                {
-                    otherPerm.Add(other);
-                    yield return otherPerm;
-                    otherPerm.RemoveAt(otherPerm.Count - 1);
-                }
-
-                elements.Add(other);
-            }
-        }
-
         protected PatternMatchingResultSet GetResultsForSets(ICollection<Expression> argumentsToBeMatched, ICollection<Expression> argumentsPattern, Func<ICollection<Expression>, Expression> builder)
         {
             PatternMatchingResultSet results = PatternMatchingResultSet.None;
 
-            foreach (var toBeMatchedPartitioning in GetAllPartitions(new List<Expression>(argumentsToBeMatched), argumentsToBeMatched.Count))
+            foreach (var toBeMatchedPartitioning in LazyFunctions.Partition(new List<Expression>(argumentsToBeMatched)))
             {
                 // This can be done way faster but I can't find an algorithm online
                 // TODO: Stop being an idiot and figure out an algorithm for myself
@@ -170,7 +118,7 @@ namespace Algebra.PatternMatching
                     continue;
                 }
 
-                foreach (var toMatchPartitionPerm in GetPermutations(toBeMatchedPartitioning))
+                foreach (var toMatchPartitionPerm in LazyFunctions.Permute(toBeMatchedPartitioning))
                 {
                     PatternMatchingResultSet permResults = PatternMatchingResultSet.All;
 

@@ -1,0 +1,48 @@
+﻿using Algebra;
+using Algebra.Evaluators;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace AtomTests.AdditionTests
+{
+    class Immutability
+    {
+        [Test]
+        public void CopiesArgumentList()
+        {
+            // ARANGE
+            List<Expression> arguments = new List<Expression>() { Expression.VarX, Expression.VarY, Expression.VarZ };
+            Expression expression = Expression.Add(arguments);
+            Expression expected = Expression.VarX + Expression.VarY + Expression.VarZ;
+
+            // ACT
+            arguments.Add(Expression.VarA);
+
+            // ASSERT
+            Assert.AreEqual(expected, expression);
+        }
+
+        [Test]
+        public void DoesntExposeThroughEvaluator()
+        {
+            // ARANGE
+            Expression expression = Expression.VarX + Expression.VarY + Expression.VarZ;
+            Expression expected = Expression.VarX + Expression.VarY + Expression.VarZ;
+            AnonymousEvaluator<bool> evaluator = new AnonymousEvaluator<bool>(() => false)
+            {
+                Sum = args =>
+                {
+                    args.Remove(0);
+                    return true;
+                }
+            };
+
+            // ACT
+
+            // ASSERT
+            Assert.Throws(typeof(NotSupportedException), () => expression.Evaluate(evaluator));
+        }
+    }
+}

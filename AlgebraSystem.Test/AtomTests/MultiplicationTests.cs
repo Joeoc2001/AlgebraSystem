@@ -5,7 +5,7 @@ using Rationals;
 using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
-using AlgebraSystem.Test;
+using AlgebraTests;
 
 namespace AtomTests
 {

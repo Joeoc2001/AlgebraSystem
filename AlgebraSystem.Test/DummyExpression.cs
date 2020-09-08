@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlgebraSystem.Test
+namespace AlgebraTests
 {
     class DummyExpression : Expression
     {

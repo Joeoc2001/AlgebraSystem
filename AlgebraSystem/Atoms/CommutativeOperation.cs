@@ -1,4 +1,5 @@
-﻿using Rationals;
+﻿using Algebra.Evaluators;
+using Rationals;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,12 +27,20 @@ namespace Algebra
             public abstract string OperationSymbol();
             public abstract Func<List<Expression>, Expression> GetSimplifyingConstructor();
 
+            protected List<Expression> GetDisplaySortedArguments()
+            {
+                List<Expression> sortedArguments = new List<Expression>(_arguments);
+                sortedArguments.Sort((a, b) => a.Evaluate(b, OrderingDualEvaluator.Instance));
+                return sortedArguments;
+            }
+
             protected override int GenHashCode()
             {
-                int value = -1906136416 * OperationSymbol().GetHashCode();
-                foreach (Expression eq in _arguments)
+                int value = -1906136416 ^ OperationSymbol().GetHashCode();
+                foreach (Expression eq in GetDisplaySortedArguments())
                 {
-                    value ^= eq.GetHashCode(); // This is bad practice but it will have to do
+                    value += eq.GetHashCode();
+                    value *= 33;
                 }
                 return value;
             }
@@ -71,13 +80,15 @@ namespace Algebra
 
                 StringBuilder builder = new StringBuilder();
 
-                builder.Append(ToParenthesisedString(this, _arguments[0]));
-                for (int i = 1; i < _arguments.Count; i++)
+                List<Expression> displaySortedArguments = GetDisplaySortedArguments();
+
+                builder.Append(ToParenthesisedString(this, displaySortedArguments[0]));
+                for (int i = 1; i < displaySortedArguments.Count; i++)
                 {
                     builder.Append(" ");
                     builder.Append(OperationSymbol());
                     builder.Append(" ");
-                    builder.Append(ToParenthesisedString(this, _arguments[i]));
+                    builder.Append(ToParenthesisedString(this, displaySortedArguments[i]));
                 }
 
                 return builder.ToString();

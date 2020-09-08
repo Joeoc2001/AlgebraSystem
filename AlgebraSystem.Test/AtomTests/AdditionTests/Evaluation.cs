@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace AlgebraSystem.Test.AtomTests.AdditionTests
+namespace AtomTests.AdditionTests
 {
     class Evaluation
     {

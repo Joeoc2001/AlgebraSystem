@@ -121,6 +121,7 @@ namespace Algebra
             return _atomicExpression;
         }
 
+        public float EvaluateOnce() => EvaluateOnce(new VariableInputSet<float>() { });
         public float EvaluateOnce(float variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable } });
         public float EvaluateOnce(Vector2 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y } });
         public float EvaluateOnce(Vector3 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y }, { "z", variable.Z } });
@@ -155,7 +156,7 @@ namespace Algebra
 
         public int CompareTo(Expression other)
         {
-            return Evaluate(other, GetOrderingDualEvaluator.Instance);
+            return Evaluate(other, OrderingDualEvaluator.Instance);
         }
 
         public override sealed bool Equals(object obj)
@@ -183,6 +184,11 @@ namespace Algebra
             if (e is null)
             {
                 return false;
+            }
+
+            if (ReferenceEquals(this, e))
+            {
+                return true;
             }
 
             switch (level)

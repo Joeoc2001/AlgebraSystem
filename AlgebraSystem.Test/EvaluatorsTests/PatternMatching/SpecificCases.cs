@@ -1,13 +1,13 @@
 ﻿using Algebra;
 using Algebra.PatternMatching;
-using AlgebraSystem.Test.Libs;
+using Libs;
 using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlgebraSystem.Test.EvaluatorsTests.PatternMatching
+namespace EvaluatorsTests.PatternMatching
 {
     class SpecificCases
     {

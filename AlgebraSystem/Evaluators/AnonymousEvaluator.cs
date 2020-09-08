@@ -10,17 +10,17 @@ namespace Algebra.Evaluators
     {
         private readonly Func<T> _defaultFunc;
 
-        public readonly Func<Expression, T> Arcsin = null;
-        public readonly Func<Expression, T> Arctan = null;
-        public readonly Func<Rational, T> Constant = null;
-        public readonly Func<Expression, Expression, T> Exponent = null;
-        public readonly Func<Function, T> Function = null;
-        public readonly Func<Expression, T> Ln = null;
-        public readonly Func<ICollection<Expression>, T> Product = null;
-        public readonly Func<Expression, T> Sign = null;
-        public readonly Func<Expression, T> Sin = null;
-        public readonly Func<ICollection<Expression>, T> Sum = null;
-        public readonly Func<string, T> Variable = null;
+        public Func<Expression, T> Arcsin = null;
+        public Func<Expression, T> Arctan = null;
+        public Func<Rational, T> Constant = null;
+        public Func<Expression, Expression, T> Exponent = null;
+        public Func<Function, T> Function = null;
+        public Func<Expression, T> Ln = null;
+        public Func<ICollection<Expression>, T> Product = null;
+        public Func<Expression, T> Sign = null;
+        public Func<Expression, T> Sin = null;
+        public Func<ICollection<Expression>, T> Sum = null;
+        public Func<string, T> Variable = null;
 
         public AnonymousEvaluator(Func<T> defaultFunc)
         {

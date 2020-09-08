@@ -6,7 +6,7 @@ using Algebra;
 using Algebra.Atoms;
 using Algebra.Parsing;
 using System;
-using AlgebraSystem.Test;
+using AlgebraTests;
 
 namespace AtomTests
 {

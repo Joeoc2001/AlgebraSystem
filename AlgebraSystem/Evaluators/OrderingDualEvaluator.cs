@@ -7,11 +7,11 @@ using System.Text;
 
 namespace Algebra.Evaluators
 {
-    public class GetOrderingDualEvaluator : IDualEvaluator<int>, IComparer<Expression>
+    public class OrderingDualEvaluator : IDualEvaluator<int>, IComparer<Expression>
     {
-        public static readonly GetOrderingDualEvaluator Instance = new GetOrderingDualEvaluator();
+        public static readonly OrderingDualEvaluator Instance = new OrderingDualEvaluator();
 
-        protected GetOrderingDualEvaluator()
+        protected OrderingDualEvaluator()
         {
 
         }

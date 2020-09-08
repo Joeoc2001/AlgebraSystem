@@ -1,12 +1,12 @@
 ﻿using Algebra;
 using Algebra.PatternMatching;
-using AlgebraSystem.Test.Libs;
+using Libs;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlgebraSystem.Test.EvaluatorsTests.Replacement
+namespace EvaluatorsTests.Replacement
 {
     class MonadReplacementTests
     {

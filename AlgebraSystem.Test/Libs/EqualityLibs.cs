@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlgebraSystem.Test.Libs
+namespace Libs
 {
     static class EqualityLibs
     {
@@ -14,6 +14,8 @@ namespace AlgebraSystem.Test.Libs
             ADoubleEqualsB,
             ANotEqualsB,
             AHashEqualsB,
+            ACompareEqualsB,
+            AToStringEqualsB,
             AExactlyEqualsB,
             AAtomicEqualB,
             ADeepEqualsB,
@@ -56,6 +58,10 @@ namespace AlgebraSystem.Test.Libs
                     return !(a != b);
                 case EqualityType.AHashEqualsB:
                     return a.GetHashCode().Equals(b.GetHashCode());
+                case EqualityType.ACompareEqualsB:
+                    return a.CompareTo(b) == 0;
+                case EqualityType.AToStringEqualsB:
+                    return a.ToString().Equals(b.ToString());
                 case EqualityType.AExactlyEqualsB:
                     return a.Equals(b, EqualityLevel.Exactly);
                 case EqualityType.AAtomicEqualB:
