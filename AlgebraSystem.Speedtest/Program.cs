@@ -16,10 +16,12 @@ namespace AlgebraSystem.Speedtest
         static void Main(string[] args)
         {
             // ARANGE
-            Expression eq = (Expression.VarX + 2) * (Expression.VarX + 3);
-            Expression expected = Expression.VarX * Expression.VarX
-                + 5 * Expression.VarX
-                + 6;
+            Expression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3) * (Expression.VarX + 4);
+            Expression expected = Expression.VarX * Expression.VarX * Expression.VarX * Expression.VarX
+                + 10 * Expression.VarX * Expression.VarX * Expression.VarX
+                + 35 * Expression.VarX * Expression.VarX
+                + 50 * Expression.VarX
+                + 24;
 
             // ACT
             bool contained = AreInSameClass(eq, expected);

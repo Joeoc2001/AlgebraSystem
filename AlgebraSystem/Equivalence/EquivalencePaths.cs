@@ -13,10 +13,15 @@ namespace Algebra.Equivalence
                 Expression.VarX * Expression.VarY + Expression.VarX * Expression.VarZ,
                 Expression.VarX * (Expression.VarY + Expression.VarZ)
             );
+        public static readonly ReplacementPath ExpandQuadratic = new ReplacementPath(
+                (Expression.VarA + Expression.VarB) * (Expression.VarY + Expression.VarZ),
+                Expression.VarA * Expression.VarY + Expression.VarA * Expression.VarZ + Expression.VarB * Expression.VarY + Expression.VarB * Expression.VarZ
+            );
 
         public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath> {
             ExpandBraces,
-            FactorBraces
+            FactorBraces,
+            ExpandQuadratic
         };
     }
 }
