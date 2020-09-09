@@ -138,7 +138,8 @@ namespace Algebra.PatternMatching
             // Get arguments
             foreach ((var one, var others) in LazyFunctions.TakeOne(function.GetParameters()))
             {
-                Expression map(Expression mapped) => identity.CreateExpression(new Dictionary<string, Expression>(others) { { one.Key, mapped } });
+                Dictionary<string, Expression> othersDict = others.ToDictionary(x => x.Key, x => x.Value);
+                Expression map(Expression mapped) => identity.CreateExpression(new Dictionary<string, Expression>(othersDict) { { one.Key, mapped } });
                 foreach (Expression result in EvaluateArgument(one.Value, map))
                 {
                     yield return result;

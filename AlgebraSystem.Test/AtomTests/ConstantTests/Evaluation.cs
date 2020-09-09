@@ -17,7 +17,7 @@ namespace AtomTests.ConstantTests
             Expression expression = Expression.ConstantFrom(a);
 
             // ACT
-            float value = expression.EvaluateOnce();
+            double value = expression.EvaluateOnce();
 
             // ASSERT
             Assert.AreEqual(a, value);

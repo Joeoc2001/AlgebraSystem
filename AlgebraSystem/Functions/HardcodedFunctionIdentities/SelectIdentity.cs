@@ -1,7 +1,6 @@
 ﻿using Algebra.Atoms;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Text;
 
 namespace Algebra

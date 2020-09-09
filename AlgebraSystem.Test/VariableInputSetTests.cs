@@ -15,7 +15,7 @@ namespace AlgebraTests
         public void VariableSet_EmptyConstructor_HasNoVariables([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
         {
             // ARANGE
-            VariableInputSet<float> set = new VariableInputSet<float>();
+            VariableInputSet<double> set = new VariableInputSet<double>();
 
             // ACT
 
@@ -29,8 +29,8 @@ namespace AlgebraTests
             // ARANGE
 
             // ACT
-            VariableInputSet<float> set1 = new VariableInputSet<float>();
-            VariableInputSet<float> set2 = new VariableInputSet<float>();
+            VariableInputSet<double> set1 = new VariableInputSet<double>();
+            VariableInputSet<double> set2 = new VariableInputSet<double>();
 
             // ASSERT
             Assert.IsTrue(set1.Equals(set2));
@@ -49,9 +49,9 @@ namespace AlgebraTests
             // ARANGE
 
             // ACT
-            VariableInputSet<float> set1 = new VariableInputSet<float>();
+            VariableInputSet<double> set1 = new VariableInputSet<double>();
             set1.Set("x", 1);
-            VariableInputSet<float> set2 = new VariableInputSet<float>();
+            VariableInputSet<double> set2 = new VariableInputSet<double>();
             set2.Set("x", 1.00001f);
 
             // ASSERT
@@ -69,7 +69,7 @@ namespace AlgebraTests
         public void VariableSet_CollectionInitilizationNotation_SetsValuesTo0()
         {
             // ARANGE
-            VariableInputSet<float> set = new VariableInputSet<float>()
+            VariableInputSet<double> set = new VariableInputSet<double>()
             {
                 "X",
                 "Y"

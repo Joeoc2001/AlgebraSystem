@@ -32,7 +32,7 @@ namespace AtomTests
             Expression expression = Expression.LnOf(v);
 
             // ACT
-            float value = expression.EvaluateOnce(new VariableInputSet<float>());
+            double value = expression.EvaluateOnce();
             double expected = Math.Log(v);
 
             // ASSERT

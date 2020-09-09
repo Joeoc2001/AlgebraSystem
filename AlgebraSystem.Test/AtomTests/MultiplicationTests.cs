@@ -92,7 +92,7 @@ namespace AtomTests
             Expression expression = Expression.ConstantFrom(a) * Expression.ConstantFrom(b);
 
             // ACT
-            float value = expression.EvaluateOnce(new VariableInputSet<float>());
+            double value = expression.EvaluateOnce();
 
             // ASSERT
             Assert.AreEqual(a * b, value);

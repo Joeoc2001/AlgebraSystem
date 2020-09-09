@@ -44,7 +44,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            float e = Expression.SignOf(Expression.VarX).EvaluateOnce(0);
+            double e = Expression.SignOf(Expression.VarX).EvaluateOnce(0);
 
             // ASSERT
             Assert.AreEqual(0, e);
@@ -56,7 +56,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            float e = Expression.SignOf(Expression.VarX).EvaluateOnce(145);
+            double e = Expression.SignOf(Expression.VarX).EvaluateOnce(145);
 
             // ASSERT
             Assert.AreEqual(1, e);
@@ -68,7 +68,7 @@ namespace AtomTests
             // ARANGE
 
             // ACT
-            float e = Expression.SignOf(Expression.VarX).EvaluateOnce(-14335);
+            double e = Expression.SignOf(Expression.VarX).EvaluateOnce(-14335);
 
             // ASSERT
             Assert.AreEqual(-1, e);
@@ -81,7 +81,7 @@ namespace AtomTests
             Expression expression = Expression.SignOf(a);
 
             // ACT
-            float value = expression.EvaluateOnce(new VariableInputSet<float>());
+            double value = expression.EvaluateOnce();
             int expected = Math.Sign(a);
 
             // ASSERT

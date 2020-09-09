@@ -17,7 +17,7 @@ namespace AtomTests.AdditionTests
             Expression expression = Expression.VarX + Expression.VarY;
 
             // ACT
-            float value = expression.EvaluateOnce(new Vector2(a, b));
+            double value = expression.EvaluateOnce(new Vector2(a, b));
 
             // ASSERT
             Assert.AreEqual(a + b, value);
@@ -30,7 +30,7 @@ namespace AtomTests.AdditionTests
             Expression expression = Expression.VarX + 1;
 
             // ACT
-            float value = expression.EvaluateOnce(a);
+            double value = expression.EvaluateOnce(a);
 
             // ASSERT
             Assert.AreEqual(a + 1, value);
@@ -43,7 +43,7 @@ namespace AtomTests.AdditionTests
             Expression expression = Expression.VarX + 100;
 
             // ACT
-            float value = expression.EvaluateOnce(a);
+            double value = expression.EvaluateOnce(a);
 
             // ASSERT
             Assert.AreEqual(a + 100, value);

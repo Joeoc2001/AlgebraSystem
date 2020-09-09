@@ -90,11 +90,11 @@ namespace AtomTests
         {
             // ARANGE
             Expression v = Expression.VariableFrom(name);
-            VariableInputSet<float> inputSet = new VariableInputSet<float>();
+            VariableInputSet<double> inputSet = new VariableInputSet<double>();
             inputSet.Set(name, expected);
 
             // ACT
-            float value = v.EvaluateOnce(inputSet);
+            double value = v.EvaluateOnce(inputSet);
 
             // ASSERT
             Assert.AreEqual(expected, value);
@@ -105,7 +105,7 @@ namespace AtomTests
         {
             // ARANGE
             Expression v = Expression.VariableFrom(name);
-            VariableInputSet<float> inputSet = new VariableInputSet<float>();
+            VariableInputSet<double> inputSet = new VariableInputSet<double>();
             inputSet.Set("q", falseValue);
 
             // ACT

@@ -8,7 +8,7 @@ using Algebra.Parsing;
 
 namespace EquivalenceTests
 {
-    [Timeout(1000)]
+    [Timeout(10000)]
     public class ExpandBracesTests
     {
         private static readonly EquivalencePath _expandBracesPath = EquivalencePaths.ExpandBraces;
@@ -133,8 +133,8 @@ namespace EquivalenceTests
         public void ExpandBraces_EquivalenceClass_IsFalseWhenExpansionIsntEqual()
         {
             // ARANGE
-            Expression eq = (Expression.VarX + 1) * (Expression.VarX + 2) * (Expression.VarX + 3);
-            Expression notExpected = ((Expression.VarX * Expression.VarX) + 5 * Expression.VarX + 3) * (Expression.VarX + 2);
+            Expression eq = (Expression.VarX + 1) * (Expression.VarX + 2);
+            Expression notExpected = (Expression.VarX * Expression.VarX) + 3 * Expression.VarX + 3;
 
             // ACT
             bool contained = AreInSameClass(eq, notExpected);

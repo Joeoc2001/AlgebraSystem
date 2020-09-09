@@ -121,13 +121,15 @@ namespace Algebra
             return _atomicExpression;
         }
 
-        public float EvaluateOnce() => EvaluateOnce(new VariableInputSet<float>() { });
-        public float EvaluateOnce(float variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable } });
-        public float EvaluateOnce(Vector2 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y } });
-        public float EvaluateOnce(Vector3 variable) => EvaluateOnce(new VariableInputSet<float>() { { "x", variable.X }, { "y", variable.Y }, { "z", variable.Z } });
-        public float EvaluateOnce(VariableInputSet<float> variables)
+        public double EvaluateOnce() => EvaluateOnce(new VariableInputSet<double>() { });
+        public double EvaluateOnce(double x) => EvaluateOnce(new VariableInputSet<double>() { { "x", x } });
+        public double EvaluateOnce(double x, double y) => EvaluateOnce(new VariableInputSet<double>() { { "x", x }, { "y", y } });
+        public double EvaluateOnce(double x, double y, double z) => EvaluateOnce(new VariableInputSet<double>() { { "x", x }, { "y", y }, { "z", z } });
+        public double EvaluateOnce(Vector2 values) => EvaluateOnce(new VariableInputSet<double>() { { "x", values.X }, { "y", values.Y } });
+        public double EvaluateOnce(Vector3 values) => EvaluateOnce(new VariableInputSet<double>() { { "x", values.X }, { "y", values.Y }, { "z", values.Z } });
+        public double EvaluateOnce(VariableInputSet<double> variables)
         {
-            return Evaluate(new FloatEvaluator(variables));
+            return Evaluate(new DoubleEvaluator(variables));
         }
 
         public static bool ShouldParenthesise(Expression parent, Expression child)

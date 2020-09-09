@@ -10,7 +10,7 @@ namespace Algebra
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Value);
+            return Value.GetHashCode() ^ -754487501;
         }
     }
 }

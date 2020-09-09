@@ -116,7 +116,7 @@ namespace AtomTests
             Expression expression = Expression.Pow(a, b);
 
             // ACT
-            float value = expression.EvaluateOnce(new VariableInputSet<float>());
+            double value = expression.EvaluateOnce();
 
             // ASSERT
             Assert.AreEqual((float)Math.Pow(a, b), value);

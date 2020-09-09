@@ -14,6 +14,7 @@ namespace Algebra.PatternMatching
     /// Finds all matches between an expression (1st argument) and a pattern (2nd argument).
     /// For example, x + y matches (2 * a) + b with both (x, y) = (2 * a, b) and (x, y) = (b, 2 * a).
     /// x + y however does not match 2 * (a + b) as it only checks the root node.
+    /// Note from above that commutative operations match twice, for example x + y matches a + b with both (x, y) = (a, b) and (x, y) = (b, a).
     /// </summary>
     public class PatternMatchingDualEvaluator : IDualEvaluator<PatternMatchingResultSet>
     {

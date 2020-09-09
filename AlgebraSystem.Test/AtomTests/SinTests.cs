@@ -87,7 +87,7 @@ namespace AtomTests
             Expression expression = Expression.SinOf(v);
 
             // ACT
-            float value = expression.EvaluateOnce(new VariableInputSet<float>());
+            double value = expression.EvaluateOnce();
             double expected = Math.Sin(v);
 
             // ASSERT

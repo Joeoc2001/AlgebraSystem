@@ -31,7 +31,7 @@ namespace Algebra.Equivalence
                 return true;
             }
 
-            paths ??= EquivalencePaths.DefaultPaths;
+            paths = paths ?? EquivalencePaths.DefaultPaths;
 
             // Which expressions are not equivalent and have been checked
             HashSet<Expression> checkedExpressions = new HashSet<Expression>() { _anchorExpression };
