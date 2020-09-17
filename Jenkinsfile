@@ -15,14 +15,14 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'dotnet test --no-restore --no-build --logger "trx;LogFileName=unit_tests.xml"'
+        sh 'dotnet test --no-restore --no-build --logger "trx;LogFileName=UnitTests.trx"'
       }
     }
   }
   
   post {
     always {
-      junit 'unit_tests.xml'
+      step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
     }
   }
 }
