@@ -15,7 +15,7 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'dotnet test --no-restore --no-build --logger "trx;LogFileName=UnitTests.trx"'
+        sh 'dotnet test --no-restore --no-build --logger "trx;LogFileName=UnitTests.trx" --collect:"XPlat Code Coverage"'
       }
     }
   }
@@ -23,6 +23,7 @@ pipeline {
   post {
     always {
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
+      cobertura coberturaReportFile: '**/TestResults/coverage.cobertura.xml'
     }
   }
 }
