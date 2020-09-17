@@ -21,7 +21,8 @@ dotnet build --no-restore'''
       steps {
         sh '''#!/bin/bash
 
-dotnet test --no-restore'''
+dotnet test --no-restore --no-build --logger "trx;LogFileName=/tmp/unit_tests.xml"'''
+        junit '/tmp/unit_tests.xml'
       }
     }
 
