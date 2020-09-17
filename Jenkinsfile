@@ -5,7 +5,23 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
-dotnet build'''
+dotnet restore'''
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh '''#!/bin/bash
+
+dotnet build --no-restore'''
+      }
+    }
+
+    stage('Test') {
+      steps {
+        sh '''#!/bin/bash
+
+dotnet test --no-restore'''
       }
     }
 
