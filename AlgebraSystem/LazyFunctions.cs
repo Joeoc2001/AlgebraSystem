@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Algebra
 {
-    static class LazyFunctions
+    internal static class LazyFunctions
     {
         /// <summary>
         /// Loops over all ways of splitting a set of elements into seperate disjoint sets

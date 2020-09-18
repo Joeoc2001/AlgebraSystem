@@ -2,6 +2,7 @@
 using Algebra.Equivalence;
 using Algebra.Evaluators;
 using Algebra.Functions.HardcodedFunctionIdentities;
+using Algebra.Metrics;
 using Algebra.PatternMatching;
 using Rationals;
 using System;

@@ -16,7 +16,7 @@ namespace EquivalenceTests
         private bool AreInSameClass(Expression start, Expression end)
         {
             EquivalenceClass equivalence = start.GetEquivalenceClass();
-            return equivalence.IsInClass(end, -1, new List<EquivalencePath>() { _factorBracesPath });
+            return equivalence.IsInClass(end, equivalencies: new List<EquivalencePath>() { _factorBracesPath });
         }
 
         [Test]
