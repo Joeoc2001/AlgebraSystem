@@ -23,7 +23,7 @@ pipeline {
   post {
     always {
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
-      cobertura coberturaReportFile: '**/TestResults/coverage.cobertura.xml'
+      cobertura coberturaReportFile: '**/coverage.cobertura.xml'
     }
   }
 }
