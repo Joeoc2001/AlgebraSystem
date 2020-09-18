@@ -19,27 +19,14 @@ namespace Algebra.Parsing
 
         public static Expression Parse(string s)
         {
-            HashSet<string> variables = new HashSet<string>() { "x", "y", "z" };
-            return Parse(s, variables);
-        }
-
-        public static Expression Parse(string s, ICollection<string> variables)
-        {
             FunctionGeneratorSet functions = FunctionGeneratorSet.DefaultFunctions;
-            return Parse(s, variables, functions);
+            return Parse(s, functions);
         }
 
-        public static Expression Parse(string s, ICollection<string> variables, FunctionGeneratorSet functions)
+        public static Expression Parse(string s, FunctionGeneratorSet functions)
         {
-            // Ensure that all identifiers are in lower case
-            HashSet<string> variablesLower = new HashSet<string>();
-            foreach (string variable in variables)
-            {
-                variablesLower.Add(variable.ToLower());
-            }
-
             // Create objects
-            Tokenizer t = new Tokenizer(new StringReader(s), variablesLower, functions.Names);
+            Tokenizer t = new Tokenizer(new StringReader(s), functions.Names);
             Parser p = new Parser(t, functions);
 
             // Parse

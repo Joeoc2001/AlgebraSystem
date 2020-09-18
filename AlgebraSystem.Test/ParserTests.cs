@@ -446,20 +446,6 @@ namespace AlgebraTests
         }
 
         [Test]
-        public void Parser_ThrowsOnUnknownVariables([Values("X", "Y", "Z", "W", "V", "val", "t")] string name)
-        {
-            // ARANGE
-            string expression = name;
-            ISet<string> variables = new HashSet<string>();
-
-            // ACT
-
-            // ASSERT
-            Assert.That(() => Parser.Parse(expression, variables),
-                  Throws.TypeOf<InvalidDataException>());
-        }
-
-        [Test]
         public void Parser_ThrowsOnTooManyOpenBraces1()
         {
             // ARANGE

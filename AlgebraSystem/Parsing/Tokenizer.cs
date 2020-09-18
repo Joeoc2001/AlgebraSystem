@@ -9,39 +9,37 @@ namespace Algebra.Parsing
 {
     public class Tokenizer
     {
-        private readonly TextReader reader;
-        private readonly ICollection<string> variables;
-        private readonly ICollection<string> functions;
+        private readonly TextReader _reader;
+        private readonly ICollection<string> _functions;
 
         public Token Token { get; private set; }
         public Rational Number { get; private set; }
         public string TokenSignature { get; private set; }
 
-        private char currentChar;
+        private char _currentChar;
 
-        public Tokenizer(TextReader reader, ICollection<string> variables, ICollection<string> functions)
+        public Tokenizer(TextReader reader, ICollection<string> functions)
         {
-            this.reader = reader;
-            this.variables = variables;
-            this.functions = functions;
+            this._reader = reader;
+            this._functions = functions;
             NextChar();
             NextToken();
         }
 
         void NextChar()
         {
-            int c = reader.Read();
-            currentChar = c < 0 ? '\0' : char.ToLower((char)c);
+            int c = _reader.Read();
+            _currentChar = c < 0 ? '\0' : char.ToLower((char)c);
         }
 
         public void NextToken()
         {
-            while (char.IsWhiteSpace(currentChar))
+            while (char.IsWhiteSpace(_currentChar))
             {
                 NextChar();
             }
 
-            switch (currentChar)
+            switch (_currentChar)
             {
                 case '\0':
                     Token = Token.EOF;
@@ -88,20 +86,20 @@ namespace Algebra.Parsing
                     return;
             }
 
-            if (char.IsDigit(currentChar))
+            if (char.IsDigit(_currentChar))
             {
                 StringBuilder stringBuilder = new StringBuilder();
 
                 bool haveDecimalPoint = false;
                 bool haveDenominator = false;
 
-                while (char.IsDigit(currentChar)
-                    || (!haveDecimalPoint && !haveDenominator && currentChar == '.')
-                    || (!haveDecimalPoint && !haveDenominator && currentChar == '/'))
+                while (char.IsDigit(_currentChar)
+                    || (!haveDecimalPoint && !haveDenominator && _currentChar == '.')
+                    || (!haveDecimalPoint && !haveDenominator && _currentChar == '/'))
                 {
-                    stringBuilder.Append(currentChar);
-                    haveDecimalPoint = haveDecimalPoint || currentChar == '.';
-                    haveDenominator = haveDenominator || currentChar == '/';
+                    stringBuilder.Append(_currentChar);
+                    haveDecimalPoint = haveDecimalPoint || _currentChar == '.';
+                    haveDenominator = haveDenominator || _currentChar == '/';
                     NextChar();
                 }
 
@@ -117,23 +115,17 @@ namespace Algebra.Parsing
                 return;
             }
 
-            if (char.IsLetter(currentChar))
+            if (char.IsLetter(_currentChar))
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                while (char.IsLetter(currentChar))
+                while (char.IsLetter(_currentChar))
                 {
-                    stringBuilder.Append(currentChar);
+                    stringBuilder.Append(_currentChar);
                     NextChar();
                 }
 
                 string identifier = stringBuilder.ToString();
-                if (variables.Contains(identifier))
-                {
-                    TokenSignature = identifier;
-                    Token = Token.Variable;
-                    return;
-                }
-                else if (functions.Contains(identifier))
+                if (_functions.Contains(identifier))
                 {
                     TokenSignature = identifier;
                     Token = Token.Function;
@@ -141,11 +133,13 @@ namespace Algebra.Parsing
                 }
                 else
                 {
-                    throw new InvalidDataException($"Unknown identifier: '{identifier}'");
+                    TokenSignature = identifier;
+                    Token = Token.Variable;
+                    return;
                 }
             }
 
-            throw new InvalidDataException($"Unexpected token '{currentChar + reader.ReadToEnd()}'");
+            throw new InvalidDataException($"Unexpected token '{_currentChar + _reader.ReadToEnd()}'");
         }
     }
 }
