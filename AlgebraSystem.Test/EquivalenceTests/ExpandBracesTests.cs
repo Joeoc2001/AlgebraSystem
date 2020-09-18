@@ -8,7 +8,7 @@ using Algebra.Parsing;
 
 namespace EquivalenceTests
 {
-    [Timeout(10000)]
+    [Timeout(1000)]
     public class ExpandBracesTests
     {
         private static readonly EquivalencePath _expandBracesPath = EquivalencePaths.ExpandBraces;

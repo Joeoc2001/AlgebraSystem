@@ -9,7 +9,7 @@ namespace EvaluatorsTests.Replacement.SpecificCases
 {
     class SubsetOfAddition3To2
     {
-        private static readonly Expression[] SubsetOfAddition3to2Expecteds = new Expression[]
+        private static readonly Expression[] _subsetOfAddition3to2Expecteds = new Expression[]
         {
             Expression.VarX * (Expression.VarY + Expression.VarZ),
             Expression.VarY * (Expression.VarX + Expression.VarZ),
@@ -19,18 +19,18 @@ namespace EvaluatorsTests.Replacement.SpecificCases
             (Expression.VarX * Expression.VarY) + Expression.VarZ,
         };
 
-        static Expression expression = Expression.VarX + Expression.VarY + Expression.VarZ;
-        static Expression pattern = Expression.VarA + Expression.VarB;
-        static Expression replacement = Expression.VarA * Expression.VarB;
-        static ReplaceEvaluator replaceEvaluator = new ReplaceEvaluator(pattern, replacement);
+        static readonly Expression _expression = Expression.VarX + Expression.VarY + Expression.VarZ;
+        static readonly Expression _pattern = Expression.VarA + Expression.VarB;
+        static readonly Expression _replacement = Expression.VarA * Expression.VarB;
+        static readonly ReplaceEvaluator _replaceEvaluator = new ReplaceEvaluator(_pattern, _replacement);
 
         [Test]
-        public void TestThat_Replacement_CanTakeSubsetOfAddition3to2([ValueSource(nameof(SubsetOfAddition3to2Expecteds))] Expression expected)
+        public void TestThat_Replacement_CanTakeSubsetOfAddition3to2([ValueSource(nameof(_subsetOfAddition3to2Expecteds))] Expression expected)
         {
             // Arrange
 
             // Act
-            List<Expression> resultSet = new List<Expression>(expression.Evaluate(replaceEvaluator));
+            List<Expression> resultSet = new List<Expression>(_expression.Evaluate(_replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Contains.Item(expected));
@@ -42,10 +42,10 @@ namespace EvaluatorsTests.Replacement.SpecificCases
             // Arrange
 
             // Act
-            List<Expression> resultSet = new List<Expression>(expression.Evaluate(replaceEvaluator));
+            List<Expression> resultSet = new List<Expression>(_expression.Evaluate(_replaceEvaluator));
 
             // Assert
-            Assert.That(resultSet, Has.Count.EqualTo(SubsetOfAddition3to2Expecteds.Length));
+            Assert.That(resultSet, Has.Count.EqualTo(_subsetOfAddition3to2Expecteds.Length));
         }
     }
 }
