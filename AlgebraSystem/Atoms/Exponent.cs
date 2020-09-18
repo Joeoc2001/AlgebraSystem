@@ -20,7 +20,7 @@ namespace Algebra
                 {
                     return term;
                 }
-                if (power.Equals(Zero))
+                if (power.Equals(Zero)) // Controversial but assume that 0^0 == 1
                 {
                     return One;
                 }
@@ -29,7 +29,7 @@ namespace Algebra
                 {
                     Rational numerator = exponentConstant.GetValue().Numerator;
                     Rational denominator = exponentConstant.GetValue().Denominator;
-                    if (denominator == 1 && numerator > 0 && numerator < 10) // Bounds for sanity sake
+                    if (denominator == 1 && numerator > -10 && numerator < 10) // Bounds for sanity sake
                     {
                         Rational value = Rational.Pow(termConstant.GetValue(), (int)numerator);
                         return ConstantFrom(value);

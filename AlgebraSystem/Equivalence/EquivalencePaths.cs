@@ -14,7 +14,7 @@ namespace Algebra.Equivalence
         public static readonly ReplacementPath CompleteTheSquare = new ReplacementPath("a * (x ^ 2) + b * x + c", "a * (x + b / (2 * a)) ^ 2 - (b ^ 2) / 4 + c");
 
 
-        private static readonly Regex rx = new Regex(@"^([^=>]+?)=>([^=>]+?)$");
+        private static readonly Regex _rx = new Regex(@"^([^=>]+?)=>([^=>]+?)$");
         public static List<EquivalencePath> ParseReplacementsString(string equivalencies)
         {
             List<EquivalencePath> paths = new List<EquivalencePath>();
@@ -26,7 +26,7 @@ namespace Algebra.Equivalence
                     continue;
                 }
 
-                MatchCollection matches = rx.Matches(equivalency);
+                MatchCollection matches = _rx.Matches(equivalency);
                 List<Match> matchesList = new List<Match>();
                 foreach (Match match in matches)
                 {
