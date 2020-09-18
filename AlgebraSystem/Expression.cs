@@ -3,6 +3,7 @@ using Algebra.Equivalence;
 using Algebra.Evaluators;
 using Algebra.Functions.HardcodedFunctionIdentities;
 using Algebra.Metrics;
+using Algebra.Parsing;
 using Algebra.PatternMatching;
 using Rationals;
 using System;
@@ -20,6 +21,8 @@ namespace Algebra
         public static implicit operator Expression(double r) => (Constant)r;
         public static implicit operator Expression(decimal r) => (Constant)r;
         public static implicit operator Expression(Rational r) => (Constant)r;
+
+        public static implicit operator Expression(string s) => From(s);
 
         public static readonly Expression VarA = VariableFrom("a");
         public static readonly Expression VarB = VariableFrom("b");
@@ -49,6 +52,11 @@ namespace Algebra
         public static Expression VariableFrom(string name)
         {
             return new Variable(name);
+        }
+
+        public static Expression From(string s)
+        {
+            return Parser.Parse(s);
         }
 
         public abstract Expression GetDerivative(string wrt);

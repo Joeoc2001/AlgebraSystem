@@ -1,27 +1,57 @@
 ﻿using Algebra.Atoms;
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Algebra.Equivalence
 {
     public static class EquivalencePaths
     {
-        public static readonly ReplacementPath ExpandBraces = new ReplacementPath(
-                Expression.VarX * (Expression.VarY + Expression.VarZ),
-                Expression.VarX * Expression.VarY + Expression.VarX * Expression.VarZ
-            );
-        public static readonly ReplacementPath FactorBraces = new ReplacementPath(
-                Expression.VarX * Expression.VarY + Expression.VarX * Expression.VarZ,
-                Expression.VarX * (Expression.VarY + Expression.VarZ)
-            );
-        public static readonly ReplacementPath ExpandQuadratic = new ReplacementPath(
-                (Expression.VarA + Expression.VarB) * (Expression.VarY + Expression.VarZ),
-                Expression.VarA * Expression.VarY + Expression.VarA * Expression.VarZ + Expression.VarB * Expression.VarY + Expression.VarB * Expression.VarZ
-            );
+        // Polynomial
+        public static readonly ReplacementPath ExpandBraces = new ReplacementPath("x * (y + z)", "x * y + x * z");
+        public static readonly ReplacementPath FactorBraces = new ReplacementPath("x * y + x * z", "x * (y + z)");
+        public static readonly ReplacementPath ExpandQuadratic = new ReplacementPath("(a + b) * (c + d)", "(a * c) + (b * c) + (a * d) + (b * d)");
+        public static readonly ReplacementPath CompleteTheSquare = new ReplacementPath("a * (x ^ 2) + b * x + c", "a * (x + b / (2 * a)) ^ 2 - (b ^ 2) / 4 + c");
+
+
+        private static readonly Regex rx = new Regex(@"^([^=>]+?)=>([^=>]+?)$");
+        public static List<EquivalencePath> ParseReplacementsString(string equivalencies)
+        {
+            List<EquivalencePath> paths = new List<EquivalencePath>();
+
+            foreach (var equivalency in equivalencies.Split('\n'))
+            {
+                if (string.IsNullOrWhiteSpace(equivalency))
+                {
+                    continue;
+                }
+
+                MatchCollection matches = rx.Matches(equivalency);
+                List<Match> matchesList = new List<Match>();
+                foreach (Match match in matches)
+                {
+                    matchesList.Add(match);
+                }
+
+                if (matchesList.Count != 1 || !matchesList[0].Success)
+                {
+                    throw new ArgumentException($"Equivalency {equivalency} is not of the form f=>g");
+                }
+
+                string expression1 = matchesList[0].Groups[0].Value;
+                string expression2 = matchesList[0].Groups[1].Value;
+
+                paths.Add(new ReplacementPath(expression1, expression2));
+            }
+
+            return paths;
+        }
 
         public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath> {
             ExpandBraces,
             FactorBraces,
-            ExpandQuadratic
+            ExpandQuadratic,
+            CompleteTheSquare
         };
     }
 }
