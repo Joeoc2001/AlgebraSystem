@@ -54,7 +54,7 @@ namespace Algebra
                 // Loop & simplify
                 foreach (Expression eq in eqs)
                 {
-                    if (eq is Constant constEq)
+                    if (eq is RationalConstant constEq)
                     {
                         collectedConstants = operation(collectedConstants, constEq.GetValue());
                         continue;

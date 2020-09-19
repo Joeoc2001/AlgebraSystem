@@ -25,7 +25,7 @@ namespace Algebra
                     return One;
                 }
 
-                if (term is Constant termConstant && power is Constant exponentConstant)
+                if (term is RationalConstant termConstant && power is RationalConstant exponentConstant)
                 {
                     Rational numerator = exponentConstant.GetValue().Numerator;
                     Rational denominator = exponentConstant.GetValue().Denominator;
@@ -48,13 +48,13 @@ namespace Algebra
             public override Expression GetDerivative(string wrt)
             {
                 // Check for common cases
-                if (_power is Constant powerConst)
+                if (_power is RationalConstant powerConst)
                 {
                     Expression baseDerivative = _term.GetDerivative(wrt);
                     return _power * baseDerivative * Pow(_term, ConstantFrom(powerConst.GetValue() - 1));
                 }
 
-                if (_term is Constant)
+                if (_term is RationalConstant)
                 {
                     Expression exponentDerivative = _power.GetDerivative(wrt);
                     return LnOf(_term) * exponentDerivative * this;

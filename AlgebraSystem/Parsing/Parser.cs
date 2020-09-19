@@ -78,9 +78,9 @@ namespace Algebra.Parsing
                 Expression rhs = ParseMultiply();
                 if (subtractNext)
                 {
-                    if (rhs is Constant constant)
+                    if (rhs is RationalConstant constant)
                     {
-                        rhs = Constant.ConstantFrom(-constant.GetValue());
+                        rhs = RationalConstant.ConstantFrom(-constant.GetValue());
                     }
                     else
                     {
@@ -169,7 +169,7 @@ namespace Algebra.Parsing
 
             if (_tokenizer.Token == Token.Decimal)
             {
-                Expression node = Constant.ConstantFrom(_tokenizer.Number);
+                Expression node = RationalConstant.ConstantFrom(_tokenizer.Number);
                 _tokenizer.NextToken();
                 return node;
             }

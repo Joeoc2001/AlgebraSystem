@@ -18,7 +18,7 @@ namespace Algebra
                     return s;
                 }
 
-                if (argument is Constant constant)
+                if (argument is RationalConstant constant)
                 {
                     if (constant.GetValue().IsZero)
                     {

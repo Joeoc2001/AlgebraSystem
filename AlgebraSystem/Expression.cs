@@ -15,12 +15,12 @@ namespace Algebra
 {
     public abstract class Expression
     {
-        public static implicit operator Expression(int r) => (Constant)r;
-        public static implicit operator Expression(long r) => (Constant)r;
-        public static implicit operator Expression(float r) => (Constant)r;
-        public static implicit operator Expression(double r) => (Constant)r;
-        public static implicit operator Expression(decimal r) => (Constant)r;
-        public static implicit operator Expression(Rational r) => (Constant)r;
+        public static implicit operator Expression(int r) => (RationalConstant)r;
+        public static implicit operator Expression(long r) => (RationalConstant)r;
+        public static implicit operator Expression(float r) => (RationalConstant)r;
+        public static implicit operator Expression(double r) => (RationalConstant)r;
+        public static implicit operator Expression(decimal r) => (RationalConstant)r;
+        public static implicit operator Expression(Rational r) => (RationalConstant)r;
 
         public static implicit operator Expression(string s) => From(s);
 
@@ -39,7 +39,7 @@ namespace Algebra
 
         public static Expression ConstantFrom(Rational value)
         {
-            return Constant.FromValue(value);
+            return RationalConstant.FromValue(value);
         }
 
         public static Expression ConstantFrom(float value) => ConstantFrom((Rational)value);

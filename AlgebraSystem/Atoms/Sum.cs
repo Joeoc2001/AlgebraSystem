@@ -39,11 +39,11 @@ namespace Algebra
                 }
 
                 // Collate Multiplication terms
-                Dictionary<Expression, Constant> terms = new Dictionary<Expression, Constant>();
+                Dictionary<Expression, RationalConstant> terms = new Dictionary<Expression, RationalConstant>();
                 foreach (Expression eq in newEqs)
                 {
                     Expression baseEq;
-                    Constant newCoefficient;
+                    RationalConstant newCoefficient;
                     if (eq is Product multeq)
                     {
                         baseEq = multeq.GetVariable();
@@ -55,15 +55,15 @@ namespace Algebra
                         newCoefficient = 1;
                     }
 
-                    if (terms.TryGetValue(baseEq, out Constant coefficient))
+                    if (terms.TryGetValue(baseEq, out RationalConstant coefficient))
                     {
-                        newCoefficient = Constant.FromValue(newCoefficient.GetValue() + coefficient.GetValue());
+                        newCoefficient = RationalConstant.FromValue(newCoefficient.GetValue() + coefficient.GetValue());
                     }
                     terms[baseEq] = newCoefficient;
                 }
                 // Put back into exponent form
                 newEqs.Clear();
-                foreach ((Expression eq, Constant coefficient) in terms)
+                foreach ((Expression eq, RationalConstant coefficient) in terms)
                 {
                     Expression newEq = eq * coefficient;
 

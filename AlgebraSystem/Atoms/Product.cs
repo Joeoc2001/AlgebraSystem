@@ -154,11 +154,11 @@ namespace Algebra
             }
 
             // Finds the first constant in the multiplication, or returns 1 if there are none
-            public Constant GetConstantCoefficient()
+            public RationalConstant GetConstantCoefficient()
             {
                 foreach (Expression eq in _arguments)
                 {
-                    if (eq is Constant c)
+                    if (eq is RationalConstant c)
                     {
                         return c;
                     }
@@ -171,7 +171,7 @@ namespace Algebra
             {
                 foreach (Expression eq in _arguments)
                 {
-                    if (eq is Constant)
+                    if (eq is RationalConstant)
                     {
                         List<Expression> others = new List<Expression>(_arguments);
                         others.Remove(eq);

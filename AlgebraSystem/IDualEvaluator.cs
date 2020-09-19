@@ -8,8 +8,8 @@ namespace Algebra
 {
     public interface IDualEvaluator<T>
     {
-        T EvaluateConstants(Rational value1, Rational value2);
-        T EvaluateVariables(string name1, string name2);
+        T EvaluateConstants(IConstantValue value1, IConstantValue value2);
+        T EvaluateVariables(IVariableValue value1, IVariableValue value2);
         T EvaluateSums(ICollection<Expression> arguments1, ICollection<Expression> arguments2);
         T EvaluateProducts(ICollection<Expression> arguments1, ICollection<Expression> arguments2);
         T EvaluateExponents(Expression baseArgument1, Expression powerArgument1, Expression baseArgument2, Expression powerArgument2);

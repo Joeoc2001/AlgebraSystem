@@ -9,10 +9,10 @@ namespace Algebra
 {
     public interface IExpandedEvaluator<T>
     {
-        T EvaluateConstant(Expression expression, Rational value);
-        T EvaluateVariable(Expression expression, string name);
-        T EvaluateSum(Expression expression, ICollection<Expression> expressions);
-        T EvaluateProduct(Expression expression, ICollection<Expression> expressions);
+        T EvaluateConstant(Expression expression, IConstantValue value);
+        T EvaluateVariable(Expression expression, IVariableValue value);
+        T EvaluateSum(Expression expression, ICollection<Expression> argumentExpressions);
+        T EvaluateProduct(Expression expression, ICollection<Expression> argumentExpressions);
         T EvaluateExponent(Expression expression, Expression baseExpression, Expression powerExpression);
         T EvaluateLn(Expression expression, Expression argumentExpression);
         T EvaluateSign(Expression expression, Expression argumentExpression);
