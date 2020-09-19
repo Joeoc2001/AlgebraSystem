@@ -11,6 +11,7 @@ namespace Algebra.Parsing
     {
         private readonly TextReader _reader;
         private readonly ICollection<string> _functions;
+        private readonly ICollection<string> _namedConstants;
 
         public Token Token { get; private set; }
         public Rational Number { get; private set; }
@@ -18,10 +19,11 @@ namespace Algebra.Parsing
 
         private char _currentChar;
 
-        public Tokenizer(TextReader reader, ICollection<string> functions)
+        public Tokenizer(TextReader reader, ICollection<string> functions, ICollection<string> namedConstants)
         {
-            this._reader = reader;
-            this._functions = functions;
+            _reader = reader;
+            _functions = functions;
+            _namedConstants = namedConstants;
             NextChar();
             NextToken();
         }
@@ -129,6 +131,12 @@ namespace Algebra.Parsing
                 {
                     TokenSignature = identifier;
                     Token = Token.Function;
+                    return;
+                }
+                else if (_namedConstants.Contains(identifier))
+                {
+                    TokenSignature = identifier;
+                    Token = Token.NamedConstant;
                     return;
                 }
                 else

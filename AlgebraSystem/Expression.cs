@@ -35,8 +35,8 @@ namespace Algebra
         public static readonly Expression Zero = 0;
         public static readonly Expression One = 1;
         public static readonly Expression MinusOne = -1;
-        public static readonly Expression PI = RealConstant.FromApproximation("PI", Rational.Approximate(Math.PI));
-        public static readonly Expression E = RealConstant.FromApproximation("E", Rational.Approximate(Math.E));
+        public static readonly Expression PI = Constants.PI.ToExpression();
+        public static readonly Expression E = Constants.E.ToExpression();
 
         public static Expression ConstantFrom(Rational value)
         {

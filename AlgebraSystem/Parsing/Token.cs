@@ -13,6 +13,7 @@ namespace Algebra.Parsing
         Exponent,
         Decimal,
         Variable,
+        NamedConstant,
         OpenBrace,
         CloseBrace,
         Function,
