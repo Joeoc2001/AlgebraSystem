@@ -66,12 +66,12 @@ namespace Algebra.PatternMatching
             return result;
         }
 
-        public HashSet<Expression> EvaluateConstant(Expression expression, Rational value)
+        public HashSet<Expression> EvaluateConstant(Expression expression, IConstant value)
         {
             return EvaluateExpression(expression);
         }
 
-        public HashSet<Expression> EvaluateVariable(Expression expression, string name)
+        public HashSet<Expression> EvaluateVariable(Expression expression, IVariable value)
         {
             return EvaluateExpression(expression);
         }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Algebra.Evaluators
 {
-    public class GetVariablesEvaluator : TraversalEvaluator<HashSet<string>>
+    public class GetVariablesEvaluator : TraversalEvaluator<HashSet<IVariable>>
     {
         public static readonly GetVariablesEvaluator Instance = new GetVariablesEvaluator();
 
@@ -15,9 +15,9 @@ namespace Algebra.Evaluators
 
         }
 
-        private static HashSet<string> Combine(ICollection<HashSet<string>> variables)
+        private static HashSet<IVariable> Combine(ICollection<HashSet<IVariable>> variables)
         {
-            HashSet<string> newSet = new HashSet<string>();
+            HashSet<IVariable> newSet = new HashSet<IVariable>();
             foreach (var variableSet in variables)
             {
                 newSet.UnionWith(variableSet);
@@ -25,62 +25,62 @@ namespace Algebra.Evaluators
             return newSet;
         }
 
-        public override HashSet<string> EvaluateConstant(Rational value)
+        public override HashSet<IVariable> EvaluateConstant(IConstant value)
         {
-            return new HashSet<string>();
+            return new HashSet<IVariable>();
         }
 
-        public override HashSet<string> EvaluateVariable(string name)
+        public override HashSet<IVariable> EvaluateVariable(IVariable value)
         {
-            return new HashSet<string>() { name };
+            return new HashSet<IVariable>() { value };
         }
 
-        protected override HashSet<string> Arcsin(HashSet<string> expression)
-        {
-            return expression;
-        }
-
-        protected override HashSet<string> Arctan(HashSet<string> expression)
+        protected override HashSet<IVariable> Arcsin(HashSet<IVariable> expression)
         {
             return expression;
         }
 
-        protected override HashSet<string> EvaluateFunction(Function function, IList<HashSet<string>> parameters)
+        protected override HashSet<IVariable> Arctan(HashSet<IVariable> expression)
+        {
+            return expression;
+        }
+
+        protected override HashSet<IVariable> EvaluateFunction(Function function, IList<HashSet<IVariable>> parameters)
         {
             return Combine(parameters);
         }
 
-        protected override HashSet<string> Ln(HashSet<string> expression)
+        protected override HashSet<IVariable> Ln(HashSet<IVariable> expression)
         {
             return expression;
         }
 
-        protected override HashSet<string> Pow(HashSet<string> b, HashSet<string> e)
+        protected override HashSet<IVariable> Pow(HashSet<IVariable> b, HashSet<IVariable> e)
         {
-            return Combine(new List<HashSet<string>>() { b, e });
+            return Combine(new List<HashSet<IVariable>>() { b, e });
         }
 
-        protected override HashSet<string> Product(ICollection<HashSet<string>> expressions)
+        protected override HashSet<IVariable> Product(ICollection<HashSet<IVariable>> expressions)
         {
             return Combine(expressions);
         }
 
-        protected override HashSet<string> Sign(HashSet<string> expression)
+        protected override HashSet<IVariable> Sign(HashSet<IVariable> expression)
         {
             return expression;
         }
 
-        protected override HashSet<string> Sin(HashSet<string> expression)
+        protected override HashSet<IVariable> Sin(HashSet<IVariable> expression)
         {
             return expression;
         }
 
-        protected override HashSet<string> Sum(ICollection<HashSet<string>> expressions)
+        protected override HashSet<IVariable> Sum(ICollection<HashSet<IVariable>> expressions)
         {
             return Combine(expressions);
         }
 
-        public override HashSet<string> EvaluateOther(Expression other)
+        public override HashSet<IVariable> EvaluateOther(Expression other)
         {
             throw new NotImplementedException($"Cannot get variables for unknown expression {other}. Override {typeof(GetVariablesEvaluator).Name} to add functionality for your new class.");
         }

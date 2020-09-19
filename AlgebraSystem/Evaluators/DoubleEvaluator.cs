@@ -19,9 +19,9 @@ namespace Algebra.Evaluators
 
         }
 
-        protected override double GetFromRational(Rational value)
+        protected override double GetFromConstant(IConstant value)
         {
-            return (double)value;
+            return value.GetDoubleApproximation();
         }
 
         protected override double PowOf(double baseValue, double powerValue)

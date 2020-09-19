@@ -4,8 +4,9 @@ using System.Text;
 
 namespace Algebra
 {
-    public interface IVariableValue
+    public interface IVariable : IEquatable<IVariable>
     {
         string GetName();
+        Expression ToExpression();
     }
 }

@@ -53,7 +53,7 @@ namespace Algebra.Evaluators
             return argument1.Evaluate(argument2, this);
         }
 
-        public int EvaluateConstants(Rational value1, Rational value2)
+        public int EvaluateConstants(IConstant value1, IConstant value2)
         {
             return value1.CompareTo(value2);
         }
@@ -146,9 +146,9 @@ namespace Algebra.Evaluators
             return CompareCommutative(arguments1, arguments2);
         }
 
-        public int EvaluateVariables(string name1, string name2)
+        public int EvaluateVariables(IVariable value1, IVariable value2)
         {
-            return name1.CompareTo(name2);
+            return value1.GetName().CompareTo(value2.GetName());
         }
     }
 }

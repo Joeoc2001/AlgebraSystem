@@ -25,7 +25,7 @@ namespace Algebra.Evaluators
             return argument1.Evaluate(argument2, this);
         }
 
-        public bool EvaluateConstants(Rational value1, Rational value2)
+        public bool EvaluateConstants(IConstant value1, IConstant value2)
         {
             return value1.Equals(value2);
         }
@@ -142,9 +142,9 @@ namespace Algebra.Evaluators
             return CommutativeExactlyEquals(arguments1, arguments2);
         }
 
-        public bool EvaluateVariables(string name1, string name2)
+        public bool EvaluateVariables(IVariable value1, IVariable value2)
         {
-            return string.Equals(name1, name2);
+            return value1.Equals(value2);
         }
     }
 }

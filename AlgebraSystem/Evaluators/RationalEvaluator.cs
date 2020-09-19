@@ -46,9 +46,9 @@ namespace Algebra.Evaluators
             return value;
         }
 
-        protected override Rational GetFromRational(Rational value)
+        protected override Rational GetFromConstant(IConstant value)
         {
-            return value;
+            return value.GetRationalApproximation();
         }
 
         protected override Rational PowOf(Rational baseValue, Rational powerValue)

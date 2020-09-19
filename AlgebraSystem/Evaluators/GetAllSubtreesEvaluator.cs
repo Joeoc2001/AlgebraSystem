@@ -47,7 +47,7 @@ namespace Algebra.Evaluators
             return EvaluateMonad(expression, argumentExpression);
         }
 
-        public HashSet<Expression> EvaluateConstant(Expression expression, Rational value)
+        public HashSet<Expression> EvaluateConstant(Expression expression, IConstant value)
         {
             return new HashSet<Expression>() { expression };
         }
@@ -98,7 +98,7 @@ namespace Algebra.Evaluators
             return EvaluateSet(expression, expressions);
         }
 
-        public HashSet<Expression> EvaluateVariable(Expression expression, string name)
+        public HashSet<Expression> EvaluateVariable(Expression expression, IVariable value)
         {
             return new HashSet<Expression>() { expression };
         }

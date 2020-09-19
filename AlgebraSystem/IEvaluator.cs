@@ -9,8 +9,8 @@ namespace Algebra
 {
     public interface IEvaluator<T>
     {
-        T EvaluateConstant(IConstantValue value);
-        T EvaluateVariable(IVariableValue value);
+        T EvaluateConstant(IConstant value);
+        T EvaluateVariable(IVariable value);
         T EvaluateSum(ICollection<Expression> expressions);
         T EvaluateProduct(ICollection<Expression> expressions);
         T EvaluateExponent(Expression baseExpression, Expression powerExpression);

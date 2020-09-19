@@ -13,7 +13,7 @@ namespace Algebra.Functions
         private readonly Expression _atomicExpression;
 
         public FunctionIdentity(string name, int hashSeed, Expression alternateExpression)
-            : base(name, alternateExpression.GetVariables())
+            : base(name, alternateExpression.GetVariableNames())
         {
             _hashSeed = hashSeed;
             _atomicExpression = alternateExpression.GetAtomicExpression();

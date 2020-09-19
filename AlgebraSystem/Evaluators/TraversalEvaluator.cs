@@ -8,7 +8,7 @@ namespace Algebra.Evaluators
 {
     public abstract class TraversalEvaluator<T> : IEvaluator<T>
     {
-        public abstract T EvaluateConstant(Rational value);
+        public abstract T EvaluateConstant(IConstant value);
 
         protected abstract T Pow(T b, T e);
 
@@ -80,7 +80,7 @@ namespace Algebra.Evaluators
             return Sum(evaluated);
         }
 
-        public abstract T EvaluateVariable(string name);
+        public abstract T EvaluateVariable(IVariable variable);
 
         protected abstract T Arcsin(T expression);
 

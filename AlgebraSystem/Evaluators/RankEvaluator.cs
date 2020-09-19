@@ -15,12 +15,12 @@ namespace Algebra.Evaluators
 
         }
 
-        public int EvaluateConstant(Rational value)
+        public int EvaluateConstant(IConstant value)
         {
             return 0;
         }
 
-        public int EvaluateVariable(string name)
+        public int EvaluateVariable(IVariable value)
         {
             return 100;
         }

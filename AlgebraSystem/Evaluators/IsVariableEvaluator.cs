@@ -11,26 +11,26 @@ namespace Algebra.Evaluators
         {
             public static readonly Result False = new Result();
 
-            private readonly string _name;
+            private readonly IVariable _value;
 
-            public Result(string name)
+            public Result(IVariable value)
             {
-                this._name = name ?? throw new ArgumentNullException(nameof(name));
+                this._value = value ?? throw new ArgumentNullException(nameof(value));
             }
 
             private Result()
             {
-                _name = null;
+                _value = null;
             }
 
             public bool IsVariable()
             {
-                return !(_name is null);
+                return !(_value is null);
             }
 
-            public string GetName()
+            public IVariable Get()
             {
-                return _name;
+                return _value;
             }
         }
 
@@ -46,7 +46,7 @@ namespace Algebra.Evaluators
             return Result.False;
         }
 
-        public override Result EvaluateVariable(string name)
+        public override Result EvaluateVariable(IVariable name)
         {
             return new Result(name);
         }

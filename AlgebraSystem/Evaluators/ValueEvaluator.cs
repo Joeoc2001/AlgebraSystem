@@ -27,11 +27,11 @@ namespace Algebra.Evaluators
             return value;
         }
 
-        protected abstract T GetFromRational(Rational value);
+        protected abstract T GetFromConstant(IConstant value);
 
-        public override sealed T EvaluateConstant(Rational value)
+        public override sealed T EvaluateConstant(IConstant value)
         {
-            return Map(GetFromRational(value));
+            return Map(GetFromConstant(value));
         }
 
         protected abstract T PowOf(T b, T e);
@@ -100,9 +100,9 @@ namespace Algebra.Evaluators
             return Map(SumOf(evaluated));
         }
 
-        public override sealed T EvaluateVariable(string name)
+        public override sealed T EvaluateVariable(IVariable value)
         {
-            name = name.ToLower();
+            string name = value.GetName().ToLower();
             if (!_variableInputs.Contains(name))
             {
                 throw new VariableNotPresentException($"Variable {name} could not be found in the given variable input set");

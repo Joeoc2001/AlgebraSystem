@@ -14,7 +14,7 @@ namespace Algebra.Evaluators
         {
         }
 
-        public bool EvaluateConstant(Rational value)
+        public bool EvaluateConstant(IConstant value)
         {
             return true;
         }
@@ -66,7 +66,7 @@ namespace Algebra.Evaluators
             return EvaluateSet(expressions);
         }
 
-        public bool EvaluateVariable(string name)
+        public bool EvaluateVariable(IVariable value)
         {
             return true;
         }

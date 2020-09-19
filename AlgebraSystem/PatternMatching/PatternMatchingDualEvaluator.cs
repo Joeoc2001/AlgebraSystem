@@ -25,7 +25,7 @@ namespace Algebra.PatternMatching
 
         }
 
-        public PatternMatchingResultSet EvaluateConstants(Rational valueToBeMatched, Rational valuePattern)
+        public PatternMatchingResultSet EvaluateConstants(IConstant valueToBeMatched, IConstant valuePattern)
         {
             if (valuePattern.Equals(valueToBeMatched))
             {
@@ -147,9 +147,9 @@ namespace Algebra.PatternMatching
             return GetResultsForSets(argumentsToBeMatched, argumentsPattern, Expression.Add);
         }
 
-        public PatternMatchingResultSet EvaluateVariables(string nameToBeMatched, string namePattern)
+        public PatternMatchingResultSet EvaluateVariables(IVariable valueToBeMatched, IVariable valuePattern)
         {
-            return new PatternMatchingResultSet(new PatternMatchingResult(namePattern, Expression.VariableFrom(nameToBeMatched)));
+            return new PatternMatchingResultSet(new PatternMatchingResult(valuePattern.GetName(), valueToBeMatched.ToExpression()));
         }
 
         public PatternMatchingResultSet EvaluateOthers(Expression expressionToBeMatched, Expression expressionPattern)
@@ -157,7 +157,7 @@ namespace Algebra.PatternMatching
             IsVariableEvaluator.Result result = expressionPattern.Evaluate(IsVariableEvaluator.Instance);
             if (result.IsVariable())
             {
-                return new PatternMatchingResultSet(new PatternMatchingResult(result.GetName(), expressionToBeMatched));
+                return new PatternMatchingResultSet(new PatternMatchingResult(result.Get().GetName(), expressionToBeMatched));
             }
 
             return PatternMatchingResultSet.None;

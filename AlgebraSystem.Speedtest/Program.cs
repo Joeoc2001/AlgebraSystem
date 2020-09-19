@@ -2,6 +2,7 @@
 using Algebra.Equivalence;
 using System;
 using System.Collections.Generic;
+using Algebra.Parsing;
 
 namespace AlgebraSystem.Speedtest
 {
@@ -10,13 +11,15 @@ namespace AlgebraSystem.Speedtest
         static void Main(string[] args)
         {
             // ARANGE
-            Expression eq1 = Expression.VarY * Expression.VarY;
-            Expression eq2 = Expression.VarY;
+            string expression = "x + 1";
+            Expression expected = Expression.VarX + 1;
 
             // ACT
+            Expression result = Parser.Parse(expression);
 
             // ASSERT
-            Console.Out.WriteLine(eq1.CompareTo(eq2));
+            Console.Out.WriteLine(expected.Equals(result));
+            Console.ReadKey();
         }
     }
 }

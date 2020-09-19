@@ -18,13 +18,14 @@ namespace Algebra.Evaluators
             this._exceptionOnVariableMissing = exceptionOnVariableMissing;
         }
 
-        public override Expression EvaluateConstant(Rational value)
+        public override Expression EvaluateConstant(IConstant value)
         {
-            return Expression.ConstantFrom(value);
+            return value.ToExpression();
         }
 
-        public override Expression EvaluateVariable(string name)
+        public override Expression EvaluateVariable(IVariable value)
         {
+            string name = value.GetName();
             if (_substitutions.TryGetValue(name, out Expression expression))
             {
                 return expression;

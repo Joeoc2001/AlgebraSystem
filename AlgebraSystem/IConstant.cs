@@ -5,11 +5,12 @@ using System.Text;
 
 namespace Algebra
 {
-    public interface IConstantValue : IEquatable<IConstantValue>
+    public interface IConstant : IEquatable<IConstant>, IComparable<IConstant>
     {
         bool IsRational();
         Rational GetRationalApproximation();
         double GetDoubleApproximation();
         string ToString();
+        Expression ToExpression();
     }
 }

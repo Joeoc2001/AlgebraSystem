@@ -6,7 +6,7 @@ namespace Algebra
 {
     namespace Atoms
     {
-        internal class Variable : Expression
+        internal class Variable : Expression, IVariable
         {
             private readonly string _name;
 
@@ -41,19 +41,19 @@ namespace Algebra
 
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateVariable(_name);
+                return evaluator.EvaluateVariable(this);
             }
 
             public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
             {
-                return evaluator.EvaluateVariable(this, _name);
+                return evaluator.EvaluateVariable(this, this);
             }
 
             public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
             {
                 if (otherExpression is Variable other)
                 {
-                    return evaluator.EvaluateVariables(this._name, other._name);
+                    return evaluator.EvaluateVariables(this, other);
                 }
                 return evaluator.EvaluateOthers(this, otherExpression);
             }
@@ -61,6 +61,21 @@ namespace Algebra
             protected override Expression GenAtomicExpression()
             {
                 return this;
+            }
+
+            public string GetName()
+            {
+                return _name;
+            }
+
+            public Expression ToExpression()
+            {
+                return this;
+            }
+
+            public bool Equals(IVariable other)
+            {
+                return GetName().Equals(other.GetName());
             }
         }
     }

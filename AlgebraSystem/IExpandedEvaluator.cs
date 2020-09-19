@@ -9,8 +9,8 @@ namespace Algebra
 {
     public interface IExpandedEvaluator<T>
     {
-        T EvaluateConstant(Expression expression, IConstantValue value);
-        T EvaluateVariable(Expression expression, IVariableValue value);
+        T EvaluateConstant(Expression expression, IConstant value);
+        T EvaluateVariable(Expression expression, IVariable value);
         T EvaluateSum(Expression expression, ICollection<Expression> argumentExpressions);
         T EvaluateProduct(Expression expression, ICollection<Expression> argumentExpressions);
         T EvaluateExponent(Expression expression, Expression baseExpression, Expression powerExpression);

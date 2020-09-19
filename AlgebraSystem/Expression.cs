@@ -8,6 +8,7 @@ using Algebra.PatternMatching;
 using Rationals;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -230,9 +231,14 @@ namespace Algebra
             return Evaluate(expression, ExactlyEqualsDualEvaluator.Instance);
         }
 
-        public HashSet<string> GetVariables()
+        public HashSet<IVariable> GetVariables()
         {
             return Evaluate(GetVariablesEvaluator.Instance);
+        }
+
+        public HashSet<string> GetVariableNames()
+        {
+            return new HashSet<string>(GetVariables().Select(v => v.GetName()).AsEnumerable());
         }
 
         public PatternMatchingResultSet Match(Expression pattern)

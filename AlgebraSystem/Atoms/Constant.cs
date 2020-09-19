@@ -5,30 +5,19 @@ using System.Text;
 
 namespace Algebra.Atoms
 {
-    internal abstract class Constant : Expression
+    internal abstract class Constant : Expression, IConstant
     {
-        public static implicit operator Constant(int r) => RationalConstant.FromValue(r);
-        public static implicit operator Constant(long r) => RationalConstant.FromValue(r);
-        public static implicit operator Constant(float r) => Rational.Approximate(r);
-        public static implicit operator Constant(double r) => Rational.Approximate(r);
-        public static implicit operator Constant(decimal r) => Rational.Approximate(r);
-        public static implicit operator Constant(Rational r) => RationalConstant.FromValue(r);
 
-        public override Expression GetDerivative(string wrt)
+        protected override abstract int GenHashCode();
+        public override abstract string ToString();
+        public abstract bool IsRational();
+        public abstract Rational GetRationalApproximation();
+        public abstract double GetDoubleApproximation();
+        public abstract bool Equals(IConstant other);
+
+        public virtual int CompareTo(IConstant other)
         {
-            return Zero;
-        }
-
-        public abstract IConstantValue GetConstantValue();
-
-        protected override int GenHashCode()
-        {
-            return GetConstantValue().GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return $"{GetConstantValue()}";
+            return GetRationalApproximation().CompareTo(other.GetRationalApproximation());
         }
 
         public override int GetOrderIndex()
@@ -36,26 +25,36 @@ namespace Algebra.Atoms
             return 0;
         }
 
+        public override Expression GetDerivative(string wrt)
+        {
+            return Zero;
+        }
+
         public override T Evaluate<T>(IEvaluator<T> evaluator)
         {
-            return evaluator.EvaluateConstant(GetConstantValue());
+            return evaluator.EvaluateConstant(this);
         }
 
         public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
         {
-            return evaluator.EvaluateConstant(this, GetConstantValue());
+            return evaluator.EvaluateConstant(this, this);
         }
 
         public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
         {
             if (otherExpression is RationalConstant other)
             {
-                return evaluator.EvaluateConstants(this.GetConstantValue(), other.GetConstantValue());
+                return evaluator.EvaluateConstants(this, other);
             }
             return evaluator.EvaluateOthers(this, otherExpression);
         }
 
         protected override Expression GenAtomicExpression()
+        {
+            return this;
+        }
+
+        public Expression ToExpression()
         {
             return this;
         }

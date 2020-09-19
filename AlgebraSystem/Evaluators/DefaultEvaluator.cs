@@ -20,7 +20,7 @@ namespace Algebra.Evaluators
             return Default();
         }
 
-        public virtual T EvaluateConstant(Rational value)
+        public virtual T EvaluateConstant(IConstant value)
         {
             return Default();
         }
@@ -65,7 +65,7 @@ namespace Algebra.Evaluators
             return Default();
         }
 
-        public virtual T EvaluateVariable(string name)
+        public virtual T EvaluateVariable(IVariable value)
         {
             return Default();
         }

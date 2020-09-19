@@ -12,7 +12,7 @@ namespace Algebra.Evaluators
 
         public Func<Expression, T> Arcsin = null;
         public Func<Expression, T> Arctan = null;
-        public Func<Rational, T> Constant = null;
+        public Func<IConstant, T> Constant = null;
         public Func<Expression, Expression, T> Exponent = null;
         public Func<Function, T> Function = null;
         public Func<Expression, T> Ln = null;
@@ -20,7 +20,7 @@ namespace Algebra.Evaluators
         public Func<Expression, T> Sign = null;
         public Func<Expression, T> Sin = null;
         public Func<ICollection<Expression>, T> Sum = null;
-        public Func<string, T> Variable = null;
+        public Func<IVariable, T> Variable = null;
 
         public AnonymousEvaluator(Func<T> defaultFunc)
         {
@@ -47,7 +47,7 @@ namespace Algebra.Evaluators
             return Evaluate(Arctan, argumentExpression);
         }
 
-        public T EvaluateConstant(Rational value)
+        public T EvaluateConstant(IConstant value)
         {
             return Evaluate(Constant, value);
         }
@@ -92,9 +92,9 @@ namespace Algebra.Evaluators
             return Evaluate(Sum, expressions);
         }
 
-        public T EvaluateVariable(string name)
+        public T EvaluateVariable(IVariable value)
         {
-            return Evaluate(Variable, name);
+            return Evaluate(Variable, value);
         }
     }
 }
