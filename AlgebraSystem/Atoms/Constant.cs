@@ -3,60 +3,63 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Atoms
+namespace Algebra
 {
-    internal abstract class Constant : Expression, IConstant
+    namespace Atoms
     {
-
-        protected override abstract int GenHashCode();
-        public override abstract string ToString();
-        public abstract bool IsRational();
-        public abstract Rational GetRationalApproximation();
-        public abstract double GetDoubleApproximation();
-        public abstract bool Equals(IConstant other);
-
-        public virtual int CompareTo(IConstant other)
+        internal abstract class Constant : Expression, IConstant
         {
-            return GetRationalApproximation().CompareTo(other.GetRationalApproximation());
-        }
 
-        public override int GetOrderIndex()
-        {
-            return 0;
-        }
+            protected override abstract int GenHashCode();
+            public override abstract string ToString();
+            public abstract bool IsRational();
+            public abstract Rational GetRationalApproximation();
+            public abstract double GetDoubleApproximation();
+            public abstract bool Equals(IConstant other);
 
-        public override Expression GetDerivative(string wrt)
-        {
-            return Zero;
-        }
-
-        public override T Evaluate<T>(IEvaluator<T> evaluator)
-        {
-            return evaluator.EvaluateConstant(this);
-        }
-
-        public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
-        {
-            return evaluator.EvaluateConstant(this, this);
-        }
-
-        public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
-        {
-            if (otherExpression is RationalConstant other)
+            public virtual int CompareTo(IConstant other)
             {
-                return evaluator.EvaluateConstants(this, other);
+                return GetRationalApproximation().CompareTo(other.GetRationalApproximation());
             }
-            return evaluator.EvaluateOthers(this, otherExpression);
-        }
 
-        protected override Expression GenAtomicExpression()
-        {
-            return this;
-        }
+            public override int GetOrderIndex()
+            {
+                return 0;
+            }
 
-        public Expression ToExpression()
-        {
-            return this;
+            public override Expression GetDerivative(string wrt)
+            {
+                return Zero;
+            }
+
+            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateConstant(this);
+            }
+
+            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            {
+                return evaluator.EvaluateConstant(this, this);
+            }
+
+            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            {
+                if (otherExpression is IConstant other)
+                {
+                    return evaluator.EvaluateConstants(this, other);
+                }
+                return evaluator.EvaluateOthers(this, otherExpression);
+            }
+
+            protected override Expression GenAtomicExpression()
+            {
+                return this;
+            }
+
+            public Expression ToExpression()
+            {
+                return this;
+            }
         }
     }
 }

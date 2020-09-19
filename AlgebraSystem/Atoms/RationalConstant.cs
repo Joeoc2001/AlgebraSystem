@@ -24,7 +24,7 @@ namespace Algebra
 
             public static RationalConstant FromValue(Rational value)
             {
-                return new RationalConstant(value.CanonicalForm);
+                return new RationalConstant(value);
             }
 
             public override bool Equals(IConstant other)
