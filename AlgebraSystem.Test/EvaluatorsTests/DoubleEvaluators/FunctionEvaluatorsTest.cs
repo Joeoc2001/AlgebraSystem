@@ -1,0 +1,65 @@
+﻿using Algebra;
+using Algebra.Evaluators;
+using Algebra.Functions;
+using Libs;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
+{
+    class FunctionEvaluatorsTest
+    {
+        [Test]
+        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] MonadBuilder.Monad monad, [Range(-1, 1)] double input)
+        {
+            // ARRANGE
+            Expression expression = MonadBuilder.Build(Expression.VarA, monad);
+            VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input } };
+            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
+            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+
+            // ACT
+            double output1 = expression.Evaluate(evaluator1);
+            double output2 = expression.Evaluate(evaluator2);
+
+            // ASSERT
+            Assert.AreEqual(output1, output2, 0.00000000001f);
+        }
+
+        [Test]
+        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] DyadBuilder.Dyad dyad, [Range(-1, 1)] double input1, [Range(-1, 1)] double input2)
+        {
+            // ARRANGE
+            Expression expression = DyadBuilder.Build(Expression.VarA, Expression.VarB, dyad);
+            VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input1 }, { "b", input2 } };
+            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
+            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+
+            // ACT
+            double output1 = expression.Evaluate(evaluator1);
+            double output2 = expression.Evaluate(evaluator2);
+
+            // ASSERT
+            Assert.AreEqual(output1, output2, 0.00000000001f);
+        }
+
+        [Test]
+        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] TryadBuilder.Tryad tryad, [Range(-1, 1)] double input1, [Range(-1, 1)] double input2, [Range(-1, 1)] double input3)
+        {
+            // ARRANGE
+            Expression expression = TryadBuilder.Build(Expression.VarA, Expression.VarB, Expression.VarC, tryad);
+            VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input1 }, { "b", input2 }, { "c", input3 } };
+            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
+            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+
+            // ACT
+            double output1 = expression.Evaluate(evaluator1);
+            double output2 = expression.Evaluate(evaluator2);
+
+            // ASSERT
+            Assert.AreEqual(output1, output2, 0.00000000001f);
+        }
+    }
+}
