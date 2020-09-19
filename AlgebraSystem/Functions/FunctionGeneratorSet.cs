@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Algebra.Functions.HardcodedFunctionIdentities;
+using Algebra.Functions.FunctionIdentities;
 
 namespace Algebra.Functions
 {

@@ -1,7 +1,7 @@
 ﻿using Algebra.Atoms;
 using Algebra.Equivalence;
 using Algebra.Evaluators;
-using Algebra.Functions.HardcodedFunctionIdentities;
+using Algebra.Functions.FunctionIdentities;
 using Algebra.Metrics;
 using Algebra.Parsing;
 using Algebra.PatternMatching;
@@ -223,7 +223,7 @@ namespace Algebra
                     Expression atomicB = e.GetAtomicExpression();
                     return atomicA.Equals(atomicB, EqualityLevel.Exactly);
                 case EqualityLevel.Deep:
-                    return GetEquivalenceClass().IsInClass(e, 3);
+                    return GetEquivalenceClass().IsInClass(e, 1000);
                 case EqualityLevel.Deepest:
                     return GetEquivalenceClass().IsInClass(e);
                 default:

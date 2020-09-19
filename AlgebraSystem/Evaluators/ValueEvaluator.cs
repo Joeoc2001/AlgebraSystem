@@ -8,14 +8,14 @@ namespace Algebra.Evaluators
 {
     public abstract class ValueEvaluator<T> : TraversalEvaluator<T>
     {
-        public delegate T FunctionEvaluator(ICollection<T> argumentExpressions);
+        public delegate T FunctionEvaluator(IList<T> argumentExpressions);
 
-        private readonly IDictionary<FunctionIdentity, FunctionEvaluator> _functionEvaluators;
+        private readonly Dictionary<FunctionIdentity, FunctionEvaluator> _functionEvaluators;
         private readonly VariableInputSet<T> _variableInputs;
 
         public ValueEvaluator(VariableInputSet<T> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators)
         {
-            this._functionEvaluators = functionEvaluators ?? new Dictionary<FunctionIdentity, FunctionEvaluator>();
+            this._functionEvaluators = new Dictionary<FunctionIdentity, FunctionEvaluator>(functionEvaluators ?? throw new ArgumentNullException(nameof(functionEvaluators)));
             this._variableInputs = variableInputs;
         }
 

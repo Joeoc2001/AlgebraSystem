@@ -5,8 +5,11 @@ using System.Text;
 
 namespace Algebra
 {
-    namespace Functions.HardcodedFunctionIdentities
+    namespace Functions.FunctionIdentities
     {
+        /// <summary>
+        /// Returns A if C < 0, B if C > 0, (A + B) / 2 if C = 0
+        /// </summary>
         internal static class SelectIdentity
         {
             private static readonly Expression _atomicExpression = 0.5 * (Expression.VarA + Expression.VarB + (Expression.VarB - Expression.VarA) * Expression.SignOf(Expression.VarC));

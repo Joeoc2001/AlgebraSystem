@@ -1,4 +1,4 @@
-﻿using Algebra.Functions.HardcodedFunctionIdentities;
+﻿using Algebra.Functions.FunctionIdentities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

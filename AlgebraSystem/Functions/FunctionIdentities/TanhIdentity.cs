@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Algebra
 {
-    namespace Functions.HardcodedFunctionIdentities
+    namespace Functions.FunctionIdentities
     {
         internal static class TanhIdentity
         {

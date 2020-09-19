@@ -1,7 +1,9 @@
 ﻿using Algebra.Functions;
+using Algebra.Functions.FunctionIdentities;
 using Rationals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Numerics;
 using System.Text;
 
@@ -9,12 +11,26 @@ namespace Algebra.Evaluators
 {
     public class DoubleEvaluator : ValueEvaluator<double>
     {
-        public DoubleEvaluator(VariableInputSet<double> variableInputs)
-            : this(variableInputs, null)
-        { }
+        public static readonly ReadOnlyDictionary<FunctionIdentity, FunctionEvaluator> DefaultFunctionEvaluators =
+            new ReadOnlyDictionary<FunctionIdentity, FunctionEvaluator>(new Dictionary<FunctionIdentity, FunctionEvaluator>()
+            {
+                { AbsIdentity.Instance, d => Math.Abs(d[0]) },
+                { ArccosIdentity.Instance, d => Math.Acos(d[0]) },
+                { CoshIdentity.Instance, d => Math.Cosh(d[0]) },
+                { CosIdentity.Instance, d => Math.Cos(d[0]) },
+                { DivIdentity.Instance, d => d[0] / d[1] },
+                { LogIdentity.Instance, d => Math.Log(d[0], d[1]) },
+                { MaxIdentity.Instance, d => Math.Max(d[0], d[1]) },
+                { MinIdentity.Instance, d => Math.Min(d[0], d[1]) },
+                { SelectIdentity.Instance, d => d[2] < 0 ? d[0] : (d[2] > 0 ? d[1] : (d[0] + d[1]) / 2) },
+                { SinhIdentity.Instance, d => Math.Sinh(d[0]) },
+                { SqrtIdentity.Instance, d => Math.Sqrt(d[0]) },
+                { TanhIdentity.Instance, d => Math.Tanh(d[0]) },
+                { TanIdentity.Instance, d => Math.Tan(d[0]) },
+            });
 
-        public DoubleEvaluator(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators)
-            : base(variableInputs, functionEvaluators)
+        public DoubleEvaluator(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators = null)
+            : base(variableInputs, functionEvaluators ?? DefaultFunctionEvaluators)
         {
 
         }
