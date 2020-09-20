@@ -11,8 +11,21 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
 {
     class FunctionEvaluatorsTest
     {
-        [Test]
-        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] MonadBuilder.Monad monad, [Range(-1, 1)] double input)
+        private static readonly double[] inputs =
+        {
+            -1,
+            0,
+            1,
+            2,
+            double.NaN,
+            double.NegativeInfinity,
+            double.PositiveInfinity,
+            double.MaxValue,
+            double.MinValue
+        };
+
+        [Test, Pairwise]
+        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] MonadBuilder.Monad monad, [ValueSource(nameof(inputs))] double input)
         {
             // ARRANGE
             Expression expression = MonadBuilder.Build(Expression.VarA, monad);
@@ -28,8 +41,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             Assert.AreEqual(output1, output2, 0.00000000001f);
         }
 
-        [Test]
-        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] DyadBuilder.Dyad dyad, [Range(-1, 1)] double input1, [Range(-1, 1)] double input2)
+        [Test, Pairwise]
+        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] DyadBuilder.Dyad dyad, [ValueSource(nameof(inputs))] double input1, [ValueSource(nameof(inputs))] double input2)
         {
             // ARRANGE
             Expression expression = DyadBuilder.Build(Expression.VarA, Expression.VarB, dyad);
@@ -45,8 +58,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             Assert.AreEqual(output1, output2, 0.00000000001f);
         }
 
-        [Test]
-        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] TryadBuilder.Tryad tryad, [Range(-1, 1)] double input1, [Range(-1, 1)] double input2, [Range(-1, 1)] double input3)
+        [Test, Pairwise]
+        public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] TryadBuilder.Tryad tryad, [ValueSource(nameof(inputs))] double input1, [ValueSource(nameof(inputs))] double input2, [ValueSource(nameof(inputs))] double input3)
         {
             // ARRANGE
             Expression expression = TryadBuilder.Build(Expression.VarA, Expression.VarB, Expression.VarC, tryad);

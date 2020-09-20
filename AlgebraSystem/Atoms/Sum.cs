@@ -103,19 +103,9 @@ namespace Algebra
                 return Add(derivatives);
             }
 
-            public override int IdentityValue()
-            {
-                return 0;
-            }
-
-            public override float Perform(float a, float b)
-            {
-                return a + b;
-            }
-
             public override string EmptyName()
             {
-                return "[EMPTY SUM]";
+                return "0";
             }
 
             public override string OperationSymbol()

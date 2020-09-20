@@ -8,10 +8,10 @@ using System.Text;
 
 namespace AtomTests.AdditionTests
 {
-    class Evaluation
+    class AdditionEvaluation
     {
         [Test]
-        public void XPlusY([Range(-10, 10)] int a, [Range(-10, 10)] int b)
+        public void XPlusY([Range(-1, 1)] int a, [Range(-1, 1)] int b)
         {
             // ARANGE
             Expression expression = Expression.VarX + Expression.VarY;
@@ -24,7 +24,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void XPlus1([Range(-10, 10)] int a)
+        public void XPlus1([Range(-1, 1)] int a)
         {
             // ARANGE
             Expression expression = Expression.VarX + 1;
@@ -37,7 +37,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void XPlus100([Range(-10, 10)] int a)
+        public void XPlus100([Range(-1, 1)] int a)
         {
             // ARANGE
             Expression expression = Expression.VarX + 100;
@@ -47,6 +47,19 @@ namespace AtomTests.AdditionTests
 
             // ASSERT
             Assert.AreEqual(a + 100, value);
+        }
+
+        [Test]
+        public void Empty()
+        {
+            // ARANGE
+            Expression expression = Expression.Add(new List<Expression>());
+
+            // ACT
+            double value = expression.EvaluateOnce();
+
+            // ASSERT
+            Assert.AreEqual(0, value);
         }
     }
 }

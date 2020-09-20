@@ -7,7 +7,7 @@ using System.Text;
 
 namespace AtomTests.AdditionTests
 {
-    class Immutability
+    class AdditionImmutability
     {
         [Test]
         public void CopiesArgumentList()

@@ -6,10 +6,10 @@ using System.Text;
 
 namespace AtomTests.AdditionTests
 {
-    class Attributes
+    class AdditionAttributes
     {
         [Test]
-        public void GetOrderIndex_Is30([ValueSource(typeof(InputValues), nameof(InputValues.expressions))] Expression expression)
+        public void GetOrderIndex_Is30([ValueSource(typeof(AdditionInputValues), nameof(AdditionInputValues.expressions))] Expression expression)
         {
             // ARANGE
 

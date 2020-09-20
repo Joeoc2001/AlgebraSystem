@@ -20,8 +20,6 @@ namespace Algebra
                 this._arguments = new ReadOnlyCollection<Expression>(eqs);
             }
 
-            public abstract int IdentityValue();
-            public abstract float Perform(float a, float b);
             public delegate Rational Operation(Rational a, Rational b);
             public abstract string EmptyName();
             public abstract string OperationSymbol();

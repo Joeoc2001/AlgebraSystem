@@ -10,7 +10,7 @@ using System.Text;
 namespace AtomTests.AdditionTests
 {
     [Timeout(1000)]
-    class Equality
+    class AdditionEquality
     {
         [Test]
         public void TrueFor_XPlus1_SingleInstance([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
@@ -129,6 +129,20 @@ namespace AtomTests.AdditionTests
             // Arrange
             Expression v1 = Expression.VarY + Expression.Pow(Expression.VarY, 2);
             Expression v2 = Expression.Pow(Expression.VarY, 2) + Expression.VarY;
+
+            // Act
+            bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);
+
+            // Assert
+            Assert.IsTrue(areEqual);
+        }
+
+        [Test]
+        public void TrueFor_EmptySum_And0([Values] EqualityLibs.EqualityType type, [Values] EqualityLibs.Order order)
+        {
+            // Arrange
+            Expression v1 = Expression.Add(new List<Expression>());
+            Expression v2 = 0;
 
             // Act
             bool areEqual = EqualityLibs.AreEqual(v1, v2, type, order);

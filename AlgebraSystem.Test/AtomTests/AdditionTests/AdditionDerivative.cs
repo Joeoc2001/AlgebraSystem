@@ -7,7 +7,7 @@ using System.Text;
 
 namespace AtomTests.AdditionTests
 {
-    class Derivative
+    class AdditionDerivative
     {
         [Test]
         public void IsValidFor_XPlusYPlusZ_WRT([Values("x", "y", "z")] string varName)

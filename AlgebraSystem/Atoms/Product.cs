@@ -133,19 +133,9 @@ namespace Algebra
                 return Sum.Add(terms);
             }
 
-            public override int IdentityValue()
-            {
-                return 1;
-            }
-
-            public override float Perform(float a, float b)
-            {
-                return a * b;
-            }
-
             public override string EmptyName()
             {
-                return "[EMPTY PRODUCT]";
+                return "1";
             }
 
             public override string OperationSymbol()

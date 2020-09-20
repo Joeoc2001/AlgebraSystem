@@ -7,10 +7,10 @@ using System.Text;
 
 namespace AtomTests.AdditionTests
 {
-    class Construction
+    class AdditionConstruction
     {
         [Test]
-        public void Addition_Construction_CollectsConstants([Range(-10, 10)] int a, [Range(-10, 10)] int b)
+        public void CollectsConstants([Range(-1, 1)] int a, [Range(-1, 1)] int b)
         {
             // ARANGE
 
@@ -23,7 +23,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_CollectsCoefficients([Range(-10, 10)] int a, [Range(-10, 10)] int b)
+        public void CollectsCoefficients([Range(-1, 1)] int a, [Range(-1, 1)] int b)
         {
             // ARANGE
 
@@ -36,7 +36,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_RemovesZeros([Range(-10, 10)] int a, [Range(-10, 10)] int b)
+        public void RemovesZeros([Range(-1, 1)] int a, [Range(-1, 1)] int b)
         {
             // ARANGE
 
@@ -49,7 +49,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_CancelsVaraibles([Range(-10, 10)] int a, [Range(-10, 10)] int b)
+        public void CancelsVaraibles([Range(-1, 1)] int a, [Range(-1, 1)] int b)
         {
             // ARANGE
 
@@ -62,7 +62,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_RemovesVaraibleCoefficientIfOne([Range(-10, 10)] int a, [Range(-10, 10)] int b)
+        public void RemovesVaraibleCoefficientIfOne([Range(-1, 1)] int a, [Range(-1, 1)] int b)
         {
             // ARANGE
 
@@ -75,7 +75,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_CollatesAdditions()
+        public void CollatesAdditions()
         {
             // ARANGE
 
@@ -88,7 +88,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_DoesNotFactorise()
+        public void DoesNotFactorise()
         {
             // ARANGE
 
@@ -101,7 +101,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_DoesntUseAtomicForm()
+        public void DoesntUseAtomicForm()
         {
             // ARANGE
             DummyExpression dummy1 = new DummyExpression();
@@ -114,7 +114,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_DoesntUseToString()
+        public void DoesntUseToString()
         {
             // ARANGE
             DummyExpression dummy1 = new DummyExpression();
@@ -127,7 +127,7 @@ namespace AtomTests.AdditionTests
         }
 
         [Test]
-        public void Addition_Construction_DoesntUseEvaluate()
+        public void DoesntUseEvaluate()
         {
             // ARANGE
             DummyExpression dummy1 = new DummyExpression();

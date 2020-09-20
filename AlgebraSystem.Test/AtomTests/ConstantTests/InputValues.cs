@@ -17,6 +17,8 @@ namespace AtomTests.ConstantTests
             int.MaxValue,
             int.MinValue,
             new Rationals.Rational(int.MinValue, int.MaxValue),
+            Expression.PI,
+            Expression.E
         };
     }
 }
