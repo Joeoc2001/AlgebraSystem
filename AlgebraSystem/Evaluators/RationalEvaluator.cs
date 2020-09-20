@@ -1,7 +1,9 @@
 ﻿using Algebra.Functions;
+using Algebra.Functions.FunctionIdentities;
 using Rationals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Numerics;
 using System.Text;
 
@@ -9,6 +11,24 @@ namespace Algebra.Evaluators
 {
     public class RationalEvaluator : ValueEvaluator<Rational>
     {
+        public static readonly ReadOnlyDictionary<FunctionIdentity, FunctionEvaluator> DefaultFunctionEvaluators =
+            new ReadOnlyDictionary<FunctionIdentity, FunctionEvaluator>(new Dictionary<FunctionIdentity, FunctionEvaluator>()
+            {
+                { AbsIdentity.Instance, d => Rational.Abs(d[0]) },
+                { ArccosIdentity.Instance, d => (Rational)Math.Acos((double)d[0]) },
+                { CoshIdentity.Instance, d => (Rational)Math.Cosh((double)d[0]) },
+                { CosIdentity.Instance, d => (Rational)Math.Cos((double) d[0]) },
+                { DivIdentity.Instance, d => d[0] / d[1] },
+                { LogIdentity.Instance, d => (Rational)Math.Log((double)d[0], (double)d[1]) },
+                { MaxIdentity.Instance, d => d[0] > d[1] ? d[0] : d[1] },
+                { MinIdentity.Instance, d => d[0] < d[1] ? d[0] : d[1] },
+                { SelectIdentity.Instance, d => d[2] < 0 ? d[0] : (d[2] > 0 ? d[1] : (d[0] + d[1]) / 2) },
+                { SinhIdentity.Instance, d => (Rational)Math.Sinh((double)d[0]) },
+                { SqrtIdentity.Instance, d => (Rational)Math.Sqrt((double)d[0]) },
+                { TanhIdentity.Instance, d => (Rational)Math.Tanh((double)d[0]) },
+                { TanIdentity.Instance, d => (Rational)Math.Tan((double)d[0]) },
+            });
+
         private readonly BigInteger? _maxSize;
 
         public RationalEvaluator(VariableInputSet<Rational> variableInputs)
