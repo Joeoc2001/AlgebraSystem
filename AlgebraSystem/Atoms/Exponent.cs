@@ -41,8 +41,8 @@ namespace Algebra
 
             public Exponent(Expression term, Expression power)
             {
-                this._term = term;
-                this._power = power;
+                this._term = term ?? throw new ArgumentNullException(nameof(term));
+                this._power = power ?? throw new ArgumentNullException(nameof(power));
             }
 
             public override Expression GetDerivative(string wrt)

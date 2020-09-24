@@ -17,7 +17,7 @@ namespace Algebra
 
             public CommutativeOperation(IList<Expression> eqs)
             {
-                this._arguments = new ReadOnlyCollection<Expression>(eqs);
+                this._arguments = new ReadOnlyCollection<Expression>(eqs ?? throw new ArgumentNullException(nameof(eqs)));
             }
 
             public delegate Rational Operation(Rational a, Rational b);

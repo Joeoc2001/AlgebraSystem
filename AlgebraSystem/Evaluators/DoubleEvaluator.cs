@@ -67,7 +67,7 @@ namespace Algebra.Evaluators
 
         protected override double SignOf(double v)
         {
-            return Math.Sign(v);
+            return double.IsNaN(v) ? double.NaN : Math.Sign(v);
         }
 
         protected override double SinOf(double v)

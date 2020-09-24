@@ -22,7 +22,7 @@ namespace Algebra.Parsing
             _values = new Dictionary<string, IConstant>();
             foreach ((string name, IConstant constant) in values)
             {
-                _values.Add(name.ToUpper(), constant);
+                _values.Add(name, constant);
             }
         }
 

@@ -24,6 +24,21 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             double.MinValue
         };
 
+        private static double CalculateTolerance(params double[] inputs)
+        {
+            double max = 0;
+            foreach (var input in inputs)
+            {
+                if (double.IsNaN(input) || double.IsInfinity(input))
+                {
+                    continue;
+                }
+                max = Math.Abs(input) > max ? Math.Abs(input) : max;
+            }
+
+            return max * 0.00000000001f;
+        }
+
         [Test, Pairwise]
         public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] MonadBuilder.Monad monad, [ValueSource(nameof(inputs))] double input)
         {
@@ -38,7 +53,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             double output2 = expression.Evaluate(evaluator2);
 
             // ASSERT
-            Assert.AreEqual(output1, output2, 0.00000000001f);
+            Assert.AreEqual(output1, output2, CalculateTolerance(input));
         }
 
         [Test, Pairwise]
@@ -55,7 +70,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             double output2 = expression.Evaluate(evaluator2);
 
             // ASSERT
-            Assert.AreEqual(output1, output2, 0.00000000001f);
+            Assert.AreEqual(output1, output2, CalculateTolerance(input1, input2));
         }
 
         [Test, Pairwise]
@@ -72,7 +87,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             double output2 = expression.Evaluate(evaluator2);
 
             // ASSERT
-            Assert.AreEqual(output1, output2, 0.00000000001f);
+            Assert.AreEqual(output1, output2, CalculateTolerance(input1, input2, input3));
         }
     }
 }

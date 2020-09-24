@@ -24,12 +24,12 @@ namespace Algebra
 
         public VariableInput<T> this[string v]
         {
-            get => _values[v.ToLower()];
+            get => _values[v];
         }
 
         public bool Contains(string name)
         {
-            return _values.ContainsKey(name.ToLower());
+            return _values.ContainsKey(name);
         }
 
         /// <summary>
@@ -61,14 +61,13 @@ namespace Algebra
         /// <exception cref="ArgumentException">Thrown if a variable input with the given name is already present</exception>
         public void Add(string name, T value)
         {
-            string lowerName = name.ToLower();
-            if (_values.ContainsKey(lowerName))
+            if (_values.ContainsKey(name))
             {
                 throw new ArgumentException("A variable with the same name has already been added");
             }
 
             VariableInput<T> variableInput = new VariableInput<T>();
-            _values.Add(lowerName, variableInput);
+            _values.Add(name, variableInput);
             variableInput.Value = value;
         }
 
@@ -79,11 +78,10 @@ namespace Algebra
         /// <param name="value">The value to set the variable to</param>
         public void Set(string name, T value)
         {
-            string lowerName = name.ToLower();
-            if (!_values.TryGetValue(lowerName, out VariableInput<T> variableInput))
+            if (!_values.TryGetValue(name, out VariableInput<T> variableInput))
             {
                 variableInput = new VariableInput<T>();
-                _values.Add(lowerName, variableInput);
+                _values.Add(name, variableInput);
             }
             variableInput.Value = value;
         }
@@ -96,10 +94,9 @@ namespace Algebra
         /// <exception cref="ArgumentException">Thrown if a variable input with the given name is not present</exception>
         public VariableInput<T> Get(string name)
         {
-            string lowerName = name.ToLower();
-            if (!_values.TryGetValue(lowerName, out VariableInput<T> variableInput))
+            if (!_values.TryGetValue(name, out VariableInput<T> variableInput))
             {
-                throw new ArgumentException($"No variable exists in this set with name {lowerName}");
+                throw new ArgumentException($"No variable exists in this set with name {name}");
             }
             return variableInput;
         }

@@ -11,7 +11,7 @@ namespace Algebra
 
             protected AtomicMonad(Expression argument)
             {
-                this._argument = argument;
+                this._argument = argument ?? throw new ArgumentNullException(nameof(argument));
             }
 
             public abstract Func<Expression, Expression> GetSimplifyingConstructor();

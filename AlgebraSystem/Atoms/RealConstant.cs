@@ -16,7 +16,6 @@ namespace Algebra
             {
                 _value = value.CanonicalForm;
                 _name = name ?? throw new ArgumentNullException(nameof(name));
-                _name = _name.ToUpper();
             }
 
             public static RealConstant FromApproximation(string name, Rational approximation)

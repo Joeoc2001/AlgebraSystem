@@ -13,6 +13,7 @@ namespace AtomTests.AdditionTests
             Expression.VarX + 1,
             Expression.VarX + Expression.PI,
             Expression.VarX + Expression.VarY,
+            Expression.VarX + Expression.VarY + Expression.E,
             (3 * Expression.VarZ) + 100,
             Expression.LnOf(Expression.VarX) + Expression.VarA,
             1 - Expression.Pow(Expression.SinOf(200), 2),
@@ -29,7 +30,7 @@ namespace AtomTests.AdditionTests
             Expression.Add(new List<Expression>()) // Empty sum
         };
 
-        public static List<Expression> expressions = new List<Expression>(atomicExpressions.Union(nonAtomicExpressions).Union(boundaryExpressions));
+        public static List<Expression> expressions = new List<Expression>(atomicExpressions.Union(nonAtomicExpressions));
 
         public static List<Expression> allExpressions = new List<Expression>(expressions.Union(boundaryExpressions));
     }

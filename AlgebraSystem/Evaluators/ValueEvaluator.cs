@@ -102,7 +102,7 @@ namespace Algebra.Evaluators
 
         public override sealed T EvaluateVariable(IVariable value)
         {
-            string name = value.GetName().ToLower();
+            string name = value.GetName();
             if (!_variableInputs.Contains(name))
             {
                 throw new VariableNotPresentException($"Variable {name} could not be found in the given variable input set");

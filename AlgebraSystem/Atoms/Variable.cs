@@ -12,12 +12,12 @@ namespace Algebra
 
             public Variable(string name)
             {
-                this._name = name.ToLower();
+                this._name = name ?? throw new ArgumentNullException(nameof(name));
             }
 
             public override Expression GetDerivative(string wrt)
             {
-                if (wrt.ToLower() == _name)
+                if (wrt == _name)
                 {
                     return One;
                 }
