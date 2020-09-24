@@ -17,11 +17,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             0,
             1,
             2,
-            double.NaN,
-            double.NegativeInfinity,
-            double.PositiveInfinity,
-            double.MaxValue,
-            double.MinValue
+            double.MaxValue / 2,
+            double.MinValue / 2
         };
 
         private static double CalculateTolerance(params double[] inputs)
@@ -45,8 +42,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             // ARRANGE
             Expression expression = MonadBuilder.Build(Expression.VarA, monad);
             VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input } };
-            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
-            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
 
             // ACT
             double output1 = expression.Evaluate(evaluator1);
@@ -62,8 +59,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             // ARRANGE
             Expression expression = DyadBuilder.Build(Expression.VarA, Expression.VarB, dyad);
             VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input1 }, { "b", input2 } };
-            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
-            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
 
             // ACT
             double output1 = expression.Evaluate(evaluator1);
@@ -79,8 +76,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             // ARRANGE
             Expression expression = TryadBuilder.Build(Expression.VarA, Expression.VarB, Expression.VarC, tryad);
             VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input1 }, { "b", input2 }, { "c", input3 } };
-            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
-            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
+            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
 
             // ACT
             double output1 = expression.Evaluate(evaluator1);

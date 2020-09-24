@@ -9,7 +9,7 @@ namespace Algebra
     {
         internal static class TanhIdentity
         {
-            private static readonly Expression _atomicExpression = Expression.SinhOf(Expression.VarA) / Expression.CoshOf(Expression.VarA);
+            private static readonly Expression _atomicExpression = 1 - 2 / (Expression.Pow(Expression.E, (2 * Expression.VarA)) + 1);
             private static readonly int _hashSeed = -1881126278;
             private static readonly string _name = "tanh";
 
