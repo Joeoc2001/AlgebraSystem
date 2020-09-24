@@ -9,6 +9,6 @@ namespace Algebra
     internal class Constants
     {
         public static readonly IConstant PI = RealConstant.FromApproximation("PI", Rational.Approximate(Math.PI));
-        public static readonly IConstant E = RealConstant.FromApproximation("PI", Rational.Approximate(Math.E));
+        public static readonly IConstant E = RealConstant.FromApproximation("E", Rational.Approximate(Math.E));
     }
 }

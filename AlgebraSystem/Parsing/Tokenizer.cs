@@ -31,7 +31,7 @@ namespace Algebra.Parsing
         void NextChar()
         {
             int c = _reader.Read();
-            _currentChar = c < 0 ? '\0' : char.ToLower((char)c);
+            _currentChar = c < 0 ? '\0' : (char)c;
         }
 
         public void NextToken()
