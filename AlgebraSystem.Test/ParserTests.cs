@@ -197,22 +197,8 @@ namespace AlgebraTests
         public void Parser_ParsesLog()
         {
             // ARANGE
-            string expression = "Log (y, x) ";
+            string expression = "log (y, x) ";
             Expression expected = Expression.LogOf(Expression.VarY, Expression.VarX);
-
-            // ACT
-            Expression result = Parser.Parse(expression);
-
-            // ASSERT
-            Assert.AreEqual(expected, result);
-        }
-
-        [Test]
-        public void Parser_ParsesLogCapital()
-        {
-            // ARANGE
-            string expression = "LOG (152, x) ";
-            Expression expected = Expression.LogOf(Expression.ConstantFrom(152), Expression.VarX);
 
             // ACT
             Expression result = Parser.Parse(expression);
