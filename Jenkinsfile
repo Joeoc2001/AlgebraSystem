@@ -30,7 +30,7 @@ pipeline {
 
     stage('Package') {
       steps {
-        sh 'dotnet pack --no-restore --no-build --include-source --output "packages/"'
+        sh 'dotnet pack --no-restore --no-build --include-source --output "tmp/packages/"'
       }
     }
   }
@@ -39,7 +39,7 @@ pipeline {
     always {
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
       cobertura coberturaReportFile: '**/coverage.cobertura.xml'
-      archiveArtifacts artifacts: 'packages/**/*.jar', fingerprint: true
+      archiveArtifacts artifacts: 'tmp/packages/*', fingerprint: true
     }
   }
 }
