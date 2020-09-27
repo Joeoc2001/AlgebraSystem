@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'mcr.microsoft.com/dotnet/core/sdk:3.1'
-    }
-  }
+  agent any
   stages {
     stage('Init') {
       steps {
@@ -20,6 +16,12 @@ pipeline {
     stage('Test') {
       steps {
         sh 'dotnet test --no-restore --no-build --logger "trx;LogFileName=UnitTests.trx" --collect:"XPlat Code Coverage"'
+      }
+    }
+
+    stage('Package') {
+      steps {
+        sh 'dotnet pack --no-restore --no-build --include-source'
       }
     }
   }
