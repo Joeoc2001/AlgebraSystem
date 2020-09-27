@@ -30,7 +30,7 @@ pipeline {
 
     stage('Package') {
       steps {
-        sh 'dotnet pack --no-restore --no-build --include-source --output "tmp/packages/"'
+        sh 'dotnet pack AlgebraSystem --no-restore --no-build --include-source --output "tmp/packages/"'
       }
     }
   }
