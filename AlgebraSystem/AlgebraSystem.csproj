@@ -3,6 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
     <RootNamespace>Algebra</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.1</Version>
+    <Authors>Joe O'Connor</Authors>
+    <Copyright />
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Joeoc2001/AlgebraSystem</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageId>SymbolicAlgebraSystem</PackageId>
+    <Product>SymbolicAlgebraSystem</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
