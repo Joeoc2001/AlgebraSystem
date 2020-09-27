@@ -1,5 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'mcr.microsoft.com/dotnet/core/sdk:3.1'
+    }
+  }
+
+  environment {
+    DOTNET_CLI_HOME = "/tmp/dotnet_cli"
+  }
+
   stages {
     stage('Init') {
       steps {
@@ -21,7 +30,7 @@ pipeline {
 
     stage('Package') {
       steps {
-        sh 'dotnet pack --no-restore --no-build --include-source'
+        sh 'dotnet pack --no-restore --no-build --include-source --output "packages/"'
       }
     }
   }
@@ -30,6 +39,7 @@ pipeline {
     always {
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
       cobertura coberturaReportFile: '**/coverage.cobertura.xml'
+      archiveArtifacts artifacts: 'packages/**/*.jar', fingerprint: true
     }
   }
 }
