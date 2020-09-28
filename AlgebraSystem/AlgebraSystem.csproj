@@ -7,11 +7,12 @@
     <Version>0.0.1</Version>
     <Authors>Joe O'Connor</Authors>
     <Copyright />
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://jenkins.joeoc.dev/job/AlgebraSystem/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Joeoc2001/AlgebraSystem</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageId>SymbolicAlgebraSystem</PackageId>
     <Product>SymbolicAlgebraSystem</Product>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
