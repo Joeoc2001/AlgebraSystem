@@ -8,8 +8,8 @@
     <Authors>Joe O'Connor</Authors>
     <Copyright />
     <PackageProjectUrl>https://jenkins.joeoc.dev/job/AlgebraSystem/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Joeoc2001/AlgebraSystem</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
+    <RepositoryUrl>https://github.com/Joeoc2001/AlgebraSystem.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageId>SymbolicAlgebraSystem</PackageId>
     <Product>SymbolicAlgebraSystem</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
