@@ -69,10 +69,28 @@ namespace Algebra
             }
         }
 
+        public struct TakenResult<T>
+        {
+            public TakenResult(T val, List<T> vals) : this()
+            {
+                One = val;
+                Others = vals;
+            }
+
+            public T One { get; }
+            public List<T> Others { get; }
+
+            public void Deconstruct(out T one, out List<T> others)
+            {
+                one = One;
+                others = Others;
+            }
+        }
+
         /// <summary>
         /// Loops over all pairs of [values and all other values] in a collection
         /// </summary>
-        public static IEnumerable<(T, List<T>)> TakeOne<T>(ICollection<T> all)
+        public static IEnumerable<TakenResult<T>> TakeOne<T>(ICollection<T> all)
         {
             List<T> vals = new List<T>(all);
 
@@ -80,16 +98,16 @@ namespace Algebra
             {
                 T val = vals[0];
                 vals.RemoveAt(0);
-                yield return (val, vals);
+                yield return new TakenResult<T>(val, vals);
                 vals.Add(val);
             }
         }
 
-        private static IEnumerable<(int largestIndex, List<T> left, List<T> right)> DualPartitionOfLength<T>(ICollection<T> all, int leftSize)
+        private static IEnumerable<Tuple<int, List<T>, List<T>>> DualPartitionOfLength<T>(ICollection<T> all, int leftSize)
         {
             if (leftSize == 0)
             {
-                yield return (0, new List<T>(), new List<T>(all));
+                yield return new Tuple<int, List<T>, List<T>>(0, new List<T>(), new List<T>(all));
             }
             else
             {
@@ -100,7 +118,7 @@ namespace Algebra
                         T moved = right[i];
                         right.RemoveAt(i);
                         left.Add(moved);
-                        yield return (i, left, right);
+                        yield return new Tuple<int, List<T>, List<T>>(i, left, right);
                         left.RemoveAt(left.Count - 1);
                         right.Insert(i, moved);
                     }
@@ -108,16 +126,34 @@ namespace Algebra
             }
         }
 
+        public struct DualPartitioning<T>
+        {
+            public DualPartitioning(List<T> left, List<T> right)
+            {
+                Left = left;
+                Right = right;
+            }
+
+            public List<T> Left { get; }
+            public List<T> Right { get; }
+
+            public void Deconstruct(out List<T> left, out List<T> right)
+            {
+                left = Left;
+                right = Right;
+            }
+        }
+
         /// <summary>
         /// Loops over all ways of splitting a set of elements into 2 seperate disjoint sets
         /// </summary>
-        public static IEnumerable<(List<T>, List<T>)> DualPartition<T>(ICollection<T> all)
+        public static IEnumerable<DualPartitioning<T>> DualPartition<T>(ICollection<T> all)
         {
             for (int length = 0; length <= all.Count; length++)
             {
                 foreach ((int _, List<T> left, List<T> right) in DualPartitionOfLength(all, length))
                 {
-                    yield return (left, right);
+                    yield return new DualPartitioning<T>(left, right);
                 }
             }
         }
@@ -125,13 +161,13 @@ namespace Algebra
         /// <summary>
         /// Loops over all ways of splitting a set of elements into 2 seperate disjoint sets which both have length >= 1
         /// </summary>
-        public static IEnumerable<(List<T>, List<T>)> DualPartitionNonEmpty<T>(ICollection<T> all)
+        public static IEnumerable<DualPartitioning<T>> DualPartitionNonEmpty<T>(ICollection<T> all)
         {
             for (int length = 1; length <= all.Count - 1; length++)
             {
                 foreach ((int _, List<T> left, List<T> right) in DualPartitionOfLength(all, length))
                 {
-                    yield return (left, right);
+                    yield return new DualPartitioning<T>(left, right);
                 }
             }
         }

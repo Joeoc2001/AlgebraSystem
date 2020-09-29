@@ -140,8 +140,6 @@ namespace Algebra
         public double EvaluateOnce(double x) => EvaluateOnce(new VariableInputSet<double>() { { "x", x } });
         public double EvaluateOnce(double x, double y) => EvaluateOnce(new VariableInputSet<double>() { { "x", x }, { "y", y } });
         public double EvaluateOnce(double x, double y, double z) => EvaluateOnce(new VariableInputSet<double>() { { "x", x }, { "y", y }, { "z", z } });
-        public double EvaluateOnce(Vector2 values) => EvaluateOnce(new VariableInputSet<double>() { { "x", values.X }, { "y", values.Y } });
-        public double EvaluateOnce(Vector3 values) => EvaluateOnce(new VariableInputSet<double>() { { "x", values.X }, { "y", values.Y }, { "z", values.Z } });
         public double EvaluateOnce(VariableInputSet<double> variables)
         {
             return Evaluate(new DoubleEvaluator(variables));

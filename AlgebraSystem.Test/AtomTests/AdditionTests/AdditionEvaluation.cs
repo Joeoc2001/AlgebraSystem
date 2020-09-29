@@ -17,7 +17,7 @@ namespace AtomTests.AdditionTests
             Expression expression = Expression.VarX + Expression.VarY;
 
             // ACT
-            double value = expression.EvaluateOnce(new Vector2(a, b));
+            double value = expression.EvaluateOnce(new VariableInputSet<double>{ { "x", a }, { "y", b } });
 
             // ASSERT
             Assert.AreEqual(a + b, value);
