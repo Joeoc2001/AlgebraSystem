@@ -16,7 +16,7 @@ namespace Algebra
             private static readonly int _hashSeed = 739870216;
             private static readonly string _name = "select";
 
-            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression, new List<string> { "a", "b", "c" });
         }
     }
 }

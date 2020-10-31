@@ -13,7 +13,7 @@ namespace Algebra
             private static readonly int _hashSeed = -1733178947;
             private static readonly string _name = "cosh";
 
-            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression);
+            public static readonly FunctionIdentity Instance = new FunctionIdentity(_name, _hashSeed, _atomicExpression, new List<string> { "a" });
         }
     }
 }
