@@ -12,7 +12,7 @@ namespace Algebra.Equivalence
         public static readonly ReplacementPath FactorBraces = new ReplacementPath("x * y + x * z", "x * (y + z)");
         public static readonly ReplacementPath ExpandQuadratic = new ReplacementPath("(a + b) * (c + d)", "(a * c) + (b * c) + (a * d) + (b * d)");
         public static readonly ReplacementPath CompleteTheSquare = new ReplacementPath("a * (x ^ 2) + b * x + c", "a * (x + b / (2 * a)) ^ 2 - (b ^ 2) / 4 + c");
-
+        
 
         private static readonly Regex _rx = new Regex(@"^([^=>]+?)=>([^=>]+?)$");
         public static List<EquivalencePath> ParseReplacementsString(string equivalencies)
