@@ -1,6 +1,8 @@
 ﻿using Algebra.Atoms;
+using Algebra.Functions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Algebra.Equivalence
@@ -46,12 +48,27 @@ namespace Algebra.Equivalence
 
             return paths;
         }
-
-        public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath> {
+        public static readonly List<EquivalencePath> DefaultFunctionReplacementPaths = GenerateFunctionReplacementPaths(FunctionIdentitySet.DefaultFunctionIdentities);
+        public static readonly List<EquivalencePath> DefaultAtomicPaths = new List<EquivalencePath>() {
             ExpandBraces,
             FactorBraces,
             ExpandQuadratic,
             CompleteTheSquare
         };
+        public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath>(DefaultFunctionReplacementPaths.Concat(DefaultAtomicPaths));
+
+        public static List<EquivalencePath> GenerateFunctionReplacementPaths(IEnumerable<FunctionIdentity> functions)
+        {
+            List<EquivalencePath> paths = new List<EquivalencePath>();
+
+            foreach (FunctionIdentity identity in functions)
+            {
+                Expression atomicForm = identity.GetBodyAsAtomicExpression();
+                Expression functionForm = identity.GetBodyAsFunctionExpression();
+                paths.Add(new ReplacementPath(atomicForm, functionForm));
+            }
+
+            return paths;
+        }
     }
 }

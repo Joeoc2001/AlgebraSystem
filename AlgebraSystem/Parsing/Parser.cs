@@ -21,7 +21,7 @@ namespace Algebra.Parsing
 
         public static Expression Parse(string s, FunctionGeneratorSet functions = null, NamedConstantSet namedConstants = null)
         {
-            functions = functions ?? FunctionGeneratorSet.DefaultFunctions;
+            functions = functions ?? FunctionGeneratorSet.DefaultFunctionGenerators;
             namedConstants = namedConstants ?? NamedConstantSet.DefaultConstants;
 
             // Create objects

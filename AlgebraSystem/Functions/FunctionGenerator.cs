@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace Algebra.Functions
@@ -103,6 +104,16 @@ namespace Algebra.Functions
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Returns the function as a raw expression, for example the sin function generator will generate sin(a)
+        /// </summary>
+        /// <returns>An instance of the function with parameters as simple variables</returns>
+        public Expression GetBodyAsFunctionExpression()
+        {
+            Dictionary<string, Expression> parameters = _parameterNames.ToDictionary(v => v, v => Expression.VariableFrom(v));
+            return CreateExpression(parameters);
         }
     }
 }

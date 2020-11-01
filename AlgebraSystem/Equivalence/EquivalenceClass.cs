@@ -37,7 +37,7 @@ namespace Algebra.Equivalence
                 return true;
             }
 
-            equivalencies = equivalencies ?? EquivalencePaths.DefaultPaths;
+            equivalencies = equivalencies ?? EquivalencePaths.DefaultAtomicPaths;
             metric = metric ?? new SharedSubtreesMetric(queryExpression);
 
             // Which expressions are not equivalent and have been checked
@@ -90,7 +90,7 @@ namespace Algebra.Equivalence
         /// <param name="metric">The metric to optimise over</param>
         public Expression Minimise(IExpressionMetric metric, int depth = 3, ulong attempts = ulong.MaxValue, List<EquivalencePath> equivalencies = null)
         {
-            equivalencies = equivalencies ?? EquivalencePaths.DefaultPaths;
+            equivalencies = equivalencies ?? EquivalencePaths.DefaultAtomicPaths;
             HashSet<Expression> checkedExpressions = new HashSet<Expression>() { _anchorExpression };
 
             Expression minimumExpression = _anchorExpression;
