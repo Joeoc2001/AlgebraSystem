@@ -110,6 +110,14 @@ namespace Algebra
                 return atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(atomicReplacements));
             }
 
+            public Expression GetAtomicBodiedExpression()
+            {
+                Expression atomicVariabledExpression = _identity.GetBodyAsAtomicExpression();
+
+                // Replace variables with their expressions
+                return atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(_parameters));
+            }
+
             public override T Evaluate<T>(IEvaluator<T> evaluator)
             {
                 return evaluator.EvaluateFunction(this);

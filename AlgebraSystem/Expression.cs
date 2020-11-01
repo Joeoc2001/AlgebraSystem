@@ -234,6 +234,12 @@ namespace Algebra
             return Evaluate(expression, ExactlyEqualsDualEvaluator.Instance);
         }
 
+        public Expression Simplify(IExpressionMetric metric = null, int depth = 3, ulong attempts = ulong.MaxValue, List<EquivalencePath> equivalencies = null)
+        {
+            metric = metric ?? DefaultSimplificationMetric.DefaultInstance;
+            return GetEquivalenceClass().Minimise(metric, depth, attempts, equivalencies);
+        }
+
         public HashSet<IVariable> GetVariables()
         {
             return Evaluate(GetVariablesEvaluator.Instance);
