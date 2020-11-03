@@ -1,4 +1,6 @@
 ﻿using Algebra.Atoms;
+using Algebra.Compilation;
+using Algebra.Compilation.Default;
 using Algebra.Equivalence;
 using Algebra.Evaluators;
 using Algebra.Functions.FunctionIdentities;
@@ -143,6 +145,11 @@ namespace Algebra
         public double EvaluateOnce(VariableInputSet<double> variables)
         {
             return Evaluate(new DoubleEvaluator(variables));
+        }
+
+        public ICompiledFunction<double> Compile(VariableInputSet<double> variables)
+        {
+            return DefaultCompiler.Instance.Compile(this, variables);
         }
 
         public static bool ShouldParenthesise(Expression parent, Expression child)

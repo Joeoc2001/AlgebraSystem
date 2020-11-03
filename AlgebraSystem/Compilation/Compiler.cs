@@ -7,19 +7,21 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    public class Compiler<Compiled>
+    public abstract class Compiler<ReturnType, Compiled>
     {
         private class CompileTraverser : IEvaluator<int>
         {
             private readonly List<Compiled> _instructions;
             private readonly Dictionary<Expression, int> _cache;
-            private readonly Compiler<Compiled> _owningCompiler;
+            private readonly Compiler<ReturnType, Compiled> _owningCompiler;
+            private readonly IVariableInputSet<ReturnType> _variables;
 
-            public CompileTraverser(Compiler<Compiled> owningCompiler)
+            public CompileTraverser(Compiler<ReturnType, Compiled> owningCompiler, IVariableInputSet<ReturnType> variables)
             {
                 _owningCompiler = owningCompiler ?? throw new ArgumentNullException(nameof(owningCompiler));
                 _instructions = new List<Compiled>();
                 _cache = new Dictionary<Expression, int>();
+                _variables = variables;
             }
 
             public Compiled[] GetCompiled()
@@ -54,17 +56,17 @@ namespace Algebra.Compilation
 
             public int EvaluateArcsin(Expression argumentExpression)
             {
-                return EvaluateMonad(argumentExpression, _owningCompiler._baseMappings.Arcsin);
+                return EvaluateMonad(argumentExpression, _owningCompiler.EvaluateArcsin);
             }
 
             public int EvaluateArctan(Expression argumentExpression)
             {
-                return EvaluateMonad(argumentExpression, _owningCompiler._baseMappings.Arctan);
+                return EvaluateMonad(argumentExpression, _owningCompiler.EvaluateArctan);
             }
 
             public int EvaluateConstant(IConstant value)
             {
-                Compiled compiled = _owningCompiler._baseMappings.Constant(value);
+                Compiled compiled = _owningCompiler.EvaluateConstant(value);
                 return AddAndReturn(compiled);
             }
 
@@ -72,42 +74,50 @@ namespace Algebra.Compilation
             {
                 int baseIndex = EvaluateAndCache(baseExpression);
                 int powerIndex = EvaluateAndCache(powerExpression);
-                Compiled compiled = _owningCompiler._baseMappings.Exponent(baseIndex, powerIndex);
+                Compiled compiled = _owningCompiler.EvaluateExponent(baseIndex, powerIndex);
                 return AddAndReturn(compiled);
             }
 
             public int EvaluateLn(Expression argumentExpression)
             {
-                return EvaluateMonad(argumentExpression, _owningCompiler._baseMappings.Ln);
+                return EvaluateMonad(argumentExpression, _owningCompiler.EvaluateLn);
             }
 
             public int EvaluateSign(Expression argumentExpression)
             {
-                return EvaluateMonad(argumentExpression, _owningCompiler._baseMappings.Sign);
+                return EvaluateMonad(argumentExpression, _owningCompiler.EvaluateSign);
             }
 
             public int EvaluateSin(Expression argumentExpression)
             {
-                return EvaluateMonad(argumentExpression, _owningCompiler._baseMappings.Sin);
+                return EvaluateMonad(argumentExpression, _owningCompiler.EvaluateSin);
+            }
+
+            private int EvaluateSequential(ICollection<Expression> expressions, Func<int, int, Compiled> map)
+            {
+                List<int> arguments = expressions.Select(e => EvaluateAndCache(e)).ToList();
+                int last = arguments[0];
+                for (int i = 1; i < arguments.Count; i++)
+                {
+                    Compiled compiled = map(last, arguments[i]);
+                    last = AddAndReturn(compiled);
+                }
+                return last;
             }
 
             public int EvaluateProduct(ICollection<Expression> expressions)
             {
-                List<int> arguments = expressions.Select(e => EvaluateAndCache(e)).ToList();
-                Compiled compiled = _owningCompiler._baseMappings.Product(arguments);
-                return AddAndReturn(compiled);
+                return EvaluateSequential(expressions, _owningCompiler.EvaluateProduct);
             }
 
             public int EvaluateSum(ICollection<Expression> expressions)
             {
-                List<int> arguments = expressions.Select(e => EvaluateAndCache(e)).ToList();
-                Compiled compiled = _owningCompiler._baseMappings.Sum(arguments);
-                return AddAndReturn(compiled);
+                return EvaluateSequential(expressions, _owningCompiler.EvaluateSum);
             }
 
             public int EvaluateVariable(IVariable value)
             {
-                Compiled compiled = _owningCompiler._baseMappings.Variable(value);
+                Compiled compiled = _owningCompiler.EvaluateVariable(value, _variables);
                 return AddAndReturn(compiled);
             }
 
@@ -129,55 +139,37 @@ namespace Algebra.Compilation
             }
         }
 
-        public class BaseMappings
-        {
-            public readonly Func<int, Compiled> Arcsin;
-            public readonly Func<int, Compiled> Arctan;
-            public readonly Func<IConstant, Compiled> Constant;
-            public readonly Func<int, int, Compiled> Exponent;
-            public readonly Func<int, Compiled> Ln;
-            public readonly Func<ICollection<int>, Compiled> Product;
-            public readonly Func<int, Compiled> Sign;
-            public readonly Func<int, Compiled> Sin;
-            public readonly Func<ICollection<int>, Compiled> Sum;
-            public readonly Func<IVariable, Compiled> Variable;
-
-            public BaseMappings(Func<int, Compiled> arcsin, Func<int, Compiled> arctan, Func<IConstant, Compiled> constant,
-                Func<int, int, Compiled> exponent, Func<int, Compiled> ln, Func<ICollection<int>, Compiled> product,
-                Func<int, Compiled> sign, Func<int, Compiled> sin, Func<ICollection<int>, Compiled> sum, Func<IVariable, Compiled> variable)
-            {
-                Arcsin = arcsin ?? throw new ArgumentNullException(nameof(arcsin));
-                Arctan = arctan ?? throw new ArgumentNullException(nameof(arctan));
-                Constant = constant ?? throw new ArgumentNullException(nameof(constant));
-                Exponent = exponent ?? throw new ArgumentNullException(nameof(exponent));
-                Ln = ln ?? throw new ArgumentNullException(nameof(ln));
-                Product = product ?? throw new ArgumentNullException(nameof(product));
-                Sign = sign ?? throw new ArgumentNullException(nameof(sign));
-                Sin = sin ?? throw new ArgumentNullException(nameof(sin));
-                Sum = sum ?? throw new ArgumentNullException(nameof(sum));
-                Variable = variable ?? throw new ArgumentNullException(nameof(variable));
-            }
-        }
-
         private readonly IDictionary<FunctionIdentity, Func<List<int>, Compiled>> _functionMap;
         private readonly IExpressionMetric _simplificationMetric;
         private readonly List<EquivalencePath> _paths;
-        private readonly BaseMappings _baseMappings;
 
-        public Compiler(IDictionary<FunctionIdentity, Func<List<int>, Compiled>> functionMap, BaseMappings baseMappings)
+        public Compiler(IDictionary<FunctionIdentity, Func<List<int>, Compiled>> functionMap)
         {
             _functionMap = functionMap;
-            _baseMappings = baseMappings;
             _simplificationMetric = new DefaultSimplificationMetric(functionMap.Keys);
             _paths = new List<EquivalencePath>(EquivalencePaths.DefaultAtomicPaths.Concat(EquivalencePaths.GenerateFunctionReplacementPaths(functionMap.Keys)));
         }
 
-        public Compiled[] Compile(Expression expression)
+        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, IVariableInputSet<ReturnType> variables, Compiled[] instructions);
+
+        public ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables)
         {
             expression = expression.Simplify(metric:_simplificationMetric, depth:3, equivalencies:_paths);
-            CompileTraverser traverser = new CompileTraverser(this);
+            CompileTraverser traverser = new CompileTraverser(this, variables);
             expression.Evaluate(traverser);
-            return traverser.GetCompiled();
+            Compiled[] instructions = traverser.GetCompiled();
+            return CreateCompiled(expression, variables, instructions);
         }
+
+        protected abstract Compiled EvaluateArcsin(int arg);
+        protected abstract Compiled EvaluateArctan(int arg);
+        protected abstract Compiled EvaluateConstant(IConstant value);
+        protected abstract Compiled EvaluateExponent(int baseIndex, int powerIndex);
+        protected abstract Compiled EvaluateLn(int arg);
+        protected abstract Compiled EvaluateSign(int arg);
+        protected abstract Compiled EvaluateSin(int arg);
+        protected abstract Compiled EvaluateProduct(int argument1, int argument2);
+        protected abstract Compiled EvaluateSum(int argument1, int argument2);
+        protected abstract Compiled EvaluateVariable(IVariable value, IVariableInputSet<ReturnType> variables);
     }
 }

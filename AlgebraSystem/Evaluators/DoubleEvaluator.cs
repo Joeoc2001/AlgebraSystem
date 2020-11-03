@@ -22,30 +22,12 @@ namespace Algebra.Evaluators
                 { LogIdentity.Instance, d => Math.Log(d[0], d[1]) },
                 { MaxIdentity.Instance, d => Math.Max(d[0], d[1]) },
                 { MinIdentity.Instance, d => Math.Min(d[0], d[1]) },
-                { SelectIdentity.Instance, d => Select(d[0], d[1], d[2]) },
+                { SelectIdentity.Instance, d => UtilityMethods.Select(d[0], d[1], d[2]) },
                 { SinhIdentity.Instance, d => Math.Sinh(d[0]) },
                 { SqrtIdentity.Instance, d => Math.Sqrt(d[0]) },
                 { TanhIdentity.Instance, d => Math.Tanh(d[0]) },
                 { TanIdentity.Instance, d => Math.Tan(d[0]) },
             });
-
-        private static double Select(double a, double b, double c)
-        {
-            if (double.IsNaN(c))
-            {
-                return double.NaN;
-            }
-
-            if (c < 0)
-            {
-                return a;
-            }
-            if (c > 0)
-            {
-                return b;
-            }
-            return (a + b) / 2;
-        }
 
         public DoubleEvaluator(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators = null)
             : base(variableInputs, functionEvaluators ?? DefaultFunctionEvaluators)

@@ -21,5 +21,23 @@ namespace Algebra
             t2 = tuple.Item2;
             t3 = tuple.Item3;
         }
+
+        public static double Select(double a, double b, double c)
+        {
+            if (double.IsNaN(c))
+            {
+                return double.NaN;
+            }
+
+            if (c < 0)
+            {
+                return a;
+            }
+            if (c > 0)
+            {
+                return b;
+            }
+            return (a + b) / 2;
+        }
     }
 }

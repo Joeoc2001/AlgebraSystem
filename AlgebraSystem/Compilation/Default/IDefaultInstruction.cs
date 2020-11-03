@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    public class CompiledFunction<>
+    namespace Default
     {
+        internal interface IDefaultInstruction { }
     }
 }

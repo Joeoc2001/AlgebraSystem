@@ -4,25 +4,17 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    public class DefaultCompiler
+    namespace Default
     {
-        private enum Opcode
+        internal enum DefaultOpcode
         {
-            CONSTANT, VARIABLE,
             SIN, COS, TAN,
             ARCSIN, ARCCOS, ARCTAN,
             SINH, COSH, TANH,
             ARSINH, ARCOSH, ARTANH,
             EXPONENT, LN, LOG, SQRT,
             ADD, SUBTRACT, MULTIPLY, DIVIDE,
-            SIGN, ABS, MIN, MAX,
-        }
-
-        private struct Instruction
-        {
-            Opcode opcode;
-            int operand1;
-            int operand2;
+            SIGN, ABS, MIN, MAX, SELECT
         }
     }
 }
