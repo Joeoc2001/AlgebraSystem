@@ -55,7 +55,7 @@ namespace Algebra.Equivalence
             ExpandQuadratic,
             CompleteTheSquare
         };
-        public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath>(DefaultFunctionReplacementPaths.Concat(DefaultAtomicPaths));
+        public static readonly List<EquivalencePath> DefaultPaths = new List<EquivalencePath>(DefaultFunctionReplacementPaths.Concat(DefaultAtomicPaths)) { AtomicEquivalencePath.Instance };
 
         public static List<EquivalencePath> GenerateFunctionReplacementPaths(IEnumerable<FunctionIdentity> functions)
         {
