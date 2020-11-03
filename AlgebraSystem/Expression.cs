@@ -147,9 +147,9 @@ namespace Algebra
             return Evaluate(new DoubleEvaluator(variables));
         }
 
-        public ICompiledFunction<double> Compile(VariableInputSet<double> variables)
+        public ICompiledFunction<double> Compile(VariableInputSet<double> variables, int simplificationAggressiveness = 3)
         {
-            return DefaultCompiler.Instance.Compile(this, variables);
+            return DefaultCompiler.Instance.Compile(this, variables, simplificationAggressiveness);
         }
 
         public static bool ShouldParenthesise(Expression parent, Expression child)

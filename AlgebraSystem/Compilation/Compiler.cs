@@ -12,7 +12,7 @@ namespace Algebra.Compilation
         private class CompileTraverser : IEvaluator<int>
         {
             private readonly List<Compiled> _instructions;
-            private readonly Dictionary<Expression, int> _cache;
+            //private readonly Dictionary<Expression, int> _cache;
             private readonly Compiler<ReturnType, Compiled> _owningCompiler;
             private readonly IVariableInputSet<ReturnType> _variables;
 
@@ -20,7 +20,7 @@ namespace Algebra.Compilation
             {
                 _owningCompiler = owningCompiler ?? throw new ArgumentNullException(nameof(owningCompiler));
                 _instructions = new List<Compiled>();
-                _cache = new Dictionary<Expression, int>();
+                //_cache = new Dictionary<Expression, int>();
                 _variables = variables;
             }
 
@@ -31,13 +31,13 @@ namespace Algebra.Compilation
 
             private int EvaluateAndCache(Expression expression)
             {
-                if (_cache.TryGetValue(expression, out int index))
-                {
-                    return index;
-                }
+                //if (_cache.TryGetValue(expression, out int index))
+                //{
+                //    return index;
+                //}
 
-                index = expression.Evaluate(this);
-                _cache.Add(expression, index);
+                int index = expression.Evaluate(this);
+                //_cache.Add(expression, index);
                 return index;
             }
 
@@ -152,9 +152,9 @@ namespace Algebra.Compilation
 
         protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, IVariableInputSet<ReturnType> variables, Compiled[] instructions);
 
-        public ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables)
+        public ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables, int simplificationAggressiveness=3)
         {
-            expression = expression.Simplify(metric:_simplificationMetric, depth:3, equivalencies:_paths);
+            expression = expression.Simplify(metric:_simplificationMetric, depth:simplificationAggressiveness, equivalencies:_paths);
             CompileTraverser traverser = new CompileTraverser(this, variables);
             expression.Evaluate(traverser);
             Compiled[] instructions = traverser.GetCompiled();

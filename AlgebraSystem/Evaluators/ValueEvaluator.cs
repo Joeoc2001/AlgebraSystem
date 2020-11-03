@@ -62,7 +62,7 @@ namespace Algebra.Evaluators
                 variableInputs.Add(variableName, evaluatedEnumerator.Current);
             }
             TraversalEvaluator<T> rationalEvaluator = Construct(_functionEvaluators, variableInputs);
-            return Map(function.GetAtomicExpression().Evaluate(rationalEvaluator));
+            return Map(identity.GetBodyAsAtomicExpression().Evaluate(rationalEvaluator));
         }
 
         protected abstract T LnOf(T v);
