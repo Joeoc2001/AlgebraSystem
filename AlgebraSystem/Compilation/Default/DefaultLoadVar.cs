@@ -4,6 +4,8 @@
     {
         internal class DefaultLoadVar : IDefaultInstruction
         {
+            public DefaultOpcode Opcode { get => DefaultOpcode.VARIABLE; }
+
             public VariableInput<double> Variable { get; }
 
             public DefaultLoadVar(VariableInput<double> variable)

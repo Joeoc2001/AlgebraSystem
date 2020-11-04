@@ -6,6 +6,9 @@ namespace Algebra.Compilation
 {
     namespace Default
     {
-        internal interface IDefaultInstruction { }
+        internal interface IDefaultInstruction
+        {
+            DefaultOpcode Opcode { get; }
+        }
     }
 }

@@ -8,6 +8,8 @@ namespace Algebra.Compilation
     {
         internal class DefaultLoadConst : IDefaultInstruction
         {
+            public DefaultOpcode Opcode { get => DefaultOpcode.CONSTANT; }
+
             public double Value { get; }
 
             public DefaultLoadConst(double value)

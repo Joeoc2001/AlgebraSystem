@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Algebra.Compilation
@@ -9,30 +10,92 @@ namespace Algebra.Compilation
         internal class DefaultCompiledFunction : ICompiledFunction<double>
         {
             private readonly IVariableInputSet<double> _variables;
+            private readonly DefaultOpcode[] _codes; // Extract for speed
             private readonly IDefaultInstruction[] _instructions;
+            private readonly int _maxStackDepth;
 
             public DefaultCompiledFunction(IVariableInputSet<double> variables, IDefaultInstruction[] instructions)
             {
                 _variables = variables;
                 _instructions = instructions;
+
+                _codes = _instructions.Select(i => i.Opcode).ToArray();
+
+                _maxStackDepth = GetMaxStackDepth(instructions);
             }
 
-            public double Evaluate()
+            private static int GetMaxStackDepth(IDefaultInstruction[] _instructions)
             {
-                Stack<double> stack = new Stack<double>();
+                int depth = 0;
+                int maxDepth = 0;
 
                 foreach (IDefaultInstruction instruction in _instructions)
                 {
-                    switch (instruction)
+                    switch (instruction.Opcode)
                     {
-                        case DefaultLoadConst loadConst:
+                        case DefaultOpcode.VARIABLE:
+                        case DefaultOpcode.CONSTANT:
+                            depth += 1;
+                            maxDepth = Math.Max(depth, maxDepth);
+                            break;
+                        case DefaultOpcode.SIN:
+                        case DefaultOpcode.COS:
+                        case DefaultOpcode.TAN:
+                        case DefaultOpcode.ARCSIN:
+                        case DefaultOpcode.ARCCOS:
+                        case DefaultOpcode.ARCTAN:
+                        case DefaultOpcode.SINH:
+                        case DefaultOpcode.COSH:
+                        case DefaultOpcode.TANH:
+                        case DefaultOpcode.ARSINH:
+                        case DefaultOpcode.ARCOSH:
+                        case DefaultOpcode.ARTANH:
+                        case DefaultOpcode.SQRT:
+                        case DefaultOpcode.SIGN:
+                        case DefaultOpcode.ABS:
+                        case DefaultOpcode.LN:
+                            continue;
+                        case DefaultOpcode.EXPONENT:
+                        case DefaultOpcode.LOG:
+                        case DefaultOpcode.ADD:
+                        case DefaultOpcode.SUBTRACT:
+                        case DefaultOpcode.MULTIPLY:
+                        case DefaultOpcode.DIVIDE:
+                        case DefaultOpcode.MIN:
+                        case DefaultOpcode.MAX:
+                            depth -= 1;
+                            break;
+                        case DefaultOpcode.SELECT:
+                            depth -= 2;
+                            break;
+                        default:
+                            throw new NotImplementedException($"Invalid opcode {instruction.Opcode}");
+                    }
+                }
+
+                return maxDepth;
+            }
+
+
+            public double Evaluate()
+            {
+                FastStack<double> stack = new FastStack<double>(_maxStackDepth);
+
+                for (int i = 0; i < _codes.Length; i++)
+                {
+                    DefaultOpcode code = _codes[i];
+                    switch (code)
+                    {
+                        case DefaultOpcode.CONSTANT:
+                            DefaultLoadConst loadConst = (DefaultLoadConst)_instructions[i];
                             stack.Push(loadConst.Value);
                             break;
-                        case DefaultLoadVar loadVar:
+                        case DefaultOpcode.VARIABLE:
+                            DefaultLoadVar loadVar = (DefaultLoadVar)_instructions[i];
                             stack.Push(loadVar.Variable.Value);
                             break;
-                        case DefaultInstruction opInstruction:
-                            stack.Push(Evaluate(opInstruction.Opcode, stack));
+                        default:
+                            stack.Push(Evaluate(code, ref stack));
                             break;
                     }
                 }
@@ -40,7 +103,7 @@ namespace Algebra.Compilation
                 return stack.Pop();
             }
 
-            private static double Evaluate(DefaultOpcode opcode, Stack<double> stack)
+            private static double Evaluate(DefaultOpcode opcode, ref FastStack<double> stack)
             {
                 switch (opcode)
                 {
