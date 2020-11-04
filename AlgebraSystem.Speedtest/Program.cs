@@ -11,50 +11,44 @@ namespace AlgebraSystem.Speedtest
     {
         static void Main(string[] args)
         {
-            int lengths = 1000;
+            int lengths = 100;
 
-            Expression expression = "tanh(max(x + y, x * y)) + arsinh(min(x + y, x * y))";
-            int c = 0;
-            double sum = 0;
+            Expression expression = "tanh(max(x + y, x * y)) + arctan(min(x + y, x * y))";
+            double time;
 
-            var watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-            for (int x = 0; x < lengths; x++)
-            {
-                for (int y = 0; y < lengths; y++)
-                {
-                    sum += expression.EvaluateOnce(x, y);
-                    c += 1;
-                }
-            }
-            watch.Stop();
-            Console.WriteLine($"Value: {sum}");
-            Console.WriteLine($"Execute Once Avg Time: {(double)watch.ElapsedMilliseconds / c} ms");
+            time = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
+            Console.WriteLine($"Execute Once Avg Time: {time} ns");
 
-            watch.Restart();
             VariableInputSet<double> variableInputs = new VariableInputSet<double>() { { "x", 0 }, { "y", 0 } };
             VariableInput<double> xInput = variableInputs.Get("x");
             VariableInput<double> yInput = variableInputs.Get("y");
             var compiled = expression.Compile(variableInputs, 3);
-            watch.Stop();
-            Console.WriteLine($"Compile time: {watch.ElapsedMilliseconds} ms");
 
-            watch.Restart();
-            c = 0;
-            sum = 0;
-            for (int x = 0; x < lengths; x++)
+            time = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return compiled.Evaluate(); });
+            Console.WriteLine($"Compiled Avg Time: {time} ns");
+
+            time = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));
+            Console.WriteLine($"Native Time: {time} ns");
+        }
+
+        private static double Time(int range, Func<int, int, int, double> func)
+        {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            int c = 0;
+            for (int x = 0; x < range; x++)
             {
-                for (int y = 0; y < lengths; y++)
+                for (int y = 0; y < range; y++)
                 {
-                    xInput.Value = x;
-                    yInput.Value = y;
-                    sum += compiled.Evaluate();
-                    c += 1;
+                    for (int z = 0; z < range; z++)
+                    {
+                        func(x, y, z);
+                        c += 1;
+                    }
                 }
             }
             watch.Stop();
-            Console.WriteLine($"Value: {sum}");
-            Console.WriteLine($"Compiled Avg Time: {(double)watch.ElapsedMilliseconds / c} ms");
+            return (double)(watch.ElapsedMilliseconds * 1000000) / c;
         }
     }
 }

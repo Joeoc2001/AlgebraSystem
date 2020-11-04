@@ -14,7 +14,9 @@ namespace Algebra.Compilation
             ARSINH, ARCOSH, ARTANH,
             EXPONENT, LN, LOG, SQRT,
             ADD, SUBTRACT, MULTIPLY, DIVIDE,
-            SIGN, ABS, MIN, MAX, SELECT
+            SIGN, ABS, MIN, MAX, SELECT,
+            VARIABLE,
+            CONSTANT
         }
     }
 }
