@@ -48,5 +48,10 @@ namespace Algebra.Functions
         {
             return _atomicExpression;
         }
+
+        public override string ToString()
+        {
+            return $"Function Itentity {GetName()}";
+        }
     }
 }

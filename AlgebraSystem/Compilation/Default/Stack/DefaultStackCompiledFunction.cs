@@ -7,14 +7,14 @@ namespace Algebra.Compilation
 {
     namespace Default.Stack
     {
-        internal class DefaultCompiledFunction : ICompiledFunction<double>
+        internal class DefaultStackCompiledFunction : ICompiledFunction<double>
         {
             private readonly IVariableInputSet<double> _variables;
             private readonly DefaultOpcode[] _codes; // Extract for speed
             private readonly IDefaultInstruction[] _instructions;
             private readonly int _maxStackDepth;
 
-            public DefaultCompiledFunction(IVariableInputSet<double> variables, IDefaultInstruction[] instructions)
+            public DefaultStackCompiledFunction(IVariableInputSet<double> variables, IDefaultInstruction[] instructions)
             {
                 _variables = variables;
                 _instructions = instructions;

@@ -151,6 +151,8 @@ namespace Algebra
             {
                 return Equals((Expression)other);
             }
+
+
         }
     }
 }

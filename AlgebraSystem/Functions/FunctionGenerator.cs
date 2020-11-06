@@ -115,5 +115,10 @@ namespace Algebra.Functions
             Dictionary<string, Expression> parameters = _parameterNames.ToDictionary(v => v, v => Expression.VariableFrom(v));
             return CreateExpression(parameters);
         }
+
+        public override string ToString()
+        {
+            return $"Function Generator {GetName()}";
+        }
     }
 }

@@ -123,8 +123,10 @@ namespace Algebra.Compilation
                     Compiled compiled = _owningCompiler.EvaluateFunction(function.GetIdentity());
                     Add(compiled);
                 }
-
-                function.GetAtomicBodiedExpression().Map(this);
+                else
+                {
+                    function.GetAtomicBodiedExpression().Map(this);
+                }
             }
         }
 

@@ -7,10 +7,12 @@
             public DefaultOpcode Opcode { get => DefaultOpcode.VARIABLE; }
 
             public VariableInput<double> Variable { get; }
+            private readonly string _name;
 
-            public DefaultLoadVar(VariableInput<double> variable)
+            public DefaultLoadVar(VariableInput<double> variable, string name)
             {
                 Variable = variable;
+                _name = name;
             }
 
             public override bool Equals(object obj)
@@ -26,7 +28,7 @@
 
             public override string ToString()
             {
-                return $"Load Var {Variable}";
+                return $"Load Var {_name}";
             }
         }
     }

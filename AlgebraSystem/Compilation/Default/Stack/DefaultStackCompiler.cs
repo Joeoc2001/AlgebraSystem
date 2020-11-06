@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    namespace Default
+    namespace Default.Stack
     {
         internal class DefaultStackCompiler : StackCompiler<double, IDefaultInstruction>
         {
@@ -40,7 +40,7 @@ namespace Algebra.Compilation
 
             protected override ICompiledFunction<double> CreateCompiled(Expression expression, IVariableInputSet<double> variables, IDefaultInstruction[] instructions)
             {
-                return new DefaultCompiledFunction(variables, instructions);
+                return new DefaultStackCompiledFunction(variables, instructions);
             }
 
             protected override IDefaultInstruction EvaluateArcsin()
@@ -95,7 +95,7 @@ namespace Algebra.Compilation
 
             protected override IDefaultInstruction EvaluateVariable(IVariable value, IVariableInputSet<double> variables)
             {
-                return new DefaultLoadVar(variables.Get(value.GetName()));
+                return new DefaultLoadVar(variables.Get(value.GetName()), value.GetName());
             }
         }
     }
