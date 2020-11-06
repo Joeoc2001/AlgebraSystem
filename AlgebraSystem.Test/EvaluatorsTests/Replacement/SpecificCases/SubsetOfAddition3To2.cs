@@ -30,7 +30,7 @@ namespace EvaluatorsTests.Replacement.SpecificCases
             // Arrange
 
             // Act
-            List<Expression> resultSet = new List<Expression>(_expression.Evaluate(_replaceEvaluator));
+            List<Expression> resultSet = new List<Expression>(_expression.Map(_replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Contains.Item(expected));
@@ -42,7 +42,7 @@ namespace EvaluatorsTests.Replacement.SpecificCases
             // Arrange
 
             // Act
-            List<Expression> resultSet = new List<Expression>(_expression.Evaluate(_replaceEvaluator));
+            List<Expression> resultSet = new List<Expression>(_expression.Map(_replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Has.Count.EqualTo(_subsetOfAddition3to2Expecteds.Length));

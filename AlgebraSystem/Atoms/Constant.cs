@@ -32,23 +32,28 @@ namespace Algebra
                 return Zero;
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateConstant(this);
+                mapping.EvaluateConstant(this);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateConstant(this, this);
+                return mapping.EvaluateConstant(this);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateConstant(this, this);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is IConstant other)
                 {
-                    return evaluator.EvaluateConstants(this, other);
+                    return mapping.EvaluateConstants(this, other);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
 
             protected override Expression GenAtomicExpression()

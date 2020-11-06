@@ -43,23 +43,28 @@ namespace Algebra
                 return "ln";
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateLn(_argument);
+                mapping.EvaluateLn(_argument);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateLn(this, _argument);
+                return mapping.EvaluateLn(_argument);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateLn(this, _argument);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is Ln other)
                 {
-                    return evaluator.EvaluateLns(this._argument, other._argument);
+                    return mapping.EvaluateLns(this._argument, other._argument);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
         }
     }

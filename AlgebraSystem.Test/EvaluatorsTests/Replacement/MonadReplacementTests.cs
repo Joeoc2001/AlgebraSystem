@@ -28,7 +28,7 @@ namespace EvaluatorsTests.Replacement
             ReplaceEvaluator replaceEvaluator = new ReplaceEvaluator(pattern, replacement);
 
             // Act
-            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Evaluate(replaceEvaluator));
+            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Map(replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Has.Count.EqualTo(1));
@@ -54,7 +54,7 @@ namespace EvaluatorsTests.Replacement
             ReplaceEvaluator replaceEvaluator = new ReplaceEvaluator(pattern, replacement);
 
             // Act
-            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Evaluate(replaceEvaluator));
+            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Map(replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Has.Count.EqualTo(1));
@@ -78,7 +78,7 @@ namespace EvaluatorsTests.Replacement
             ReplaceEvaluator replaceEvaluator = new ReplaceEvaluator(pattern, replacement);
 
             // Act
-            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Evaluate(replaceEvaluator));
+            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Map(replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Has.Count.EqualTo(1));
@@ -104,7 +104,7 @@ namespace EvaluatorsTests.Replacement
             ReplaceEvaluator replaceEvaluator = new ReplaceEvaluator(pattern, replacement);
 
             // Act
-            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Evaluate(replaceEvaluator));
+            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Map(replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Has.Count.EqualTo(1));
@@ -132,7 +132,7 @@ namespace EvaluatorsTests.Replacement
             ReplaceEvaluator replaceEvaluator = new ReplaceEvaluator(pattern, replacement);
 
             // Act
-            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Evaluate(replaceEvaluator));
+            HashSet<Expression> resultSet = new HashSet<Expression>(expression.Map(replaceEvaluator));
 
             // Assert
             Assert.That(resultSet, Has.Count.EqualTo(1));

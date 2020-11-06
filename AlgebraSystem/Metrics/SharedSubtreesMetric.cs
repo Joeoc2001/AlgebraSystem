@@ -1,4 +1,4 @@
-﻿using Algebra.Evaluators;
+﻿using Algebra.mappings;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +11,7 @@ namespace Algebra.Metrics
 
         private static HashSet<Expression> GetSubtrees(Expression expression)
         {
-            return expression.Evaluate(GetAllSubtreesEvaluator.Instance);
+            return expression.Map(GetAllSubtreesMapping.Instance);
         }
 
         public SharedSubtreesMetric(Expression expression) : base(expression)

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    namespace Default
+    namespace Default.Stack
     {
         internal class DefaultInstruction : IDefaultInstruction
         {
@@ -24,6 +24,11 @@ namespace Algebra.Compilation
             public override int GetHashCode()
             {
                 return 1881446463 + Opcode.GetHashCode();
+            }
+
+            public override string ToString()
+            {
+                return $"Stack Instr {Opcode}";
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using Algebra.Evaluators;
+﻿using Algebra.mappings;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +16,7 @@ namespace Algebra
 
         public int Compare(Expression x, Expression y)
         {
-            return x.Evaluate(y, OrderingDualEvaluator.Instance);
+            return x.Map(y, OrderingDualMapping.Instance);
         }
     }
 }

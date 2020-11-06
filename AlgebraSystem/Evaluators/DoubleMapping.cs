@@ -7,12 +7,12 @@ using System.Collections.ObjectModel;
 using System.Numerics;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class DoubleEvaluator : ValueEvaluator<double>
+    public class DoubleMapping : ValueMapping<double>
     {
-        public static readonly ReadOnlyDictionary<FunctionIdentity, FunctionEvaluator> DefaultFunctionEvaluators =
-            new ReadOnlyDictionary<FunctionIdentity, FunctionEvaluator>(new Dictionary<FunctionIdentity, FunctionEvaluator>()
+        public static readonly ReadOnlyDictionary<FunctionIdentity, Functionmapping> DefaultFunctionmappings =
+            new ReadOnlyDictionary<FunctionIdentity, Functionmapping>(new Dictionary<FunctionIdentity, Functionmapping>()
             {
                 { AbsIdentity.Instance, d => Math.Abs(d[0]) },
                 { ArccosIdentity.Instance, d => Math.Acos(d[0]) },
@@ -29,8 +29,8 @@ namespace Algebra.Evaluators
                 { TanIdentity.Instance, d => Math.Tan(d[0]) },
             });
 
-        public DoubleEvaluator(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators = null)
-            : base(variableInputs, functionEvaluators ?? DefaultFunctionEvaluators)
+        public DoubleMapping(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, Functionmapping> functionmappings = null)
+            : base(variableInputs, functionmappings ?? DefaultFunctionmappings)
         {
 
         }
@@ -45,9 +45,9 @@ namespace Algebra.Evaluators
             return Math.Pow(baseValue, powerValue);
         }
 
-        protected override TraversalEvaluator<double> Construct(IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<double> variableInputs)
+        protected override TraversalMapping<double> Construct(IDictionary<FunctionIdentity, Functionmapping> functionmappings, VariableInputSet<double> variableInputs)
         {
-            return new DoubleEvaluator(variableInputs, functionEvaluators);
+            return new DoubleMapping(variableInputs, functionmappings);
         }
 
         protected override double LnOf(double v)

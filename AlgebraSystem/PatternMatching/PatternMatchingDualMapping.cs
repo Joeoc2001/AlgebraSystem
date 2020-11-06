@@ -1,4 +1,4 @@
-﻿using Algebra.Evaluators;
+﻿using Algebra.mappings;
 using Algebra.Functions;
 using Rationals;
 using System;
@@ -16,11 +16,11 @@ namespace Algebra.PatternMatching
     /// x + y however does not match 2 * (a + b) as it only checks the root node.
     /// Note from above that commutative operations match twice, for example x + y matches a + b with both (x, y) = (a, b) and (x, y) = (b, a).
     /// </summary>
-    public class PatternMatchingDualEvaluator : IDualEvaluator<PatternMatchingResultSet>
+    public class PatternMatchingDualMapping : IDualMapping<PatternMatchingResultSet>
     {
-        public static readonly PatternMatchingDualEvaluator Instance = new PatternMatchingDualEvaluator();
+        public static readonly PatternMatchingDualMapping Instance = new PatternMatchingDualMapping();
 
-        private PatternMatchingDualEvaluator()
+        private PatternMatchingDualMapping()
         {
 
         }
@@ -36,32 +36,32 @@ namespace Algebra.PatternMatching
 
         public PatternMatchingResultSet EvaluateArcsins(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentToBeMatched.Evaluate(argumentPattern, this);
+            return argumentToBeMatched.Map(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateArctans(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentToBeMatched.Evaluate(argumentPattern, this);
+            return argumentToBeMatched.Map(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateLns(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentToBeMatched.Evaluate(argumentPattern, this);
+            return argumentToBeMatched.Map(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateSigns(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentToBeMatched.Evaluate(argumentPattern, this);
+            return argumentToBeMatched.Map(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateSins(Expression argumentToBeMatched, Expression argumentPattern)
         {
-            return argumentToBeMatched.Evaluate(argumentPattern, this);
+            return argumentToBeMatched.Map(argumentPattern, this);
         }
 
         public PatternMatchingResultSet EvaluateExponents(Expression baseArgumentToBeMatched, Expression powerArgumentToBeMatched, Expression baseArgumentPattern, Expression powerArgumentPattern)
         {
-            PatternMatchingResultSet baseInputs = baseArgumentToBeMatched.Evaluate(baseArgumentPattern, this);
+            PatternMatchingResultSet baseInputs = baseArgumentToBeMatched.Map(baseArgumentPattern, this);
 
             // Short circuit if we can before we pattern match power inputs
             if (baseInputs.IsNone)
@@ -69,7 +69,7 @@ namespace Algebra.PatternMatching
                 return baseInputs;
             }
 
-            PatternMatchingResultSet powerInputs = powerArgumentToBeMatched.Evaluate(powerArgumentPattern, this);
+            PatternMatchingResultSet powerInputs = powerArgumentToBeMatched.Map(powerArgumentPattern, this);
 
             return baseInputs.Intersect(powerInputs);
         }
@@ -92,7 +92,7 @@ namespace Algebra.PatternMatching
                     throw new NotSupportedException("Two functions with the same identity should always have the same parameter names");
                 }
 
-                PatternMatchingResultSet parameterInputs = parameterToBeMatched.Evaluate(parameterPattern, this);
+                PatternMatchingResultSet parameterInputs = parameterToBeMatched.Map(parameterPattern, this);
 
                 resultSet = resultSet.Intersect(parameterInputs);
 
@@ -126,7 +126,7 @@ namespace Algebra.PatternMatching
                     foreach ((List<Expression> toBeMatchedPartition, Expression argumentPattern) in toMatchPartitionPerm.Zip(argumentsPattern, (a, b) => (a, b)))
                     {
                         Expression partitionExpression = builder(toBeMatchedPartition);
-                        PatternMatchingResultSet partitionResults = partitionExpression.Evaluate(argumentPattern, this);
+                        PatternMatchingResultSet partitionResults = partitionExpression.Map(argumentPattern, this);
                         permResults = permResults.Intersect(partitionResults);
                     }
 
@@ -154,7 +154,7 @@ namespace Algebra.PatternMatching
 
         public PatternMatchingResultSet EvaluateOthers(Expression expressionToBeMatched, Expression expressionPattern)
         {
-            IsVariableEvaluator.Result result = expressionPattern.Evaluate(IsVariableEvaluator.Instance);
+            IsVariableMapping.Result result = expressionPattern.Map(IsVariableMapping.Instance);
             if (result.IsVariable())
             {
                 return new PatternMatchingResultSet(new PatternMatchingResult(result.Get().GetName(), expressionToBeMatched));

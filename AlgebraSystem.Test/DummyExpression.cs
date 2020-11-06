@@ -66,19 +66,19 @@ namespace AlgebraTests
             return base.ToString();
         }
 
-        public override T Evaluate<T>(IEvaluator<T> evaluator)
+        public override T Map<T>(IMapping<T> evaluator)
         {
             EvaluateCalledCount += 1;
             return default;
         }
 
-        public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+        public override T Map<T>(IExtendedMapping<T> evaluator)
         {
             EvaluateCalledCount += 1;
             return default;
         }
 
-        public override T Evaluate<T>(Expression other, IDualEvaluator<T> evaluator)
+        public override T Map<T>(Expression other, IDualMapping<T> evaluator)
         {
             EvaluateCalledCount += 1;
             return default;

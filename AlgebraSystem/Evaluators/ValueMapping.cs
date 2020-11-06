@@ -4,18 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public abstract class ValueEvaluator<T> : TraversalEvaluator<T>
+    public abstract class ValueMapping<T> : TraversalMapping<T>
     {
-        public delegate T FunctionEvaluator(IList<T> argumentExpressions);
+        public delegate T Functionmapping(IList<T> argumentExpressions);
 
-        private readonly Dictionary<FunctionIdentity, FunctionEvaluator> _functionEvaluators;
+        private readonly Dictionary<FunctionIdentity, Functionmapping> _functionmappings;
         private readonly VariableInputSet<T> _variableInputs;
 
-        public ValueEvaluator(VariableInputSet<T> variableInputs, IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators)
+        public ValueMapping(VariableInputSet<T> variableInputs, IDictionary<FunctionIdentity, Functionmapping> functionmappings)
         {
-            this._functionEvaluators = new Dictionary<FunctionIdentity, FunctionEvaluator>(functionEvaluators ?? throw new ArgumentNullException(nameof(functionEvaluators)));
+            this._functionmappings = new Dictionary<FunctionIdentity, Functionmapping>(functionmappings ?? throw new ArgumentNullException(nameof(functionmappings)));
             this._variableInputs = variableInputs;
         }
 
@@ -41,16 +41,16 @@ namespace Algebra.Evaluators
             return Map(PowOf(baseValue, powerValue));
         }
 
-        protected abstract TraversalEvaluator<T> Construct(IDictionary<FunctionIdentity, FunctionEvaluator> functionEvaluators, VariableInputSet<T> variableInputs);
+        protected abstract TraversalMapping<T> Construct(IDictionary<FunctionIdentity, Functionmapping> functionmappings, VariableInputSet<T> variableInputs);
 
         protected override sealed T EvaluateFunction(Function function, IList<T> evaluated)
         {
             FunctionIdentity identity = function.GetIdentity();
 
             // Check for a faster method
-            if (_functionEvaluators.TryGetValue(identity, out FunctionEvaluator evaluator))
+            if (_functionmappings.TryGetValue(identity, out Functionmapping mapping))
             {
-                return Map(evaluator(evaluated));
+                return Map(mapping(evaluated));
             }
 
             // Evaluate fully
@@ -61,8 +61,8 @@ namespace Algebra.Evaluators
                 evaluatedEnumerator.MoveNext();
                 variableInputs.Add(variableName, evaluatedEnumerator.Current);
             }
-            TraversalEvaluator<T> rationalEvaluator = Construct(_functionEvaluators, variableInputs);
-            return Map(identity.GetBodyAsAtomicExpression().Evaluate(rationalEvaluator));
+            TraversalMapping<T> rationalmapping = Construct(_functionmappings, variableInputs);
+            return Map(identity.GetBodyAsAtomicExpression().Map(rationalmapping));
         }
 
         protected abstract T LnOf(T v);

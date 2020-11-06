@@ -43,23 +43,28 @@ namespace Algebra
                 return "sin";
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateSin(_argument);
+                mapping.EvaluateSin(_argument);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateSin(this, _argument);
+                return mapping.EvaluateSin(_argument);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateSin(this, _argument);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is Sin other)
                 {
-                    return evaluator.EvaluateSins(this._argument, other._argument);
+                    return mapping.EvaluateSins(this._argument, other._argument);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
         }
     }

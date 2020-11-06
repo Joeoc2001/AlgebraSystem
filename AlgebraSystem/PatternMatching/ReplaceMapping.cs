@@ -1,4 +1,4 @@
-﻿using Algebra.Evaluators;
+﻿using Algebra.mappings;
 using Algebra.Functions;
 using Rationals;
 using System;
@@ -15,12 +15,12 @@ namespace Algebra.PatternMatching
     /// the resulting expression set will be {6 * (x + y), 3 * x * y + 2}.
     /// This is useful for equality axioms, e.g. x * (y + z) == x * y + x * z
     /// </summary>
-    public class ReplaceEvaluator : IExpandedEvaluator<HashSet<Expression>>
+    public class ReplaceMapping : IExtendedMapping<HashSet<Expression>>
     {
         private readonly Expression _patternExpression;
         private readonly Expression _replacementExpression;
 
-        public ReplaceEvaluator(Expression patternExpression, Expression replacementExpression)
+        public ReplaceMapping(Expression patternExpression, Expression replacementExpression)
         {
             this._patternExpression = patternExpression ?? throw new ArgumentNullException();
             this._replacementExpression = replacementExpression ?? throw new ArgumentNullException();
@@ -33,14 +33,14 @@ namespace Algebra.PatternMatching
 
         protected HashSet<Expression> EvaluateExpression(Expression expression)
         {
-            PatternMatchingResultSet matches = expression.Evaluate(_patternExpression, PatternMatchingDualEvaluator.Instance);
+            PatternMatchingResultSet matches = expression.Map(_patternExpression, PatternMatchingDualMapping.Instance);
 
             HashSet<Expression> result = new HashSet<Expression>();
 
             foreach (PatternMatchingResult match in matches)
             {
-                VariableReplacementEvaluator replacementEvaluator = new VariableReplacementEvaluator(match, false);
-                result.Add(_replacementExpression.Evaluate(replacementEvaluator));
+                VariableReplacementMapping replacementmapping = new VariableReplacementMapping(match, false);
+                result.Add(_replacementExpression.Map(replacementmapping));
             }
 
             return result;
@@ -49,7 +49,7 @@ namespace Algebra.PatternMatching
         protected IEnumerable<Expression> EvaluateArgument(Expression argument, Func<Expression, Expression> argumentMap)
         {
             // Map
-            foreach (var unmappedArgument in argument.Evaluate(this))
+            foreach (var unmappedArgument in argument.Map(this))
             {
                 yield return argumentMap(unmappedArgument);
             }
@@ -164,7 +164,7 @@ namespace Algebra.PatternMatching
 
         public virtual HashSet<Expression> EvaluateOther(Expression other)
         {
-            throw new NotImplementedException($"Cannot replace for unknown expression {other}. Override {typeof(ReplaceEvaluator).Name} to add functionality for your new class.");
+            throw new NotImplementedException($"Cannot replace for unknown expression {other}. Override {typeof(ReplaceMapping).Name} to add functionality for your new class.");
         }
     }
 }

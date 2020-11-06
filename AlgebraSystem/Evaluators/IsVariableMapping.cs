@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class IsVariableEvaluator : DefaultEvaluator<IsVariableEvaluator.Result>
+    public class IsVariableMapping : DefaultMapping<IsVariableMapping.Result>
     {
         public class Result
         {
@@ -34,9 +34,9 @@ namespace Algebra.Evaluators
             }
         }
 
-        public static readonly IsVariableEvaluator Instance = new IsVariableEvaluator();
+        public static readonly IsVariableMapping Instance = new IsVariableMapping();
 
-        private IsVariableEvaluator()
+        private IsVariableMapping()
         {
 
         }

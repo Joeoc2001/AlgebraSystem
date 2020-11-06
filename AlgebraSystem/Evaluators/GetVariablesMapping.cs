@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class GetVariablesEvaluator : TraversalEvaluator<HashSet<IVariable>>
+    public class GetVariablesMapping : TraversalMapping<HashSet<IVariable>>
     {
-        public static readonly GetVariablesEvaluator Instance = new GetVariablesEvaluator();
+        public static readonly GetVariablesMapping Instance = new GetVariablesMapping();
 
-        protected GetVariablesEvaluator()
+        protected GetVariablesMapping()
         {
 
         }
@@ -82,7 +82,7 @@ namespace Algebra.Evaluators
 
         public override HashSet<IVariable> EvaluateOther(Expression other)
         {
-            throw new NotImplementedException($"Cannot get variables for unknown expression {other}. Override {typeof(GetVariablesEvaluator).Name} to add functionality for your new class.");
+            throw new NotImplementedException($"Cannot get variables for unknown expression {other}. Override {typeof(GetVariablesMapping).Name} to add functionality for your new class.");
         }
     }
 }

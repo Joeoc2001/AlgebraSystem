@@ -1,4 +1,4 @@
-﻿using Algebra.Evaluators;
+﻿using Algebra.mappings;
 using Rationals;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Algebra
             protected List<Expression> GetDisplaySortedArguments()
             {
                 List<Expression> sortedArguments = new List<Expression>(_arguments);
-                sortedArguments.Sort((a, b) => a.Evaluate(b, OrderingDualEvaluator.Instance));
+                sortedArguments.Sort((a, b) => a.Map(b, OrderingDualMapping.Instance));
                 return sortedArguments;
             }
 

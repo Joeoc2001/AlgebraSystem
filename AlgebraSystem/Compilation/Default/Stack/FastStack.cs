@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    namespace Default
+    namespace Default.Stack
     {
         internal struct FastStack<T>
         {

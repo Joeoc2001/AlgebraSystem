@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public abstract class DefaultEvaluator<T> : IEvaluator<T>
+    public abstract class DefaultMapping<T> : IMapping<T>
     {
         public abstract T Default();
 

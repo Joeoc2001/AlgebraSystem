@@ -42,7 +42,7 @@ namespace AtomTests.AdditionTests
             // ACT
 
             // ASSERT
-            Assert.Throws(typeof(NotSupportedException), () => expression.Evaluate(evaluator));
+            Assert.Throws(typeof(NotSupportedException), () => expression.Map(evaluator));
         }
     }
 }

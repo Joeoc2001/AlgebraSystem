@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Algebra
 {
-    public interface IDualEvaluator<T>
+    public interface IDualMapping<T>
     {
         T EvaluateConstants(IConstant value1, IConstant value2);
         T EvaluateVariables(IVariable value1, IVariable value2);

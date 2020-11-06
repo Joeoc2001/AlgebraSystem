@@ -2,7 +2,7 @@
 using Algebra.Compilation;
 using Algebra.Compilation.Default;
 using Algebra.Equivalence;
-using Algebra.Evaluators;
+using Algebra.mappings;
 using Algebra.Functions.FunctionIdentities;
 using Algebra.Metrics;
 using Algebra.Parsing;
@@ -70,9 +70,10 @@ namespace Algebra
         public abstract Expression GetDerivative(string wrt);
         protected abstract int GenHashCode();
         protected abstract Expression GenAtomicExpression();
-        public abstract T Evaluate<T>(IEvaluator<T> evaluator);
-        public abstract T Evaluate<T>(IExpandedEvaluator<T> evaluator);
-        public abstract T Evaluate<T>(Expression other, IDualEvaluator<T> evaluator);
+        public abstract void Map(IMapping mapping);
+        public abstract T Map<T>(IMapping<T> mapping);
+        public abstract T Map<T>(IExtendedMapping<T> mapping);
+        public abstract T Map<T>(Expression other, IDualMapping<T> mapping);
 
         /* Used for displaying braces when printing a human-readable string
          * Should be:
@@ -112,7 +113,7 @@ namespace Algebra
         {
             if (!_isAtomic.HasValue)
             {
-                _isAtomic = Evaluate(IsAtomicEvaluator.Instance);
+                _isAtomic = Map(IsAtomicMapping.Instance);
             }
             return _isAtomic.Value;
         }
@@ -144,12 +145,12 @@ namespace Algebra
         public double EvaluateOnce(double x, double y, double z) => EvaluateOnce(new VariableInputSet<double>() { { "x", x }, { "y", y }, { "z", z } });
         public double EvaluateOnce(VariableInputSet<double> variables)
         {
-            return Evaluate(new DoubleEvaluator(variables));
+            return Map(new DoubleMapping(variables));
         }
 
         public ICompiledFunction<double> Compile(VariableInputSet<double> variables, int simplificationAggressiveness = 3)
         {
-            return DefaultCompiler.Instance.Compile(this, variables, simplificationAggressiveness);
+            return DefaultStackCompiler.Instance.Compile(this, variables, simplificationAggressiveness);
         }
 
         public static bool ShouldParenthesise(Expression parent, Expression child)
@@ -178,7 +179,7 @@ namespace Algebra
 
         public int CompareTo(Expression other)
         {
-            return Evaluate(other, OrderingDualEvaluator.Instance);
+            return Map(other, OrderingDualMapping.Instance);
         }
 
         public override sealed bool Equals(object obj)
@@ -238,7 +239,7 @@ namespace Algebra
 
         protected bool ExactlyEquals(Expression expression)
         {
-            return Evaluate(expression, ExactlyEqualsDualEvaluator.Instance);
+            return Map(expression, ExactlyEqualsDualMapping.Instance);
         }
 
         public Expression Simplify(IExpressionMetric metric = null, int depth = 3, ulong attempts = ulong.MaxValue, List<EquivalencePath> equivalencies = null)
@@ -249,7 +250,7 @@ namespace Algebra
 
         public HashSet<IVariable> GetVariables()
         {
-            return Evaluate(GetVariablesEvaluator.Instance);
+            return Map(GetVariablesMapping.Instance);
         }
 
         public HashSet<string> GetVariableNames()
@@ -259,7 +260,7 @@ namespace Algebra
 
         public PatternMatchingResultSet Match(Expression pattern)
         {
-            return Evaluate(pattern, PatternMatchingDualEvaluator.Instance);
+            return Map(pattern, PatternMatchingDualMapping.Instance);
         }
 
         /// <summary>
@@ -274,7 +275,7 @@ namespace Algebra
         /// <returns>A set of expressions where all instance of the pattern have been replaced with the replacement expression</returns>
         public IEnumerable<Expression> Replace(Expression pattern, Expression replacement)
         {
-            return Evaluate(new ReplaceEvaluator(pattern, replacement));
+            return Map(new ReplaceMapping(pattern, replacement));
         }
 
         public static bool operator ==(Expression left, Expression right)

@@ -46,8 +46,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
 
             // ACT
-            double output1 = expression.Evaluate(evaluator1);
-            double output2 = expression.Evaluate(evaluator2);
+            double output1 = expression.Map(evaluator1);
+            double output2 = expression.Map(evaluator2);
 
             // ASSERT
             Assert.AreEqual(output1, output2, CalculateTolerance(input));
@@ -63,8 +63,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
 
             // ACT
-            double output1 = expression.Evaluate(evaluator1);
-            double output2 = expression.Evaluate(evaluator2);
+            double output1 = expression.Map(evaluator1);
+            double output2 = expression.Map(evaluator2);
 
             // ASSERT
             Assert.AreEqual(output1, output2, CalculateTolerance(input1, input2));
@@ -80,8 +80,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
 
             // ACT
-            double output1 = expression.Evaluate(evaluator1);
-            double output2 = expression.Evaluate(evaluator2);
+            double output1 = expression.Map(evaluator1);
+            double output2 = expression.Map(evaluator2);
 
             // ASSERT
             Assert.AreEqual(output1, output2, CalculateTolerance(input1, input2, input3));

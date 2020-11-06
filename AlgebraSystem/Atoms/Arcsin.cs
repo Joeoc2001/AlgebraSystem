@@ -43,23 +43,28 @@ namespace Algebra
                 return "arcsin";
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateArcsin(_argument);
+                mapping.EvaluateArcsin(_argument);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateArcsin(this, _argument);
+                return mapping.EvaluateArcsin(_argument);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateArcsin(this, _argument);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is Arcsin other)
                 {
-                    return evaluator.EvaluateArcsins(this._argument, other._argument);
+                    return mapping.EvaluateArcsins(this._argument, other._argument);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
         }
     }

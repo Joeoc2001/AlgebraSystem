@@ -23,6 +23,11 @@
             {
                 return -2134847229 + Variable.GetHashCode();
             }
+
+            public override string ToString()
+            {
+                return $"Load Var {Variable}";
+            }
         }
     }
 }

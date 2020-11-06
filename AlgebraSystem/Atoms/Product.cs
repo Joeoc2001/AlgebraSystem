@@ -185,23 +185,28 @@ namespace Algebra
                 return Multiply;
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateProduct(_arguments);
+                mapping.EvaluateProduct(_arguments);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateProduct(this, _arguments);
+                return mapping.EvaluateProduct(_arguments);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateProduct(this, _arguments);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is Product other)
                 {
-                    return evaluator.EvaluateProducts(this._arguments, other._arguments);
+                    return mapping.EvaluateProducts(this._arguments, other._arguments);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
         }
     }

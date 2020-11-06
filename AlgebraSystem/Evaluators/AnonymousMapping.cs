@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class AnonymousEvaluator<T> : IEvaluator<T>
+    public class AnonymousMapping<T> : IMapping<T>
     {
         private readonly Func<T> _defaultFunc;
 
@@ -22,7 +22,7 @@ namespace Algebra.Evaluators
         public Func<ICollection<Expression>, T> Sum = null;
         public Func<IVariable, T> Variable = null;
 
-        public AnonymousEvaluator(Func<T> defaultFunc)
+        public AnonymousMapping(Func<T> defaultFunc)
         {
             _defaultFunc = defaultFunc;
         }

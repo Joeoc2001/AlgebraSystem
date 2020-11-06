@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Algebra
 {
-    public interface IEvaluator<T>
+    public interface IMapping<T>
     {
         T EvaluateConstant(IConstant value);
         T EvaluateVariable(IVariable value);
@@ -20,6 +20,20 @@ namespace Algebra
         T EvaluateArcsin(Expression argumentExpression);
         T EvaluateArctan(Expression argumentExpression);
         T EvaluateFunction(Function function);
-        T EvaluateOther(Expression other);
+    }
+
+    public interface IMapping
+    {
+        void EvaluateConstant(IConstant value);
+        void EvaluateVariable(IVariable value);
+        void EvaluateSum(ICollection<Expression> expressions);
+        void EvaluateProduct(ICollection<Expression> expressions);
+        void EvaluateExponent(Expression baseExpression, Expression powerExpression);
+        void EvaluateLn(Expression argumentExpression);
+        void EvaluateSign(Expression argumentExpression);
+        void EvaluateSin(Expression argumentExpression);
+        void EvaluateArcsin(Expression argumentExpression);
+        void EvaluateArctan(Expression argumentExpression);
+        void EvaluateFunction(Function function);
     }
 }

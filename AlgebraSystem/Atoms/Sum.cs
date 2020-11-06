@@ -123,23 +123,28 @@ namespace Algebra
                 return Add;
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateSum(_arguments);
+                mapping.EvaluateSum(_arguments);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateSum(this, _arguments);
+                return mapping.EvaluateSum(_arguments);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateSum(this, _arguments);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is Sum other)
                 {
-                    return evaluator.EvaluateSums(this._arguments, other._arguments);
+                    return mapping.EvaluateSums(this._arguments, other._arguments);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
         }
     }

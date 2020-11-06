@@ -11,13 +11,13 @@ namespace AlgebraSystem.Speedtest
     {
         static void Main(string[] args)
         {
-            int lengths = 100;
+            int lengths = 300;
 
             Expression expression = "tanh(max(x + y, x * y)) + arctan(min(x + y, x * y))";
             double time;
 
-            time = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
-            Console.WriteLine($"Execute Once Avg Time: {time} ns");
+            //time = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
+            //Console.WriteLine($"Execute Once Avg Time: {time} ns");
 
             VariableInputSet<double> variableInputs = new VariableInputSet<double>() { { "x", 0 }, { "y", 0 } };
             VariableInput<double> xInput = variableInputs.Get("x");
@@ -25,7 +25,7 @@ namespace AlgebraSystem.Speedtest
             var compiled = expression.Compile(variableInputs, 3);
 
             time = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return compiled.Evaluate(); });
-            Console.WriteLine($"Compiled Avg Time: {time} ns");
+            Console.WriteLine($"Compiled stack Avg Time: {time} ns");
 
             time = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));
             Console.WriteLine($"Native Time: {time} ns");

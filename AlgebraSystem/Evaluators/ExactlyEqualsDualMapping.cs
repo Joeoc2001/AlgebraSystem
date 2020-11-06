@@ -4,25 +4,25 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class ExactlyEqualsDualEvaluator : IDualEvaluator<bool>
+    public class ExactlyEqualsDualMapping : IDualMapping<bool>
     {
-        public static readonly ExactlyEqualsDualEvaluator Instance = new ExactlyEqualsDualEvaluator();
+        public static readonly ExactlyEqualsDualMapping Instance = new ExactlyEqualsDualMapping();
 
-        private ExactlyEqualsDualEvaluator()
+        private ExactlyEqualsDualMapping()
         {
 
         }
 
         public bool EvaluateArcsins(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public bool EvaluateArctans(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public bool EvaluateConstants(IConstant value1, IConstant value2)
@@ -32,7 +32,7 @@ namespace Algebra.Evaluators
 
         public bool EvaluateExponents(Expression baseArgument1, Expression powerArgument1, Expression baseArgument2, Expression powerArgument2)
         {
-            return baseArgument1.Evaluate(baseArgument2, this) && powerArgument1.Evaluate(powerArgument2, this);
+            return baseArgument1.Map(baseArgument2, this) && powerArgument1.Map(powerArgument2, this);
         }
 
         public bool EvaluateFunctions(Function function1, Function function2)
@@ -68,7 +68,7 @@ namespace Algebra.Evaluators
 
         public bool EvaluateLns(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public bool EvaluateOthers(Expression expression1, Expression expression2)
@@ -129,12 +129,12 @@ namespace Algebra.Evaluators
 
         public bool EvaluateSigns(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public bool EvaluateSins(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public bool EvaluateSums(ICollection<Expression> arguments1, ICollection<Expression> arguments2)

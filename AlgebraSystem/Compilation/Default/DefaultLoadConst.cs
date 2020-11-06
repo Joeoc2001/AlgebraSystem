@@ -27,6 +27,11 @@ namespace Algebra.Compilation
             {
                 return -1937169414 + Value.GetHashCode();
             }
+
+            public override string ToString()
+            {
+                return $"Load Const {Value}";
+            }
         }
     }
 }

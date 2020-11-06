@@ -43,23 +43,28 @@ namespace Algebra
                 return "arctan";
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateArctan(_argument);
+                mapping.EvaluateArctan(_argument);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateArctan(this, _argument);
+                return mapping.EvaluateArctan(_argument);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateArctan(this, _argument);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is Arctan other)
                 {
-                    return evaluator.EvaluateArctans(this._argument, other._argument);
+                    return mapping.EvaluateArctans(this._argument, other._argument);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
         }
     }

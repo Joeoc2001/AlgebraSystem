@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class RankEvaluator : IEvaluator<int>
+    public class RankMapping : IMapping<int>
     {
-        public static readonly RankEvaluator Instance = new RankEvaluator();
+        public static readonly RankMapping Instance = new RankMapping();
 
-        protected RankEvaluator()
+        protected RankMapping()
         {
 
         }
@@ -72,7 +72,7 @@ namespace Algebra.Evaluators
 
         public int EvaluateOther(Expression other)
         {
-            throw new NotImplementedException($"Cannot get rank for unknown expression {other}. Override {typeof(RankEvaluator).Name} to add functionality for your new class.");
+            throw new NotImplementedException($"Cannot get rank for unknown expression {other}. Override {typeof(RankMapping).Name} to add functionality for your new class.");
         }
     }
 }

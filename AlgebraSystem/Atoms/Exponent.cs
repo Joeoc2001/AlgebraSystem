@@ -98,23 +98,28 @@ namespace Algebra
                 return 10;
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateExponent(_term, _power);
+                mapping.EvaluateExponent(_term, _power);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateExponent(this, _term, _power);
+                return mapping.EvaluateExponent(_term, _power);
             }
 
-            public override T Evaluate<T>(Expression otherExpression, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateExponent(this, _term, _power);
+            }
+
+            public override T Map<T>(Expression otherExpression, IDualMapping<T> mapping)
             {
                 if (otherExpression is Exponent other)
                 {
-                    return evaluator.EvaluateExponents(this._term, this._power, other._term, other._power);
+                    return mapping.EvaluateExponents(this._term, this._power, other._term, other._power);
                 }
-                return evaluator.EvaluateOthers(this, otherExpression);
+                return mapping.EvaluateOthers(this, otherExpression);
             }
 
             protected override Expression GenAtomicExpression()

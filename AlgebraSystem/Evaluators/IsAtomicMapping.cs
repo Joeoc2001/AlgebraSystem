@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class IsAtomicEvaluator : IEvaluator<bool>
+    public class IsAtomicMapping : IMapping<bool>
     {
-        public static readonly IsAtomicEvaluator Instance = new IsAtomicEvaluator();
+        public static readonly IsAtomicMapping Instance = new IsAtomicMapping();
 
-        protected IsAtomicEvaluator()
+        protected IsAtomicMapping()
         {
         }
 
@@ -21,7 +21,7 @@ namespace Algebra.Evaluators
 
         public bool EvaluateExponent(Expression baseExpression, Expression powerExpression)
         {
-            return baseExpression.Evaluate(this) && powerExpression.Evaluate(this);
+            return baseExpression.Map(this) && powerExpression.Map(this);
         }
 
         public bool EvaluateFunction(Function function)
@@ -31,14 +31,14 @@ namespace Algebra.Evaluators
 
         public bool EvaluateLn(Expression argumentExpression)
         {
-            return argumentExpression.Evaluate(this);
+            return argumentExpression.Map(this);
         }
 
         public bool EvaluateSet(ICollection<Expression> expressions)
         {
             foreach (Expression expression in expressions)
             {
-                if (!expression.Evaluate(this))
+                if (!expression.Map(this))
                 {
                     return false;
                 }
@@ -53,12 +53,12 @@ namespace Algebra.Evaluators
 
         public bool EvaluateSign(Expression argumentExpression)
         {
-            return argumentExpression.Evaluate(this);
+            return argumentExpression.Map(this);
         }
 
         public bool EvaluateSin(Expression argumentExpression)
         {
-            return argumentExpression.Evaluate(this);
+            return argumentExpression.Map(this);
         }
 
         public bool EvaluateSum(ICollection<Expression> expressions)
@@ -73,17 +73,17 @@ namespace Algebra.Evaluators
 
         public bool EvaluateArcsin(Expression argumentExpression)
         {
-            return argumentExpression.Evaluate(this);
+            return argumentExpression.Map(this);
         }
 
         public bool EvaluateArctan(Expression argumentExpression)
         {
-            return argumentExpression.Evaluate(this);
+            return argumentExpression.Map(this);
         }
 
         public bool EvaluateOther(Expression other)
         {
-            throw new NotImplementedException($"Cannot check if {other} is atomic. Override {typeof(IsAtomicEvaluator).Name} to add functionality for your new class.");
+            throw new NotImplementedException($"Cannot check if {other} is atomic. Override {typeof(IsAtomicMapping).Name} to add functionality for your new class.");
         }
     }
 }

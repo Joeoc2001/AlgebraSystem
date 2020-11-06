@@ -5,20 +5,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    public class OrderingDualEvaluator : IDualEvaluator<int>, IComparer<Expression>
+    public class OrderingDualMapping : IDualMapping<int>, IComparer<Expression>
     {
-        public static readonly OrderingDualEvaluator Instance = new OrderingDualEvaluator();
+        public static readonly OrderingDualMapping Instance = new OrderingDualMapping();
 
-        protected OrderingDualEvaluator()
+        protected OrderingDualMapping()
         {
 
         }
 
         public int Compare(Expression x, Expression y)
         {
-            return x.Evaluate(y, this);
+            return x.Map(y, this);
         }
 
         private int CompareCommutative(ICollection<Expression> a, ICollection<Expression> b)
@@ -45,12 +45,12 @@ namespace Algebra.Evaluators
 
         public int EvaluateArcsins(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public int EvaluateArctans(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public int EvaluateConstants(IConstant value1, IConstant value2)
@@ -60,12 +60,12 @@ namespace Algebra.Evaluators
 
         public int EvaluateExponents(Expression baseArgument1, Expression powerArgument1, Expression baseArgument2, Expression powerArgument2)
         {
-            int comp1 = baseArgument1.Evaluate(baseArgument2, this);
+            int comp1 = baseArgument1.Map(baseArgument2, this);
             if (comp1 != 0)
             {
                 return comp1;
             }
-            return powerArgument1.Evaluate(powerArgument2, this);
+            return powerArgument1.Map(powerArgument2, this);
         }
 
         public int EvaluateFunctions(Function function1, Function function2)
@@ -116,13 +116,13 @@ namespace Algebra.Evaluators
 
         public int EvaluateLns(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public int EvaluateOthers(Expression expression1, Expression expression2)
         {
-            int a = expression1.Evaluate(RankEvaluator.Instance);
-            int b = expression2.Evaluate(RankEvaluator.Instance);
+            int a = expression1.Map(RankMapping.Instance);
+            int b = expression2.Map(RankMapping.Instance);
             return a.CompareTo(b);
         }
 
@@ -133,12 +133,12 @@ namespace Algebra.Evaluators
 
         public int EvaluateSigns(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public int EvaluateSins(Expression argument1, Expression argument2)
         {
-            return argument1.Evaluate(argument2, this);
+            return argument1.Map(argument2, this);
         }
 
         public int EvaluateSums(ICollection<Expression> arguments1, ICollection<Expression> arguments2)

@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Algebra.Evaluators
+namespace Algebra.mappings
 {
-    class VariableReplacementEvaluator : TraversalEvaluator<Expression>
+    class VariableReplacementMapping : TraversalMapping<Expression>
     {
         private readonly IReadOnlyDictionary<string, Expression> _substitutions;
         private readonly bool _exceptionOnVariableMissing;
 
-        public VariableReplacementEvaluator(IReadOnlyDictionary<string, Expression> substitutions, bool exceptionOnVariableMissing = true)
+        public VariableReplacementMapping(IReadOnlyDictionary<string, Expression> substitutions, bool exceptionOnVariableMissing = true)
         {
             this._substitutions = substitutions;
             this._exceptionOnVariableMissing = exceptionOnVariableMissing;
@@ -87,7 +87,7 @@ namespace Algebra.Evaluators
 
         public override Expression EvaluateOther(Expression other)
         {
-            throw new NotImplementedException($"Cannot replace variables of unknown expression {other}. Override {typeof(VariableReplacementEvaluator).Name} to add functionality for your new class.");
+            throw new NotImplementedException($"Cannot replace variables of unknown expression {other}. Override {typeof(VariableReplacementMapping).Name} to add functionality for your new class.");
         }
     }
 }

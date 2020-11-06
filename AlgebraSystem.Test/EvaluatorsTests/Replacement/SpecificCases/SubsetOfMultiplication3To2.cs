@@ -30,7 +30,7 @@ namespace EvaluatorsTests.Replacement.SpecificCases
             // Arrange
 
             // Act
-            IEnumerable<Expression> resultSet = expression.Evaluate(replaceEvaluator);
+            IEnumerable<Expression> resultSet = expression.Map(replaceEvaluator);
 
             // Assert
             Assert.That(resultSet, Contains.Item(expected));
@@ -42,7 +42,7 @@ namespace EvaluatorsTests.Replacement.SpecificCases
             // Arrange
 
             // Act
-            IEnumerable<Expression> resultSet = expression.Evaluate(replaceEvaluator);
+            IEnumerable<Expression> resultSet = expression.Map(replaceEvaluator);
 
             // Assert
             Assert.That(new List<Expression>(resultSet), Has.Count.EqualTo(SubsetOfMultiplication3to2Expecteds.Length));

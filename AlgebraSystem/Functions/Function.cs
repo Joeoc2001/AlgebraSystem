@@ -1,5 +1,5 @@
 ﻿using Algebra.Atoms;
-using Algebra.Evaluators;
+using Algebra.mappings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -107,34 +107,44 @@ namespace Algebra
                 {
                     atomicReplacements.Add(parameter.Key, parameter.Value.GetAtomicExpression());
                 }
-                return atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(atomicReplacements));
+                return atomicVariabledExpression.Map(new VariableReplacementMapping(atomicReplacements));
             }
 
+            /// <summary>
+            /// Returns this expression but with this function replaced with its atomic form.
+            /// E.g. tan(tan(x)) becomes sin(tan(x))/sin(tan(x))
+            /// </summary>
+            /// <returns>An expression with this function instead being atomic</returns>
             public Expression GetAtomicBodiedExpression()
             {
                 Expression atomicVariabledExpression = _identity.GetBodyAsAtomicExpression();
 
                 // Replace variables with their expressions
-                return atomicVariabledExpression.Evaluate(new VariableReplacementEvaluator(_parameters));
+                return atomicVariabledExpression.Map(new VariableReplacementMapping(_parameters));
             }
 
-            public override T Evaluate<T>(IEvaluator<T> evaluator)
+            public override void Map(IMapping mapping)
             {
-                return evaluator.EvaluateFunction(this);
+                mapping.EvaluateFunction(this);
             }
 
-            public override T Evaluate<T>(IExpandedEvaluator<T> evaluator)
+            public override T Map<T>(IMapping<T> mapping)
             {
-                return evaluator.EvaluateFunction(this);
+                return mapping.EvaluateFunction(this);
             }
 
-            public override T Evaluate<T>(Expression other, IDualEvaluator<T> evaluator)
+            public override T Map<T>(IExtendedMapping<T> mapping)
+            {
+                return mapping.EvaluateFunction(this);
+            }
+
+            public override T Map<T>(Expression other, IDualMapping<T> mapping)
             {
                 if (other is Function function)
                 {
-                    return evaluator.EvaluateFunctions(this, function);
+                    return mapping.EvaluateFunctions(this, function);
                 }
-                return evaluator.EvaluateOthers(this, other);
+                return mapping.EvaluateOthers(this, other);
             }
 
             public bool Equals(Function other)
