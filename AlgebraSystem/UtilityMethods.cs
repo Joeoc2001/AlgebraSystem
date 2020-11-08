@@ -39,5 +39,20 @@ namespace Algebra
             }
             return (a + b) / 2;
         }
+
+        public static double Arsinh(double a)
+        {
+            return Math.Log(a + Math.Sqrt(a * a + 1));
+        }
+
+        public static double Arcosh(double a)
+        {
+            return Math.Log(a + Math.Sqrt(a * a - 1));
+        }
+
+        public static double Artanh(double a)
+        {
+            return 0.5 * Math.Log((a + 1) / (a - 1));
+        }
     }
 }

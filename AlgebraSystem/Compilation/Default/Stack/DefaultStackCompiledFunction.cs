@@ -11,10 +11,10 @@ namespace Algebra.Compilation
         {
             private readonly IVariableInputSet<double> _variables;
             private readonly DefaultOpcode[] _codes; // Extract for speed
-            private readonly IDefaultInstruction[] _instructions;
+            private readonly IDefaultStackInstruction[] _instructions;
             private readonly int _maxStackDepth;
 
-            public DefaultStackCompiledFunction(IVariableInputSet<double> variables, IDefaultInstruction[] instructions)
+            public DefaultStackCompiledFunction(IVariableInputSet<double> variables, IDefaultStackInstruction[] instructions)
             {
                 _variables = variables;
                 _instructions = instructions;
@@ -24,12 +24,12 @@ namespace Algebra.Compilation
                 _maxStackDepth = GetMaxStackDepth(instructions);
             }
 
-            private static int GetMaxStackDepth(IDefaultInstruction[] _instructions)
+            private static int GetMaxStackDepth(IDefaultStackInstruction[] _instructions)
             {
                 int depth = 0;
                 int maxDepth = 0;
 
-                foreach (IDefaultInstruction instruction in _instructions)
+                foreach (IDefaultStackInstruction instruction in _instructions)
                 {
                     switch (instruction.Opcode)
                     {
@@ -87,11 +87,11 @@ namespace Algebra.Compilation
                     switch (code)
                     {
                         case DefaultOpcode.CONSTANT:
-                            DefaultLoadConst loadConst = (DefaultLoadConst)_instructions[i];
+                            DefaultStackLoadConst loadConst = (DefaultStackLoadConst)_instructions[i];
                             stack.Push(loadConst.Value);
                             break;
                         case DefaultOpcode.VARIABLE:
-                            DefaultLoadVar loadVar = (DefaultLoadVar)_instructions[i];
+                            DefaultStackLoadVar loadVar = (DefaultStackLoadVar)_instructions[i];
                             stack.Push(loadVar.Variable.Value);
                             break;
                         default:

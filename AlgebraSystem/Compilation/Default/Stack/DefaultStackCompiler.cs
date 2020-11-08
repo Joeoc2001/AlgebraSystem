@@ -9,26 +9,26 @@ namespace Algebra.Compilation
 {
     namespace Default.Stack
     {
-        internal class DefaultStackCompiler : StackCompiler<double, IDefaultInstruction>
+        internal class DefaultStackCompiler : StackCompiler<double, IDefaultStackInstruction>
         {
-            private static readonly Dictionary<FunctionIdentity, IDefaultInstruction> _defaultFunctionMap = new Dictionary<FunctionIdentity, IDefaultInstruction>()
+            private static readonly Dictionary<FunctionIdentity, IDefaultStackInstruction> _defaultFunctionMap = new Dictionary<FunctionIdentity, IDefaultStackInstruction>()
             {
-                { AbsIdentity.Instance,         new DefaultInstruction(DefaultOpcode.ABS)     },
-                { ArccosIdentity.Instance,      new DefaultInstruction(DefaultOpcode.ARCCOS)  },
-                { ArcoshIdentity.Instance,      new DefaultInstruction(DefaultOpcode.ARCOSH)  },
-                { ArsinhIdentity.Instance,      new DefaultInstruction(DefaultOpcode.ARSINH)  },
-                { ArtanhIdentity.Instance,      new DefaultInstruction(DefaultOpcode.ARTANH)  },
-                { CoshIdentity.Instance,        new DefaultInstruction(DefaultOpcode.COSH)    },
-                { CosIdentity.Instance,         new DefaultInstruction(DefaultOpcode.COS)     },
-                { DivIdentity.Instance,         new DefaultInstruction(DefaultOpcode.DIVIDE)  },
-                { LogIdentity.Instance,         new DefaultInstruction(DefaultOpcode.LOG)     },
-                { MaxIdentity.Instance,         new DefaultInstruction(DefaultOpcode.MAX)     },
-                { MinIdentity.Instance,         new DefaultInstruction(DefaultOpcode.MIN)     },
-                { SelectIdentity.Instance,      new DefaultInstruction(DefaultOpcode.SELECT)  },
-                { SinhIdentity.Instance,        new DefaultInstruction(DefaultOpcode.SINH)    },
-                { SqrtIdentity.Instance,        new DefaultInstruction(DefaultOpcode.SQRT)    },
-                { TanhIdentity.Instance,        new DefaultInstruction(DefaultOpcode.TANH)    },
-                { TanIdentity.Instance,         new DefaultInstruction(DefaultOpcode.TAN)     },
+                { AbsIdentity.Instance,         new DefaultStackInstruction(DefaultOpcode.ABS)     },
+                { ArccosIdentity.Instance,      new DefaultStackInstruction(DefaultOpcode.ARCCOS)  },
+                { ArcoshIdentity.Instance,      new DefaultStackInstruction(DefaultOpcode.ARCOSH)  },
+                { ArsinhIdentity.Instance,      new DefaultStackInstruction(DefaultOpcode.ARSINH)  },
+                { ArtanhIdentity.Instance,      new DefaultStackInstruction(DefaultOpcode.ARTANH)  },
+                { CoshIdentity.Instance,        new DefaultStackInstruction(DefaultOpcode.COSH)    },
+                { CosIdentity.Instance,         new DefaultStackInstruction(DefaultOpcode.COS)     },
+                { DivIdentity.Instance,         new DefaultStackInstruction(DefaultOpcode.DIVIDE)  },
+                { LogIdentity.Instance,         new DefaultStackInstruction(DefaultOpcode.LOG)     },
+                { MaxIdentity.Instance,         new DefaultStackInstruction(DefaultOpcode.MAX)     },
+                { MinIdentity.Instance,         new DefaultStackInstruction(DefaultOpcode.MIN)     },
+                { SelectIdentity.Instance,      new DefaultStackInstruction(DefaultOpcode.SELECT)  },
+                { SinhIdentity.Instance,        new DefaultStackInstruction(DefaultOpcode.SINH)    },
+                { SqrtIdentity.Instance,        new DefaultStackInstruction(DefaultOpcode.SQRT)    },
+                { TanhIdentity.Instance,        new DefaultStackInstruction(DefaultOpcode.TANH)    },
+                { TanIdentity.Instance,         new DefaultStackInstruction(DefaultOpcode.TAN)     },
             };
 
             public static DefaultStackCompiler Instance = new DefaultStackCompiler();
@@ -38,64 +38,64 @@ namespace Algebra.Compilation
             {
             }
 
-            protected override ICompiledFunction<double> CreateCompiled(Expression expression, IVariableInputSet<double> variables, IDefaultInstruction[] instructions)
+            protected override ICompiledFunction<double> CreateCompiled(Expression expression, IVariableInputSet<double> variables, IDefaultStackInstruction[] instructions)
             {
                 return new DefaultStackCompiledFunction(variables, instructions);
             }
 
-            protected override IDefaultInstruction EvaluateArcsin()
+            protected override IDefaultStackInstruction EvaluateArcsin()
             {
-                return new DefaultInstruction(DefaultOpcode.ARCSIN);
+                return new DefaultStackInstruction(DefaultOpcode.ARCSIN);
             }
 
-            protected override IDefaultInstruction EvaluateArctan()
+            protected override IDefaultStackInstruction EvaluateArctan()
             {
-                return new DefaultInstruction(DefaultOpcode.ARCTAN);
+                return new DefaultStackInstruction(DefaultOpcode.ARCTAN);
             }
 
-            protected override IDefaultInstruction EvaluateConstant(IConstant value)
+            protected override IDefaultStackInstruction EvaluateConstant(IConstant value)
             {
-                return new DefaultLoadConst((double)value.GetDoubleApproximation());
+                return new DefaultStackLoadConst((double)value.GetDoubleApproximation());
             }
 
-            protected override IDefaultInstruction EvaluateExponent()
+            protected override IDefaultStackInstruction EvaluateExponent()
             {
-                return new DefaultInstruction(DefaultOpcode.EXPONENT);
+                return new DefaultStackInstruction(DefaultOpcode.EXPONENT);
             }
 
-            protected override IDefaultInstruction EvaluateFunction(FunctionIdentity function)
+            protected override IDefaultStackInstruction EvaluateFunction(FunctionIdentity function)
             {
                 return _defaultFunctionMap[function];
             }
 
-            protected override IDefaultInstruction EvaluateLn()
+            protected override IDefaultStackInstruction EvaluateLn()
             {
-                return new DefaultInstruction(DefaultOpcode.LN);
+                return new DefaultStackInstruction(DefaultOpcode.LN);
             }
 
-            protected override IDefaultInstruction EvaluateProduct()
+            protected override IDefaultStackInstruction EvaluateProduct()
             {
-                return new DefaultInstruction(DefaultOpcode.MULTIPLY);
+                return new DefaultStackInstruction(DefaultOpcode.MULTIPLY);
             }
 
-            protected override IDefaultInstruction EvaluateSign()
+            protected override IDefaultStackInstruction EvaluateSign()
             {
-                return new DefaultInstruction(DefaultOpcode.SIGN);
+                return new DefaultStackInstruction(DefaultOpcode.SIGN);
             }
 
-            protected override IDefaultInstruction EvaluateSin()
+            protected override IDefaultStackInstruction EvaluateSin()
             {
-                return new DefaultInstruction(DefaultOpcode.SIN);
+                return new DefaultStackInstruction(DefaultOpcode.SIN);
             }
 
-            protected override IDefaultInstruction EvaluateSum()
+            protected override IDefaultStackInstruction EvaluateSum()
             {
-                return new DefaultInstruction(DefaultOpcode.ADD);
+                return new DefaultStackInstruction(DefaultOpcode.ADD);
             }
 
-            protected override IDefaultInstruction EvaluateVariable(IVariable value, IVariableInputSet<double> variables)
+            protected override IDefaultStackInstruction EvaluateVariable(IVariable value, IVariableInputSet<double> variables)
             {
-                return new DefaultLoadVar(variables.Get(value.GetName()), value.GetName());
+                return new DefaultStackLoadVar(variables.Get(value.GetName()), value.GetName());
             }
         }
     }

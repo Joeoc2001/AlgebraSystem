@@ -6,18 +6,18 @@ namespace Algebra.Compilation
 {
     namespace Default.Stack
     {
-        internal class DefaultInstruction : IDefaultInstruction
+        internal class DefaultStackInstruction : IDefaultStackInstruction
         {
             public DefaultOpcode Opcode { get; }
 
-            public DefaultInstruction(DefaultOpcode opcode)
+            public DefaultStackInstruction(DefaultOpcode opcode)
             {
                 this.Opcode = opcode;
             }
 
             public override bool Equals(object obj)
             {
-                return obj is DefaultInstruction instruction &&
+                return obj is DefaultStackInstruction instruction &&
                        Opcode == instruction.Opcode;
             }
 

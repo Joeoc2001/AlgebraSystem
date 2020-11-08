@@ -1,15 +1,15 @@
 ﻿namespace Algebra.Compilation
 {
-    namespace Default
+    namespace Default.Stack
     {
-        internal class DefaultLoadVar : IDefaultInstruction
+        internal class DefaultStackLoadVar : IDefaultStackInstruction
         {
             public DefaultOpcode Opcode { get => DefaultOpcode.VARIABLE; }
 
             public VariableInput<double> Variable { get; }
             private readonly string _name;
 
-            public DefaultLoadVar(VariableInput<double> variable, string name)
+            public DefaultStackLoadVar(VariableInput<double> variable, string name)
             {
                 Variable = variable;
                 _name = name;
@@ -17,7 +17,7 @@
 
             public override bool Equals(object obj)
             {
-                return obj is DefaultLoadVar var &&
+                return obj is DefaultStackLoadVar var &&
                        Variable == var.Variable;
             }
 

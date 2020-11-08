@@ -4,22 +4,22 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    namespace Default
+    namespace Default.Stack
     {
-        internal class DefaultLoadConst : IDefaultInstruction
+        internal class DefaultStackLoadConst : IDefaultStackInstruction
         {
             public DefaultOpcode Opcode { get => DefaultOpcode.CONSTANT; }
 
             public double Value { get; }
 
-            public DefaultLoadConst(double value)
+            public DefaultStackLoadConst(double value)
             {
                 Value = value;
             }
 
             public override bool Equals(object obj)
             {
-                return obj is DefaultLoadConst @const &&
+                return obj is DefaultStackLoadConst @const &&
                        Value == @const.Value;
             }
 
