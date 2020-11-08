@@ -22,9 +22,9 @@ namespace AlgebraSystem.Speedtest
             VariableInputSet<double> variableInputs = new VariableInputSet<double>() { { "x", 0 }, { "y", 0 } };
             VariableInput<double> xInput = variableInputs.Get("x");
             VariableInput<double> yInput = variableInputs.Get("y");
-            var compiled = expression.Compile(variableInputs, 3);
+            var compiled = expression.Compile(3);
 
-            time = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return compiled.Evaluate(); });
+            time = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return compiled.Evaluate(variableInputs); });
             Console.WriteLine($"Compiled stack Avg Time: {time} ns");
 
             time = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));

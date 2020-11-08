@@ -6,29 +6,27 @@
         {
             public DefaultOpcode Opcode { get => DefaultOpcode.VARIABLE; }
 
-            public VariableInput<double> Variable { get; }
-            private readonly string _name;
+            public string Name { get; }
 
-            public DefaultStackLoadVar(VariableInput<double> variable, string name)
+            public DefaultStackLoadVar(string name)
             {
-                Variable = variable;
-                _name = name;
+                Name = name;
             }
 
             public override bool Equals(object obj)
             {
                 return obj is DefaultStackLoadVar var &&
-                       Variable == var.Variable;
+                       Name == var.Name;
             }
 
             public override int GetHashCode()
             {
-                return -2134847229 + Variable.GetHashCode();
+                return -2134847229 + Name.GetHashCode();
             }
 
             public override string ToString()
             {
-                return $"Load Var {_name}";
+                return $"Load Var {Name}";
             }
         }
     }

@@ -38,9 +38,9 @@ namespace Algebra.Compilation
             {
             }
 
-            protected override ICompiledFunction<double> CreateCompiled(Expression expression, IVariableInputSet<double> variables, IDefaultStackInstruction[] instructions)
+            protected override ICompiledFunction<double> CreateCompiled(Expression expression, IDefaultStackInstruction[] instructions)
             {
-                return new DefaultStackCompiledFunction(variables, instructions);
+                return new DefaultStackCompiledFunction(instructions);
             }
 
             protected override IDefaultStackInstruction EvaluateArcsin()
@@ -93,9 +93,9 @@ namespace Algebra.Compilation
                 return new DefaultStackInstruction(DefaultOpcode.ADD);
             }
 
-            protected override IDefaultStackInstruction EvaluateVariable(IVariable value, IVariableInputSet<double> variables)
+            protected override IDefaultStackInstruction EvaluateVariable(IVariable value)
             {
-                return new DefaultStackLoadVar(variables.Get(value.GetName()), value.GetName());
+                return new DefaultStackLoadVar(value.GetName());
             }
         }
     }

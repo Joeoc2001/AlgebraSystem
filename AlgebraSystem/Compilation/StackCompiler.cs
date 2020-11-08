@@ -13,12 +13,10 @@ namespace Algebra.Compilation
         {
             private readonly List<Compiled> _instructions = new List<Compiled>();
             private readonly StackCompiler<ReturnType, Compiled> _owningCompiler;
-            private readonly IVariableInputSet<ReturnType> _variables;
 
-            public CompileTraverser(StackCompiler<ReturnType, Compiled> owningCompiler, IVariableInputSet<ReturnType> variables)
+            public CompileTraverser(StackCompiler<ReturnType, Compiled> owningCompiler)
             {
                 _owningCompiler = owningCompiler ?? throw new ArgumentNullException(nameof(owningCompiler));
-                _variables = variables;
             }
 
             public Compiled[] GetCompiled()
@@ -107,7 +105,7 @@ namespace Algebra.Compilation
 
             public void EvaluateVariable(IVariable value)
             {
-                Compiled compiled = _owningCompiler.EvaluateVariable(value, _variables);
+                Compiled compiled = _owningCompiler.EvaluateVariable(value);
                 Add(compiled);
             }
 
@@ -135,15 +133,15 @@ namespace Algebra.Compilation
 
         }
 
-        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, IVariableInputSet<ReturnType> variables, Compiled[] instructions);
+        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions);
 
-        public override ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables, int simplificationAggressiveness=3)
+        public override ICompiledFunction<ReturnType> Compile(Expression expression, int simplificationAggressiveness=3)
         {
             expression = expression.Simplify(metric:_simplificationMetric, depth:simplificationAggressiveness, equivalencies:_paths);
-            CompileTraverser traverser = new CompileTraverser(this, variables);
+            CompileTraverser traverser = new CompileTraverser(this);
             expression.Map(traverser);
             Compiled[] instructions = traverser.GetCompiled();
-            return CreateCompiled(expression, variables, instructions);
+            return CreateCompiled(expression, instructions);
         }
 
         protected abstract Compiled EvaluateArcsin();
@@ -155,7 +153,7 @@ namespace Algebra.Compilation
         protected abstract Compiled EvaluateSin();
         protected abstract Compiled EvaluateProduct();
         protected abstract Compiled EvaluateSum();
-        protected abstract Compiled EvaluateVariable(IVariable value, IVariableInputSet<ReturnType> variables);
+        protected abstract Compiled EvaluateVariable(IVariable value);
         protected abstract Compiled EvaluateFunction(FunctionIdentity function);
     }
 }

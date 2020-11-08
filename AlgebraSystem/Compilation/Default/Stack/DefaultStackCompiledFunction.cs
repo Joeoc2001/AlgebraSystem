@@ -9,14 +9,12 @@ namespace Algebra.Compilation
     {
         internal class DefaultStackCompiledFunction : ICompiledFunction<double>
         {
-            private readonly IVariableInputSet<double> _variables;
             private readonly DefaultOpcode[] _codes; // Extract for speed
             private readonly IDefaultStackInstruction[] _instructions;
             private readonly int _maxStackDepth;
 
-            public DefaultStackCompiledFunction(IVariableInputSet<double> variables, IDefaultStackInstruction[] instructions)
+            public DefaultStackCompiledFunction(IDefaultStackInstruction[] instructions)
             {
-                _variables = variables;
                 _instructions = instructions;
 
                 _codes = _instructions.Select(i => i.Opcode).ToArray();
@@ -77,7 +75,7 @@ namespace Algebra.Compilation
             }
 
 
-            public double Evaluate()
+            public double Evaluate(IVariableInputSet<double> variables)
             {
                 FastStack<double> stack = new FastStack<double>(_maxStackDepth);
 
@@ -92,7 +90,7 @@ namespace Algebra.Compilation
                             break;
                         case DefaultOpcode.VARIABLE:
                             DefaultStackLoadVar loadVar = (DefaultStackLoadVar)_instructions[i];
-                            stack.Push(loadVar.Variable.Value);
+                            stack.Push(variables.Get(loadVar.Name).Value);
                             break;
                         default:
                             stack.Push(Evaluate(code, ref stack));
@@ -175,11 +173,6 @@ namespace Algebra.Compilation
             private static double Artanh(double a)
             {
                 return 0.5 * Math.Log((a + 1) / (a - 1));
-            }
-
-            public IVariableInputSet<double> GetVariableInputs()
-            {
-                return _variables;
             }
         }
     }

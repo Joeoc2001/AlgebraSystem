@@ -17,15 +17,13 @@ namespace Algebra.Compilation
         private class CompileTraverser : IMapping<int>
         {
             private readonly HeapCompiler<ReturnType, Compiled> _compiler;
-            private readonly IVariableInputSet<ReturnType> _variables;
 
             private readonly List<(Compiled instr, int lastUsed)> _instructions = new List<(Compiled, int)>();
             private readonly Dictionary<Expression, int> _resultLocation = new Dictionary<Expression, int>();
 
-            public CompileTraverser(HeapCompiler<ReturnType, Compiled> compiler, IVariableInputSet<ReturnType> variables)
+            public CompileTraverser(HeapCompiler<ReturnType, Compiled> compiler)
             {
                 _compiler = compiler;
-                _variables = variables;
             }
 
             public Compiled[] GetCompiled()
@@ -108,7 +106,7 @@ namespace Algebra.Compilation
             {
                 int resultLoc = _instructions.Count;
 
-                Compiled instr = _compiler.EvaluateVariable(value, _variables, resultLoc);
+                Compiled instr = _compiler.EvaluateVariable(value, resultLoc);
                 _instructions.Add((instr, resultLoc));
 
                 return resultLoc;
@@ -200,14 +198,14 @@ namespace Algebra.Compilation
 
         }
 
-        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, IVariableInputSet<ReturnType> variables, Compiled[] instructions, int[] indirectionTable, int cellCount);
+        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, int[] indirectionTable, int cellCount);
 
-        public override ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables, int simplificationAggressiveness=3)
+        public override ICompiledFunction<ReturnType> Compile(Expression expression, int simplificationAggressiveness=3)
         {
             expression = expression.Simplify(metric:_simplificationMetric, depth:simplificationAggressiveness, equivalencies:_paths);
 
             // Compile and extract features
-            CompileTraverser traverser = new CompileTraverser(this, variables);
+            CompileTraverser traverser = new CompileTraverser(this);
             expression.Map(traverser);
             Compiled[] instructions = traverser.GetCompiled();
             int[] lastUses = traverser.GetLastUses();
@@ -216,7 +214,7 @@ namespace Algebra.Compilation
             int[] indirectionTable = GenerateIndirectionTable(lastUses);
             int cellCount = indirectionTable.Max() + 1;
 
-            return CreateCompiled(expression, variables, instructions, indirectionTable, cellCount);
+            return CreateCompiled(expression, instructions, indirectionTable, cellCount);
         }
 
         private static int[] GenerateIndirectionTable(int[] lastUses)
@@ -274,7 +272,7 @@ namespace Algebra.Compilation
         protected abstract Compiled EvaluateSin(int arg, int dest);
         protected abstract Compiled EvaluateProduct(int arg1, int arg2, int dest);
         protected abstract Compiled EvaluateSum(int arg1, int arg2, int dest);
-        protected abstract Compiled EvaluateVariable(IVariable value, IVariableInputSet<ReturnType> variables, int dest);
+        protected abstract Compiled EvaluateVariable(IVariable value, int dest);
         protected abstract Compiled EvaluateFunction(FunctionIdentity function, List<int> args, int dest);
     }
 }

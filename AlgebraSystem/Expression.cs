@@ -1,6 +1,6 @@
 ﻿using Algebra.Atoms;
 using Algebra.Compilation;
-using Algebra.Compilation.Default;
+using Algebra.Compilation.Default.Stack;
 using Algebra.Equivalence;
 using Algebra.mappings;
 using Algebra.Functions.FunctionIdentities;
@@ -148,9 +148,9 @@ namespace Algebra
             return Map(new DoubleMapping(variables));
         }
 
-        public ICompiledFunction<double> Compile(VariableInputSet<double> variables, int simplificationAggressiveness = 3)
+        public ICompiledFunction<double> Compile(int simplificationAggressiveness = 3)
         {
-            return DefaultStackCompiler.Instance.Compile(this, variables, simplificationAggressiveness);
+            return DefaultStackCompiler.Instance.Compile(this, simplificationAggressiveness);
         }
 
         public static bool ShouldParenthesise(Expression parent, Expression child)

@@ -20,6 +20,6 @@ namespace Algebra.Compilation
             _paths = new List<EquivalencePath>(EquivalencePaths.DefaultAtomicPaths.Concat(EquivalencePaths.GenerateFunctionReplacementPaths(supportedFunctions)));
         }
 
-        public abstract ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables, int simplificationAggressiveness = 3);
+        public abstract ICompiledFunction<ReturnType> Compile(Expression expression, int simplificationAggressiveness = 3);
     }
 }

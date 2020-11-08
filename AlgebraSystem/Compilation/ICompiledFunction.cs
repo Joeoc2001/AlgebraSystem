@@ -6,7 +6,6 @@ namespace Algebra.Compilation
 {
     public interface ICompiledFunction<T>
     {
-        IVariableInputSet<T> GetVariableInputs();
-        T Evaluate();
+        T Evaluate(IVariableInputSet<double> variables);
     }
 }
