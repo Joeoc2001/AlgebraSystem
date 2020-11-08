@@ -27,4 +27,8 @@
     <PackageReference Include="OptimizedPriorityQueue" Version="5.0.0" />
     <PackageReference Include="Rationals" Version="1.3.3" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Compilation\Default\Set\" />
+  </ItemGroup>
 </Project>

@@ -7,18 +7,17 @@ using System.Text;
 
 namespace Algebra.Compilation
 {
-    public abstract class StackCompiler<ReturnType, Compiled>
+    public abstract class StackCompiler<ReturnType, Compiled> : Compiler<ReturnType>
     {
         private class CompileTraverser : IMapping
         {
-            private readonly List<Compiled> _instructions;
+            private readonly List<Compiled> _instructions = new List<Compiled>();
             private readonly StackCompiler<ReturnType, Compiled> _owningCompiler;
             private readonly IVariableInputSet<ReturnType> _variables;
 
             public CompileTraverser(StackCompiler<ReturnType, Compiled> owningCompiler, IVariableInputSet<ReturnType> variables)
             {
                 _owningCompiler = owningCompiler ?? throw new ArgumentNullException(nameof(owningCompiler));
-                _instructions = new List<Compiled>();
                 _variables = variables;
             }
 
@@ -130,20 +129,15 @@ namespace Algebra.Compilation
             }
         }
 
-        private readonly ICollection<FunctionIdentity> _supportedFunctions;
-        private readonly IExpressionMetric _simplificationMetric;
-        private readonly List<EquivalencePath> _paths;
-
         public StackCompiler(ICollection<FunctionIdentity> supportedFunctions)
+            : base(supportedFunctions)
         {
-            _supportedFunctions = supportedFunctions;
-            _simplificationMetric = new DefaultSimplificationMetric(supportedFunctions);
-            _paths = new List<EquivalencePath>(EquivalencePaths.DefaultAtomicPaths.Concat(EquivalencePaths.GenerateFunctionReplacementPaths(supportedFunctions)));
+
         }
 
         protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, IVariableInputSet<ReturnType> variables, Compiled[] instructions);
 
-        public ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables, int simplificationAggressiveness=3)
+        public override ICompiledFunction<ReturnType> Compile(Expression expression, IVariableInputSet<ReturnType> variables, int simplificationAggressiveness=3)
         {
             expression = expression.Simplify(metric:_simplificationMetric, depth:simplificationAggressiveness, equivalencies:_paths);
             CompileTraverser traverser = new CompileTraverser(this, variables);
