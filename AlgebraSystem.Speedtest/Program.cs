@@ -14,41 +14,51 @@ namespace AlgebraSystem.Speedtest
             int lengths = 100;
 
             Expression expression = "tanh(max(x + y, x * y)) + arctan(min(x + y, x * y))";
-            double time;
+            double time, sum;
 
-            time = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
+            (time, sum) = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
             Console.WriteLine($"Execute Once Avg Time: {time} ns");
+            Console.WriteLine($"Value: {sum}");
 
             VariableInputSet<double> variableInputs = new VariableInputSet<double>() { { "x", 0 }, { "y", 0 } };
             VariableInput<double> xInput = variableInputs.Get("x");
             VariableInput<double> yInput = variableInputs.Get("y");
-            var compiled = expression.Compile(3);
+            var stackCompiled = expression.Compile(Expression.CompilationMethod.Stack, 3);
+            var heapCompiled = expression.Compile(Expression.CompilationMethod.Heap, 3);
 
-            time = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return compiled.Evaluate(variableInputs); });
+            (time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return stackCompiled.Evaluate(variableInputs); });
             Console.WriteLine($"Compiled stack Avg Time: {time} ns");
+            Console.WriteLine($"Value: {sum}");
 
-            time = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));
+            (time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return heapCompiled.Evaluate(variableInputs); });
+            Console.WriteLine($"Compiled heap Avg Time: {time} ns");
+            Console.WriteLine($"Value: {sum}");
+
+            (time, sum) = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));
             Console.WriteLine($"Native Time: {time} ns");
+            Console.WriteLine($"Value: {sum}");
         }
 
-        private static double Time(int range, Func<int, int, int, double> func)
+        private static (double, double) Time(int range, Func<int, int, int, double> func)
         {
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             int c = 0;
+            double sum = 0;
             for (int x = 0; x < range; x++)
             {
                 for (int y = 0; y < range; y++)
                 {
                     for (int z = 0; z < range; z++)
                     {
-                        func(x, y, z);
+                        sum += func(x, y, z);
                         c += 1;
                     }
                 }
             }
             watch.Stop();
-            return (double)(watch.ElapsedMilliseconds * 1000000) / c;
+            double time = (double)(watch.ElapsedMilliseconds * 1000000) / c;
+            return (time, sum);
         }
     }
 }

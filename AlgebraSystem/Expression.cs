@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using Algebra.Compilation.Default.Heap;
 
 namespace Algebra
 {
@@ -148,9 +149,23 @@ namespace Algebra
             return Map(new DoubleMapping(variables));
         }
 
-        public ICompiledFunction<double> Compile(int simplificationAggressiveness = 3)
+        public enum CompilationMethod
         {
-            return DefaultStackCompiler.Instance.Compile(this, simplificationAggressiveness);
+            Stack,
+            Heap
+        }
+
+        public ICompiledFunction<double> Compile(CompilationMethod method = CompilationMethod.Heap, int simplificationAggressiveness = 3)
+        {
+            switch (method)
+            {
+                case CompilationMethod.Stack:
+                    return DefaultStackCompiler.Instance.Compile(this, simplificationAggressiveness);
+                case CompilationMethod.Heap:
+                    return DefaultHeapCompiler.Instance.Compile(this, simplificationAggressiveness);
+                default:
+                    throw new ArgumentOutOfRangeException($"Unknown compilation method {method}");
+            }
         }
 
         public static bool ShouldParenthesise(Expression parent, Expression child)

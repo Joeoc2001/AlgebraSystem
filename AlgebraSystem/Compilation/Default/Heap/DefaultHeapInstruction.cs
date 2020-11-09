@@ -23,14 +23,13 @@ namespace Algebra.Compilation
 
             public DefaultOpcode Opcode { get; }
             public bool IsHoldingDouble { get; }
-            private DataUnion _data;
-            public DataUnion Data { get => _data; }
+            public DataUnion Data { get; }
             public int Dest { get; }
 
             public DefaultHeapInstruction(DefaultOpcode opcode, int arg_1, int dest)
             {
                 Opcode = opcode;
-                _data = new DataUnion
+                Data = new DataUnion
                 {
                     Arg_1 = arg_1,
                     Arg_2 = 0
@@ -42,7 +41,7 @@ namespace Algebra.Compilation
             public DefaultHeapInstruction(DefaultOpcode opcode, int arg_1, int arg_2, int dest)
             {
                 Opcode = opcode;
-                _data = new DataUnion
+                Data = new DataUnion
                 {
                     Arg_1 = arg_1,
                     Arg_2 = arg_2,
@@ -54,7 +53,7 @@ namespace Algebra.Compilation
             public DefaultHeapInstruction(DefaultOpcode opcode, double value, int dest)
             {
                 Opcode = opcode;
-                _data = new DataUnion
+                Data = new DataUnion
                 {
                     Value = value
                 };
@@ -62,14 +61,16 @@ namespace Algebra.Compilation
                 Dest = dest;
             }
 
-            public void IndirectByTable(int[] indirectionTable)
+            public DefaultHeapInstruction IndirectByTable(int[] indirectionTable)
             {
+                int newDest = indirectionTable[Dest];
                 if (IsHoldingDouble)
                 {
-                    return;
+                    return new DefaultHeapInstruction(Opcode, Data.Value, newDest);
                 }
-                _data.Arg_1 = indirectionTable[Data.Arg_1];
-                _data.Arg_2 = indirectionTable[Data.Arg_2];
+                int arg_1 = indirectionTable[Data.Arg_1];
+                int arg_2 = indirectionTable[Data.Arg_2];
+                return new DefaultHeapInstruction(Opcode, arg_1, arg_2, newDest);
             }
 
             public override bool Equals(object obj)

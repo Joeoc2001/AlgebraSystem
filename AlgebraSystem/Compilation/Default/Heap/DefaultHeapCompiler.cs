@@ -41,9 +41,9 @@ namespace Algebra.Compilation
             protected override ICompiledFunction<double> CreateCompiled(Expression expression, DefaultHeapInstruction[] instructions, Dictionary<string, int> seenVariables, int[] indirectionTable, int cellCount)
             {
                 // Map instructions using indirection table
-                foreach (var instr in instructions)
+                for (int i = 0; i < instructions.Length; i++)
                 {
-                    instr.IndirectByTable(indirectionTable); 
+                    instructions[i] = instructions[i].IndirectByTable(indirectionTable); 
                 }
 
                 return new DefaultHeapCompiledFunction(instructions, cellCount, seenVariables.ToDictionary(x => x.Value, x => x.Key));
