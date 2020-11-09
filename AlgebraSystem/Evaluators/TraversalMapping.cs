@@ -96,6 +96,7 @@ namespace Algebra.mappings
             return Arctan(argumentExpression.Map(this));
         }
 
-        public abstract T EvaluateOther(Expression other);
+        [Obsolete]
+        public virtual T EvaluateOther(Expression other) { return default; }
     }
 }

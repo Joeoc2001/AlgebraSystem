@@ -152,7 +152,8 @@ namespace Algebra
         public enum CompilationMethod
         {
             Stack,
-            Heap
+            Heap,
+            LambdaHeap
         }
 
         public ICompiledFunction<double> Compile(CompilationMethod method = CompilationMethod.Heap, int simplificationAggressiveness = 3)
@@ -163,6 +164,8 @@ namespace Algebra
                     return DefaultStackCompiler.Instance.Compile(this, simplificationAggressiveness);
                 case CompilationMethod.Heap:
                     return DefaultHeapCompiler.Instance.Compile(this, simplificationAggressiveness);
+                case CompilationMethod.LambdaHeap:
+                    return LambdaHeapCompiler.Instance.Compile(this, simplificationAggressiveness);
                 default:
                     throw new ArgumentOutOfRangeException($"Unknown compilation method {method}");
             }

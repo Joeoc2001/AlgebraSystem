@@ -11,9 +11,9 @@ namespace Algebra.Compilation
         {
             private readonly DefaultHeapInstruction[] _instructions;
             private readonly int _heapSize;
-            private readonly Dictionary<int, string> _variableNames;
+            private readonly string[] _variableNames;
 
-            public DefaultHeapCompiledFunction(DefaultHeapInstruction[] instructions, int heapSize, Dictionary<int, string> variableNames)
+            public DefaultHeapCompiledFunction(DefaultHeapInstruction[] instructions, int heapSize, string[] variableNames)
             {
                 _instructions = instructions;
                 _heapSize = heapSize;
@@ -27,96 +27,83 @@ namespace Algebra.Compilation
 
                 foreach (DefaultHeapInstruction instruction in _instructions)
                 {
-                    double arg1 = heap[instruction.Data.Arg_1];
-                    double arg2 = heap[instruction.Data.Arg_2];
+                    DefaultHeapInstruction.DataUnion data = instruction.Data;
                     switch (instruction.Opcode)
                     {
                         case DefaultOpcode.VARIABLE:
-                            result = variables.Get(_variableNames[instruction.Data.Arg_1]).Value;
+                            result = variables.Get(_variableNames[data.Arg_1]).Value;
                             break;
                         case DefaultOpcode.CONSTANT:
-                            result = instruction.Data.Value;
-                            break;
-                        case DefaultOpcode.SIN:
-                            result = Math.Sin(arg1);
-                            break;
-                        case DefaultOpcode.COS:
-                            result = Math.Cos(arg1);
-                            break;
-                        case DefaultOpcode.TAN:
-                            result = Math.Tan(arg1);
-                            break;
-                        case DefaultOpcode.ARCSIN:
-                            result = Math.Asin(arg1);
-                            break;
-                        case DefaultOpcode.ARCCOS:
-                            result = Math.Acos(arg1);
-                            break;
-                        case DefaultOpcode.ARCTAN:
-                            result = Math.Atan(arg1);
-                            break;
-                        case DefaultOpcode.SINH:
-                            result = Math.Sinh(arg1);
-                            break;
-                        case DefaultOpcode.COSH:
-                            result = Math.Cosh(arg1);
-                            break;
-                        case DefaultOpcode.TANH:
-                            result = Math.Tanh(arg1);
-                            break;
-                        case DefaultOpcode.ARSINH:
-                            result = UtilityMethods.Arsinh(arg1);
-                            break;
-                        case DefaultOpcode.ARCOSH:
-                            result = UtilityMethods.Arcosh(arg1);
-                            break;
-                        case DefaultOpcode.ARTANH:
-                            result = UtilityMethods.Artanh(arg1);
-                            break;
-                        case DefaultOpcode.EXPONENT:
-                            result = Math.Pow(arg1, arg2);
-                            break;
-                        case DefaultOpcode.LN:
-                            result = Math.Log(arg1);
-                            break;
-                        case DefaultOpcode.LOG:
-                            result = Math.Log(arg1, arg2);
-                            break;
-                        case DefaultOpcode.SQRT:
-                            result = Math.Sqrt(arg1);
-                            break;
-                        case DefaultOpcode.ADD:
-                            result = arg1 + arg2;
-                            break;
-                        case DefaultOpcode.SUBTRACT:
-                            result = arg1 - arg2;
-                            break;
-                        case DefaultOpcode.MULTIPLY:
-                            result = arg1 * arg2;
-                            break;
-                        case DefaultOpcode.DIVIDE:
-                            result = arg1 / arg2;
-                            break;
-                        case DefaultOpcode.SIGN:
-                            result = Math.Sign(arg1);
-                            break;
-                        case DefaultOpcode.ABS:
-                            result = Math.Abs(arg1);
-                            break;
-                        case DefaultOpcode.MIN:
-                            result = Math.Min(arg1, arg2);
-                            break;
-                        case DefaultOpcode.MAX:
-                            result = Math.Max(arg1, arg2);
+                            result = data.Value;
                             break;
                         default:
-                            throw new NotImplementedException($"Cannot execute instruction {instruction.Opcode}");
+                            double arg1 = heap[data.Arg_1];
+                            double arg2 = heap[data.Arg_2];
+                            result = EvaluateOperation(instruction.Opcode, arg1, arg2);
+                            break;
                     }
 
                     heap[instruction.Dest] = result;
                 }
 
                 return result;
+            }
+
+            private static double EvaluateOperation(DefaultOpcode opcode, double arg1, double arg2)
+            {
+                switch (opcode)
+                {
+                    case DefaultOpcode.SIN:
+                        return Math.Sin(arg1);
+                    case DefaultOpcode.COS:
+                        return Math.Cos(arg1);
+                    case DefaultOpcode.TAN:
+                        return Math.Tan(arg1);
+                    case DefaultOpcode.ARCSIN:
+                        return Math.Asin(arg1);
+                    case DefaultOpcode.ARCCOS:
+                        return Math.Acos(arg1);
+                    case DefaultOpcode.ARCTAN:
+                        return Math.Atan(arg1);
+                    case DefaultOpcode.SINH:
+                        return Math.Sinh(arg1);
+                    case DefaultOpcode.COSH:
+                        return Math.Cosh(arg1);
+                    case DefaultOpcode.TANH:
+                        return Math.Tanh(arg1);
+                    case DefaultOpcode.ARSINH:
+                        return UtilityMethods.Arsinh(arg1);
+                    case DefaultOpcode.ARCOSH:
+                        return UtilityMethods.Arcosh(arg1);
+                    case DefaultOpcode.ARTANH:
+                        return UtilityMethods.Artanh(arg1);
+                    case DefaultOpcode.EXPONENT:
+                        return Math.Pow(arg1, arg2);
+                    case DefaultOpcode.LN:
+                        return Math.Log(arg1);
+                    case DefaultOpcode.LOG:
+                        return Math.Log(arg1, arg2);
+                    case DefaultOpcode.SQRT:
+                        return Math.Sqrt(arg1);
+                    case DefaultOpcode.ADD:
+                        return arg1 + arg2;
+                    case DefaultOpcode.SUBTRACT:
+                        return arg1 - arg2;
+                    case DefaultOpcode.MULTIPLY:
+                        return arg1 * arg2;
+                    case DefaultOpcode.DIVIDE:
+                        return arg1 / arg2;
+                    case DefaultOpcode.SIGN:
+                        return Math.Sign(arg1);
+                    case DefaultOpcode.ABS:
+                        return Math.Abs(arg1);
+                    case DefaultOpcode.MIN:
+                        return Math.Min(arg1, arg2);
+                    case DefaultOpcode.MAX:
+                        return Math.Max(arg1, arg2);
+                    default:
+                        throw new NotImplementedException($"Cannot execute instruction {opcode}");
+                }
             }
         }
     }
