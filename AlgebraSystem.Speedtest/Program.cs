@@ -11,7 +11,7 @@ namespace AlgebraSystem.Speedtest
     {
         static void Main(string[] args)
         {
-            int lengths = 100;
+            int lengths = 400;
 
             Expression expression = "tanh(max(x + y, x * y)) + arctan(min(x + y, x * y))";
             double time, sum;
@@ -31,9 +31,9 @@ namespace AlgebraSystem.Speedtest
             Console.WriteLine($"Compiled stack Avg Time: {time} ns");
             Console.WriteLine($"Value: {sum}");*/
 
-            (time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return heapCompiled.Evaluate(variableInputs); });
+            /*(time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return heapCompiled.Evaluate(variableInputs); });
             Console.WriteLine($"Compiled heap Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");
+            Console.WriteLine($"Value: {sum}");*/
 
             (time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return lambdaHeapCompiled.Evaluate(variableInputs); });
             Console.WriteLine($"Compiled lambda heap Avg Time: {time} ns");

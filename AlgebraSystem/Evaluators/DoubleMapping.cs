@@ -94,10 +94,5 @@ namespace Algebra.mappings
         {
             return Math.Atan(v);
         }
-
-        public override double EvaluateOther(Expression other)
-        {
-            throw new NotImplementedException($"Cannot evaluate {other}");
-        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Algebra.Compilation
@@ -19,7 +20,7 @@ namespace Algebra.Compilation
             private static Func<double[], double> GenerateFunction(DefaultHeapInstruction[] instructions, int heapSize, string[] variables)
             {
                 // Create LINQ expression
-                System.Linq.Expressions.ParameterExpression parameters = System.Linq.Expressions.Expression.Parameter(typeof(double[]));
+                System.Linq.Expressions.ParameterExpression parameters = System.Linq.Expressions.Expression.Parameter(typeof(double[]), "vars");
                 System.Linq.Expressions.Expression linqExpression = GenerateLinqExpression(instructions, heapSize, parameters);
 
                 // Try to reduce
@@ -29,9 +30,8 @@ namespace Algebra.Compilation
                 }
 
                 // Compile lambda
-                System.Linq.Expressions.LambdaExpression lambda = System.Linq.Expressions.Expression.Lambda(linqExpression, true, parameters);  // TODO: Evaluate if tail call adds any performance due to lack of recusion
-                Delegate compiled = lambda.Compile();
-                Func<double[], double> func = (Func<double[], double>)(compiled); // Error is on this line :(
+                System.Linq.Expressions.Expression<Func<double[], double>> lambda = System.Linq.Expressions.Expression.Lambda<Func<double[], double>>(linqExpression, true, parameters);  // TODO: Evaluate if tail call adds any performance due to lack of recusion
+                Func<double[], double> func = lambda.Compile(); 
 
                 return func;
             }
@@ -39,14 +39,9 @@ namespace Algebra.Compilation
             private static System.Linq.Expressions.Expression GenerateLinqExpression(DefaultHeapInstruction[] instructions, int heapSize, System.Linq.Expressions.ParameterExpression parameters)
             {
                 // Create heap
-                System.Linq.Expressions.ParameterExpression[] heap = new System.Linq.Expressions.ParameterExpression[heapSize];
-                for (int i = 0; i < heapSize; i++)
-                {
-                    heap[i] = System.Linq.Expressions.Expression.Variable(typeof(double), $"Heap_{i}");
-                }
+                System.Linq.Expressions.Expression[] heap = new System.Linq.Expressions.Expression[heapSize];
 
                 // Process instructions
-                List<System.Linq.Expressions.Expression> expressions = new List<System.Linq.Expressions.Expression>(instructions.Length);
                 System.Linq.Expressions.Expression result = null;
                 foreach (DefaultHeapInstruction instruction in instructions)
                 {
@@ -60,25 +55,21 @@ namespace Algebra.Compilation
                             result = System.Linq.Expressions.Expression.Constant(instruction.Data.Value, typeof(double));
                             break;
                         default:
-                            System.Linq.Expressions.ParameterExpression arg1 = heap[instruction.Data.Arg_1];
-                            System.Linq.Expressions.ParameterExpression arg2 = heap[instruction.Data.Arg_2];
+                            System.Linq.Expressions.Expression arg1 = heap[instruction.Data.Arg_1];
+                            System.Linq.Expressions.Expression arg2 = heap[instruction.Data.Arg_2];
                             result = GenerateLinqExpression(instruction.Opcode, arg1, arg2);
                             break;
                     }
-                    System.Linq.Expressions.Expression assignExpr = System.Linq.Expressions.Expression.Assign(heap[instruction.Dest], result);
-                    expressions.Add(assignExpr);
+                    heap[instruction.Dest] = result;
                 }
 
-                // Add return value to the end
+                // Return last executed instruction
                 if (result == null)
                 {
                     throw new ArgumentNullException(nameof(result));
                 }
-                expressions.Add(result);
 
-                // Build block
-                List<System.Linq.Expressions.ParameterExpression> variables = new List<System.Linq.Expressions.ParameterExpression>(heap) { parameters };
-                return System.Linq.Expressions.Expression.Block(variables, expressions);
+                return result;
             }
 
             // TODO: Clean this up into a data structure (dict?)
@@ -99,12 +90,11 @@ namespace Algebra.Compilation
             private static readonly MethodInfo signMethod = typeof(Math).GetMethod("Sign", new[] { typeof(double) });
             private static readonly MethodInfo absMethod = typeof(Math).GetMethod("Abs", new[] { typeof(double) });
 
-            private static readonly MethodInfo expMethod = typeof(Math).GetMethod("Pow", new[] { typeof(double), typeof(double) });
             private static readonly MethodInfo logMethod = typeof(Math).GetMethod("Log", new[] { typeof(double), typeof(double) });
             private static readonly MethodInfo minMethod = typeof(Math).GetMethod("Min", new[] { typeof(double), typeof(double) });
             private static readonly MethodInfo maxMethod = typeof(Math).GetMethod("Max", new[] { typeof(double), typeof(double) });
 
-            private static System.Linq.Expressions.Expression GenerateLinqExpression(DefaultOpcode opcode, System.Linq.Expressions.ParameterExpression arg1, System.Linq.Expressions.ParameterExpression arg2)
+            private static System.Linq.Expressions.Expression GenerateLinqExpression(DefaultOpcode opcode, System.Linq.Expressions.Expression arg1, System.Linq.Expressions.Expression arg2)
             {
                 switch (opcode)
                 {
@@ -133,7 +123,7 @@ namespace Algebra.Compilation
                     case DefaultOpcode.ARTANH:
                         return System.Linq.Expressions.Expression.Call(atanhMethod, arg1);
                     case DefaultOpcode.EXPONENT:
-                        return System.Linq.Expressions.Expression.Call(expMethod, arg1, arg2);
+                        return System.Linq.Expressions.Expression.Power(arg1, arg2);
                     case DefaultOpcode.LN:
                         return System.Linq.Expressions.Expression.Call(lnMethod, arg1);
                     case DefaultOpcode.LOG:

@@ -79,10 +79,5 @@ namespace Algebra.mappings
         {
             return Combine(expressions);
         }
-
-        public override HashSet<IVariable> EvaluateOther(Expression other)
-        {
-            throw new NotImplementedException($"Cannot get variables for unknown expression {other}. Override {typeof(GetVariablesMapping).Name} to add functionality for your new class.");
-        }
     }
 }

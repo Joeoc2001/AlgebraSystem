@@ -84,10 +84,5 @@ namespace Algebra.mappings
         {
             return Expression.ArctanOf(expression);
         }
-
-        public override Expression EvaluateOther(Expression other)
-        {
-            throw new NotImplementedException($"Cannot replace variables of unknown expression {other}. Override {typeof(VariableReplacementMapping).Name} to add functionality for your new class.");
-        }
     }
 }
