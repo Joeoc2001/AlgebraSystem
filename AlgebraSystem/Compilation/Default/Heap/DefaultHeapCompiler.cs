@@ -3,13 +3,14 @@ using Algebra.Functions;
 using Algebra.Functions.FunctionIdentities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Algebra.Compilation
 {
-    namespace Default.Stack
+    namespace Default.Heap
     {
-        internal class DefaultHeapCompiler : HeapCompiler<double, DefaultHeapInstruction<int>>
+        internal class DefaultHeapCompiler : HeapCompiler<double, DefaultHeapInstruction>
         {
             private static readonly Dictionary<FunctionIdentity, DefaultOpcode> _defaultFunctionMap = new Dictionary<FunctionIdentity, DefaultOpcode>()
             {
@@ -37,6 +38,81 @@ namespace Algebra.Compilation
             {
             }
 
+            protected override ICompiledFunction<double> CreateCompiled(Expression expression, DefaultHeapInstruction[] instructions, Dictionary<string, int> seenVariables, int[] indirectionTable, int cellCount)
+            {
+                // Map instructions using indirection table
+                foreach (var instr in instructions)
+                {
+                    instr.IndirectByTable(indirectionTable); 
+                }
+
+                return new DefaultHeapCompiledFunction(instructions, cellCount, seenVariables.ToDictionary(x => x.Value, x => x.Key));
+            }
+
+            protected override DefaultHeapInstruction EvaluateArcsin(int arg, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.ARCSIN, arg, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateArctan(int arg, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.ARCTAN, arg, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateConstant(IConstant value, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.CONSTANT, value.GetDoubleApproximation(), dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateExponent(int arg1, int arg2, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.EXPONENT, arg1, arg2, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateFunction(FunctionIdentity function, List<int> args, int dest)
+            {
+                if (args.Count == 0 || args.Count > 2)
+                {
+                    throw new ArgumentException($"Heap function cannot have {args.Count} arguments");
+                }
+
+                if (args.Count == 1)
+                {
+                    return new DefaultHeapInstruction(_defaultFunctionMap[function], args[0], dest);
+                }
+
+                return new DefaultHeapInstruction(_defaultFunctionMap[function], args[0], args[1], dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateLn(int arg, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.LN, arg, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateProduct(int arg1, int arg2, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.MULTIPLY, arg1, arg2, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateSign(int arg, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.SIGN, arg, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateSin(int arg, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.SIN, arg, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateSum(int arg1, int arg2, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.ADD, arg1, arg2, dest);
+            }
+
+            protected override DefaultHeapInstruction EvaluateVariable(IVariable value, Dictionary<string, int> seenVariables, int dest)
+            {
+                return new DefaultHeapInstruction(DefaultOpcode.VARIABLE, seenVariables[value.GetName()], dest);
+            }
         }
     }
 }

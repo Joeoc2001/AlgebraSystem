@@ -20,6 +20,7 @@ namespace Algebra.Compilation
 
             private readonly List<(Compiled instr, int lastUsed)> _instructions = new List<(Compiled, int)>();
             private readonly Dictionary<Expression, int> _resultLocation = new Dictionary<Expression, int>();
+            private readonly Dictionary<string, int> _seenVariables = new Dictionary<string, int>();
 
             public CompileTraverser(HeapCompiler<ReturnType, Compiled> compiler)
             {
@@ -34,6 +35,11 @@ namespace Algebra.Compilation
             public int[] GetLastUses()
             {
                 return _instructions.Select(i => i.lastUsed).ToArray();
+            }
+
+            public Dictionary<string, int> GetSeenVariables()
+            {
+                return _seenVariables;
             }
 
             private int EvaluateArgument(Expression arg)
@@ -104,9 +110,14 @@ namespace Algebra.Compilation
 
             public int EvaluateVariable(IVariable value)
             {
+                if (!_seenVariables.ContainsKey(value.GetName()))
+                {
+                    _seenVariables.Add(value.GetName(), _seenVariables.Count);
+                }
+
                 int resultLoc = _instructions.Count;
 
-                Compiled instr = _compiler.EvaluateVariable(value, resultLoc);
+                Compiled instr = _compiler.EvaluateVariable(value, _seenVariables, resultLoc);
                 _instructions.Add((instr, resultLoc));
 
                 return resultLoc;
@@ -198,7 +209,7 @@ namespace Algebra.Compilation
 
         }
 
-        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, int[] indirectionTable, int cellCount);
+        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, Dictionary<string, int> seenVariables, int[] indirectionTable, int cellCount);
 
         public override ICompiledFunction<ReturnType> Compile(Expression expression, int simplificationAggressiveness=3)
         {
@@ -208,13 +219,14 @@ namespace Algebra.Compilation
             CompileTraverser traverser = new CompileTraverser(this);
             expression.Map(traverser);
             Compiled[] instructions = traverser.GetCompiled();
+            Dictionary<string, int> seenVariables = traverser.GetSeenVariables();
             int[] lastUses = traverser.GetLastUses();
 
             // Create indirection table
             int[] indirectionTable = GenerateIndirectionTable(lastUses);
             int cellCount = indirectionTable.Max() + 1;
 
-            return CreateCompiled(expression, instructions, indirectionTable, cellCount);
+            return CreateCompiled(expression, instructions, seenVariables, indirectionTable, cellCount);
         }
 
         private static int[] GenerateIndirectionTable(int[] lastUses)
@@ -272,7 +284,7 @@ namespace Algebra.Compilation
         protected abstract Compiled EvaluateSin(int arg, int dest);
         protected abstract Compiled EvaluateProduct(int arg1, int arg2, int dest);
         protected abstract Compiled EvaluateSum(int arg1, int arg2, int dest);
-        protected abstract Compiled EvaluateVariable(IVariable value, int dest);
+        protected abstract Compiled EvaluateVariable(IVariable value, Dictionary<string, int> seenVariables, int dest);
         protected abstract Compiled EvaluateFunction(FunctionIdentity function, List<int> args, int dest);
     }
 }
