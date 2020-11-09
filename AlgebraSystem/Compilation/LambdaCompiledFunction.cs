@@ -23,7 +23,17 @@ namespace Algebra.Compilation
                 values[i] = variables.Get(_variables[i]).Value;
             }
 
-            return _func(values);
+            return Evaluate(values);
+        }
+
+        public T Evaluate(params T[] variables)
+        {
+            return _func(variables);
+        }
+
+        public string[] GetParameterOrdering()
+        {
+            return _variables;
         }
     }
 }

@@ -156,16 +156,16 @@ namespace Algebra
             LambdaHeap
         }
 
-        public ICompiledFunction<double> Compile(CompilationMethod method = CompilationMethod.Heap, int simplificationAggressiveness = 3)
+        public ICompiledFunction<double> Compile(IEnumerable<string> parameterOrdering = null, CompilationMethod method = CompilationMethod.LambdaHeap, int simplificationAggressiveness = 3)
         {
             switch (method)
             {
                 case CompilationMethod.Stack:
-                    return DefaultStackCompiler.Instance.Compile(this, simplificationAggressiveness);
+                    return DefaultStackCompiler.Instance.Compile(this, parameterOrdering, simplificationAggressiveness);
                 case CompilationMethod.Heap:
-                    return DefaultHeapCompiler.Instance.Compile(this, simplificationAggressiveness);
+                    return DefaultHeapCompiler.Instance.Compile(this, parameterOrdering, simplificationAggressiveness);
                 case CompilationMethod.LambdaHeap:
-                    return LambdaHeapCompiler.Instance.Compile(this, simplificationAggressiveness);
+                    return LambdaHeapCompiler.Instance.Compile(this, parameterOrdering, simplificationAggressiveness);
                 default:
                     throw new ArgumentOutOfRangeException($"Unknown compilation method {method}");
             }

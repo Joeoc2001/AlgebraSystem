@@ -12,10 +12,12 @@ namespace Algebra.Compilation
             private readonly DefaultOpcode[] _codes; // Extract for speed
             private readonly IDefaultStackInstruction[] _instructions;
             private readonly int _maxStackDepth;
+            private readonly string[] _variableNames;
 
-            public DefaultStackCompiledFunction(IDefaultStackInstruction[] instructions)
+            public DefaultStackCompiledFunction(IDefaultStackInstruction[] instructions, string[] variables)
             {
                 _instructions = instructions;
+                _variableNames = variables;
 
                 _codes = _instructions.Select(i => i.Opcode).ToArray();
 
@@ -73,7 +75,6 @@ namespace Algebra.Compilation
 
                 return maxDepth;
             }
-
 
             public double Evaluate(IVariableInputSet<double> variables)
             {
@@ -173,6 +174,21 @@ namespace Algebra.Compilation
             private static double Artanh(double a)
             {
                 return 0.5 * Math.Log((a + 1) / (a - 1));
+            }
+
+            public string[] GetParameterOrdering()
+            {
+                return _variableNames;
+            }
+
+            public double Evaluate(params double[] variables)
+            {
+                VariableInputSet<double> input = new VariableInputSet<double>();
+                for (int i = 0; i < variables.Length; i++)
+                {
+                    input.Add(_variableNames[i], variables[i]);
+                }
+                return Evaluate(input);
             }
         }
     }

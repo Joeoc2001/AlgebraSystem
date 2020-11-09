@@ -1,5 +1,6 @@
 ﻿using Algebra.Equivalence;
 using Algebra.Functions;
+using Algebra.mappings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,15 +134,23 @@ namespace Algebra.Compilation
 
         }
 
-        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions);
+        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, string[] variables);
 
-        public override ICompiledFunction<ReturnType> Compile(Expression expression, int simplificationAggressiveness=3)
+        public override ICompiledFunction<ReturnType> Compile(Expression expression, IEnumerable<string> parameterOrdering = null, int simplificationAggressiveness=3)
         {
             expression = expression.Simplify(metric:_simplificationMetric, depth:simplificationAggressiveness, equivalencies:_paths);
+
+            // Compile
             CompileTraverser traverser = new CompileTraverser(this);
             expression.Map(traverser);
             Compiled[] instructions = traverser.GetCompiled();
-            return CreateCompiled(expression, instructions);
+
+            // Get variables
+            IEnumerable<string> foundVariables = expression.Map(GetVariablesMapping.Instance).Select(v => v.GetName()).ToList();
+            IEnumerable<string> variables = CompareVariables(parameterOrdering, foundVariables); 
+
+            // Return
+            return CreateCompiled(expression, instructions, variables.ToArray());
         }
 
         protected abstract Compiled EvaluateArcsin();

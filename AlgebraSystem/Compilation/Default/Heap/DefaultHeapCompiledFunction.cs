@@ -22,6 +22,17 @@ namespace Algebra.Compilation
 
             public double Evaluate(IVariableInputSet<double> variables)
             {
+                double[] values = new double[_variableNames.Length];
+                for (int i = 0; i < _variableNames.Length; i++)
+                {
+                    values[i] = variables.Get(_variableNames[i]).Value;
+                }
+
+                return Evaluate(values);
+            }
+
+            public double Evaluate(double[] variables)
+            {
                 double[] heap = new double[_heapSize];
                 double result = 0;
 
@@ -31,7 +42,7 @@ namespace Algebra.Compilation
                     switch (instruction.Opcode)
                     {
                         case DefaultOpcode.VARIABLE:
-                            result = variables.Get(_variableNames[data.Arg_1]).Value;
+                            result = variables[data.Arg_1];
                             break;
                         case DefaultOpcode.CONSTANT:
                             result = data.Value;
@@ -104,6 +115,11 @@ namespace Algebra.Compilation
                     default:
                         throw new NotImplementedException($"Cannot execute instruction {opcode}");
                 }
+            }
+
+            public string[] GetParameterOrdering()
+            {
+                return _variableNames;
             }
         }
     }

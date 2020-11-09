@@ -209,9 +209,9 @@ namespace Algebra.Compilation
 
         }
 
-        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, Dictionary<string, int> seenVariables, int[] indirectionTable, int cellCount);
+        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, IEnumerable<string> variables, int[] indirectionTable, int cellCount);
 
-        public override ICompiledFunction<ReturnType> Compile(Expression expression, int simplificationAggressiveness=3)
+        public override ICompiledFunction<ReturnType> Compile(Expression expression, IEnumerable<string> parameterOrdering = null, int simplificationAggressiveness=3)
         {
             expression = expression.Simplify(metric:_simplificationMetric, depth:simplificationAggressiveness, equivalencies:_paths);
 
@@ -219,14 +219,17 @@ namespace Algebra.Compilation
             CompileTraverser traverser = new CompileTraverser(this);
             expression.Map(traverser);
             Compiled[] instructions = traverser.GetCompiled();
-            Dictionary<string, int> seenVariables = traverser.GetSeenVariables();
+            IEnumerable<string> seenVariables = traverser.GetSeenVariables().OrderBy(kv => kv.Value).Select(kv => kv.Key).ToList();
             int[] lastUses = traverser.GetLastUses();
 
             // Create indirection table
             int[] indirectionTable = GenerateIndirectionTable(lastUses);
             int cellCount = indirectionTable.Max() + 1;
 
-            return CreateCompiled(expression, instructions, seenVariables, indirectionTable, cellCount);
+            // Calculate variables
+            IEnumerable<string> variables = CompareVariables(parameterOrdering, seenVariables);
+
+            return CreateCompiled(expression, instructions, variables, indirectionTable, cellCount);
         }
 
         private static int[] GenerateIndirectionTable(int[] lastUses)

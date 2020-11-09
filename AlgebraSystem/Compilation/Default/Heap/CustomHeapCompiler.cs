@@ -38,7 +38,7 @@ namespace Algebra.Compilation
 
             protected abstract ICompiledFunction<double> CreateCompiled(DefaultHeapInstruction[] instructions, int cellCount, string[] variables);
 
-            protected override ICompiledFunction<double> CreateCompiled(Expression expression, DefaultHeapInstruction[] instructions, Dictionary<string, int> seenVariables, int[] indirectionTable, int cellCount)
+            protected override ICompiledFunction<double> CreateCompiled(Expression expression, DefaultHeapInstruction[] instructions, IEnumerable<string> variables, int[] indirectionTable, int cellCount)
             {
                 // Map instructions using indirection table
                 for (int i = 0; i < instructions.Length; i++)
@@ -46,14 +46,7 @@ namespace Algebra.Compilation
                     instructions[i] = instructions[i].IndirectByTable(indirectionTable); 
                 }
 
-                // Make variable array
-                string[] variables = new string[seenVariables.Count];
-                foreach (var item in seenVariables)
-                {
-                    variables[item.Value] = item.Key;
-                }
-
-                return CreateCompiled(instructions, cellCount, variables);
+                return CreateCompiled(instructions, cellCount, variables.ToArray());
             }
 
             protected override DefaultHeapInstruction EvaluateArcsin(int arg, int dest)

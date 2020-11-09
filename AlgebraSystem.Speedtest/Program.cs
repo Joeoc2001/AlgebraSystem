@@ -20,12 +20,9 @@ namespace AlgebraSystem.Speedtest
             Console.WriteLine($"Execute Once Avg Time: {time} ns");
             Console.WriteLine($"Value: {sum}");*/
 
-            VariableInputSet<double> variableInputs = new VariableInputSet<double>() { { "x", 0 }, { "y", 0 } };
-            VariableInput<double> xInput = variableInputs.Get("x");
-            VariableInput<double> yInput = variableInputs.Get("y");
-            var stackCompiled = expression.Compile(Expression.CompilationMethod.Stack, 3);
-            var heapCompiled = expression.Compile(Expression.CompilationMethod.Heap, 3);
-            var lambdaHeapCompiled = expression.Compile(Expression.CompilationMethod.LambdaHeap, 3);
+            var stackCompiled = expression.Compile(new List<string>(){ "x", "y" }, Expression.CompilationMethod.Stack, 3);
+            var heapCompiled = expression.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.Heap, 3);
+            var lambdaHeapCompiled = expression.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.LambdaHeap, 3);
 
             /*(time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return stackCompiled.Evaluate(variableInputs); });
             Console.WriteLine($"Compiled stack Avg Time: {time} ns");
@@ -35,7 +32,7 @@ namespace AlgebraSystem.Speedtest
             Console.WriteLine($"Compiled heap Avg Time: {time} ns");
             Console.WriteLine($"Value: {sum}");*/
 
-            (time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return lambdaHeapCompiled.Evaluate(variableInputs); });
+            (time, sum) = Time(lengths, (x, y, z) => lambdaHeapCompiled.Evaluate(x, y) );
             Console.WriteLine($"Compiled lambda heap Avg Time: {time} ns");
             Console.WriteLine($"Value: {sum}");
 

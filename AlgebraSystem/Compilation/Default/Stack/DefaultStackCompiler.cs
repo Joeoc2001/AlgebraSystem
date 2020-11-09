@@ -38,9 +38,9 @@ namespace Algebra.Compilation
             {
             }
 
-            protected override ICompiledFunction<double> CreateCompiled(Expression expression, IDefaultStackInstruction[] instructions)
+            protected override ICompiledFunction<double> CreateCompiled(Expression expressions, IDefaultStackInstruction[] instructions, string[] variables)
             {
-                return new DefaultStackCompiledFunction(instructions);
+                return new DefaultStackCompiledFunction(instructions, variables);
             }
 
             protected override IDefaultStackInstruction EvaluateArcsin()

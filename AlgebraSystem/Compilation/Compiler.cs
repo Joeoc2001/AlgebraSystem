@@ -20,6 +20,22 @@ namespace Algebra.Compilation
             _paths = new List<EquivalencePath>(EquivalencePaths.DefaultAtomicPaths.Concat(EquivalencePaths.GenerateFunctionReplacementPaths(supportedFunctions)));
         }
 
-        public abstract ICompiledFunction<ReturnType> Compile(Expression expression, int simplificationAggressiveness = 3);
+        protected static IEnumerable<string> CompareVariables(IEnumerable<string> parameterOrdering, IEnumerable<string> foundVariables)
+        {
+            if (parameterOrdering == null)
+            {
+                return foundVariables;
+            }
+
+            if (foundVariables.Count() != parameterOrdering.Count()
+                || foundVariables.Except(parameterOrdering).Any()
+                || parameterOrdering.Except(foundVariables).Any())
+            {
+                throw new ArgumentException($"Provided parameter order {parameterOrdering} does not match found parameters {foundVariables}");
+            }
+            return parameterOrdering;
+        }
+
+        public abstract ICompiledFunction<ReturnType> Compile(Expression expression, IEnumerable<string> parameterOrdering = null, int simplificationAggressiveness = 3);
     }
 }
