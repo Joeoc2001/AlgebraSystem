@@ -19,7 +19,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests
             { "x + y", (x, y) => x + y },
             { "x * y", (x, y) => x * y },
             { "x - y", (x, y) => x - y },
-            { "x / y", (x, y) => x / y },
+            { "(x + y) / 2", (x, y) => (x + y) / 2 },
             { "x * y + y", (x, y) => x * y + y },
             { "x ^ y", (x, y) => Math.Pow(x, y) },
             { "max(x + y, x * y)", (x, y) => Math.Max(x + y, x * y) },
