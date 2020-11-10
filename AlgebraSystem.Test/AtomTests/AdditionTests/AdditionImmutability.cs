@@ -1,5 +1,5 @@
 ﻿using Algebra;
-using Algebra.Evaluators;
+using Algebra.Mappings;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace AtomTests.AdditionTests
             // ARANGE
             Expression expression = Expression.VarX + Expression.VarY + Expression.VarZ;
             Expression expected = Expression.VarX + Expression.VarY + Expression.VarZ;
-            AnonymousEvaluator<bool> evaluator = new AnonymousEvaluator<bool>(() => false)
+            AnonymousMapping<bool> evaluator = new AnonymousMapping<bool>(() => false)
             {
                 Sum = args =>
                 {

@@ -22,7 +22,7 @@ namespace EvaluatorsTests.Replacement.SpecificCases
         static Expression expression = Expression.VarX * Expression.VarY * Expression.VarZ;
         static Expression pattern = Expression.VarA * Expression.VarB;
         static Expression replacement = Expression.VarA + Expression.VarB;
-        static ReplaceEvaluator replaceEvaluator = new ReplaceEvaluator(pattern, replacement);
+        static ReplaceMapping replaceEvaluator = new ReplaceMapping(pattern, replacement);
 
         [Test]
         public void TestThat_Replacement_CanTakeSubsetOfMultiplication3to2([ValueSource(nameof(SubsetOfMultiplication3to2Expecteds))] Expression expected)

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.mappings
+namespace Algebra.Mappings
 {
     public abstract class DefaultMapping<T> : IMapping<T>
     {

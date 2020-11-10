@@ -66,6 +66,11 @@ namespace AlgebraTests
             return base.ToString();
         }
 
+        public override void Map(IMapping evaluator)
+        {
+            EvaluateCalledCount += 1;
+        }
+
         public override T Map<T>(IMapping<T> evaluator)
         {
             EvaluateCalledCount += 1;

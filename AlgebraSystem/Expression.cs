@@ -2,7 +2,7 @@
 using Algebra.Compilation;
 using Algebra.Compilation.Default.Stack;
 using Algebra.Equivalence;
-using Algebra.mappings;
+using Algebra.Mappings;
 using Algebra.Functions.FunctionIdentities;
 using Algebra.Metrics;
 using Algebra.Parsing;

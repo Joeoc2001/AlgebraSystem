@@ -27,11 +27,10 @@ namespace Algebra.Compilation
                 return foundVariables;
             }
 
-            if (foundVariables.Count() != parameterOrdering.Count()
-                || foundVariables.Except(parameterOrdering).Any()
-                || parameterOrdering.Except(foundVariables).Any())
+            if (foundVariables.Count() > parameterOrdering.Count()
+                || foundVariables.Except(parameterOrdering).Any())
             {
-                throw new ArgumentException($"Provided parameter order {parameterOrdering} does not match found parameters {foundVariables}");
+                throw new ArgumentException($"Provided parameter order {string.Join(", ", parameterOrdering)} does not match found parameters {string.Join(", ", foundVariables)}");
             }
             return parameterOrdering;
         }

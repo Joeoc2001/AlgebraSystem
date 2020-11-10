@@ -1,4 +1,4 @@
-﻿using Algebra.mappings;
+﻿using Algebra.Mappings;
 using Algebra.Functions;
 using Rationals;
 using System;

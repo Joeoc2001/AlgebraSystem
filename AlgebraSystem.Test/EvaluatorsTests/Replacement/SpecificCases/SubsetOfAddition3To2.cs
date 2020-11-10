@@ -22,7 +22,7 @@ namespace EvaluatorsTests.Replacement.SpecificCases
         static readonly Expression _expression = Expression.VarX + Expression.VarY + Expression.VarZ;
         static readonly Expression _pattern = Expression.VarA + Expression.VarB;
         static readonly Expression _replacement = Expression.VarA * Expression.VarB;
-        static readonly ReplaceEvaluator _replaceEvaluator = new ReplaceEvaluator(_pattern, _replacement);
+        static readonly ReplaceMapping _replaceEvaluator = new ReplaceMapping(_pattern, _replacement);
 
         [Test]
         public void TestThat_Replacement_CanTakeSubsetOfAddition3to2([ValueSource(nameof(_subsetOfAddition3to2Expecteds))] Expression expected)

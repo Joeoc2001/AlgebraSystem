@@ -1,13 +1,13 @@
 ﻿using Algebra;
-using Algebra.Evaluators;
 using Algebra.Functions;
+using Algebra.Mappings;
 using Libs;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
+namespace AlgebraSystem.Test.EvaluatorsTests.DoubleMappings
 {
     class FunctionEvaluatorsTest
     {
@@ -42,8 +42,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             // ARRANGE
             Expression expression = MonadBuilder.Build(Expression.VarA, monad);
             VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input } };
-            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
-            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
+            DoubleMapping evaluator1 = new DoubleMapping(inputs, new Dictionary<FunctionIdentity, DoubleMapping.FunctionMapping>());
+            DoubleMapping evaluator2 = new DoubleMapping(inputs, DoubleMapping.DefaultFunctionMappings);
 
             // ACT
             double output1 = expression.Map(evaluator1);
@@ -59,8 +59,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             // ARRANGE
             Expression expression = DyadBuilder.Build(Expression.VarA, Expression.VarB, dyad);
             VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input1 }, { "b", input2 } };
-            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
-            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
+            DoubleMapping evaluator1 = new DoubleMapping(inputs, new Dictionary<FunctionIdentity, DoubleMapping.FunctionMapping>());
+            DoubleMapping evaluator2 = new DoubleMapping(inputs, DoubleMapping.DefaultFunctionMappings);
 
             // ACT
             double output1 = expression.Map(evaluator1);
@@ -76,8 +76,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleEvaluators
             // ARRANGE
             Expression expression = TryadBuilder.Build(Expression.VarA, Expression.VarB, Expression.VarC, tryad);
             VariableInputSet<double> inputs = new VariableInputSet<double>() { { "a", input1 }, { "b", input2 }, { "c", input3 } };
-            DoubleEvaluator evaluator1 = new DoubleEvaluator(inputs, new Dictionary<FunctionIdentity, DoubleEvaluator.FunctionEvaluator>());
-            DoubleEvaluator evaluator2 = new DoubleEvaluator(inputs, DoubleEvaluator.DefaultFunctionEvaluators);
+            DoubleMapping evaluator1 = new DoubleMapping(inputs, new Dictionary<FunctionIdentity, DoubleMapping.FunctionMapping>());
+            DoubleMapping evaluator2 = new DoubleMapping(inputs, DoubleMapping.DefaultFunctionMappings);
 
             // ACT
             double output1 = expression.Map(evaluator1);

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Algebra.mappings
+namespace Algebra.Mappings
 {
     class VariableReplacementMapping : TraversalMapping<Expression>
     {

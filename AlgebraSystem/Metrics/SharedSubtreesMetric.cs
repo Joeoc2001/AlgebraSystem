@@ -1,4 +1,4 @@
-﻿using Algebra.mappings;
+﻿using Algebra.Mappings;
 using System;
 using System.Collections.Generic;
 using System.Text;

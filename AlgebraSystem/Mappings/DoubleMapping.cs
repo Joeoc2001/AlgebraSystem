@@ -7,12 +7,12 @@ using System.Collections.ObjectModel;
 using System.Numerics;
 using System.Text;
 
-namespace Algebra.mappings
+namespace Algebra.Mappings
 {
     public class DoubleMapping : ValueMapping<double>
     {
-        public static readonly ReadOnlyDictionary<FunctionIdentity, Functionmapping> DefaultFunctionmappings =
-            new ReadOnlyDictionary<FunctionIdentity, Functionmapping>(new Dictionary<FunctionIdentity, Functionmapping>()
+        public static readonly ReadOnlyDictionary<FunctionIdentity, FunctionMapping> DefaultFunctionMappings =
+            new ReadOnlyDictionary<FunctionIdentity, FunctionMapping>(new Dictionary<FunctionIdentity, FunctionMapping>()
             {
                 { AbsIdentity.Instance, d => Math.Abs(d[0]) },
                 { ArccosIdentity.Instance, d => Math.Acos(d[0]) },
@@ -29,8 +29,8 @@ namespace Algebra.mappings
                 { TanIdentity.Instance, d => Math.Tan(d[0]) },
             });
 
-        public DoubleMapping(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, Functionmapping> functionmappings = null)
-            : base(variableInputs, functionmappings ?? DefaultFunctionmappings)
+        public DoubleMapping(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, FunctionMapping> functionmappings = null)
+            : base(variableInputs, functionmappings ?? DefaultFunctionMappings)
         {
 
         }
@@ -45,7 +45,7 @@ namespace Algebra.mappings
             return Math.Pow(baseValue, powerValue);
         }
 
-        protected override TraversalMapping<double> Construct(IDictionary<FunctionIdentity, Functionmapping> functionmappings, VariableInputSet<double> variableInputs)
+        protected override TraversalMapping<double> Construct(IDictionary<FunctionIdentity, FunctionMapping> functionmappings, VariableInputSet<double> variableInputs)
         {
             return new DoubleMapping(variableInputs, functionmappings);
         }

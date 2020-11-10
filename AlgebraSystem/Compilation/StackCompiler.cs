@@ -1,6 +1,6 @@
 ﻿using Algebra.Equivalence;
 using Algebra.Functions;
-using Algebra.mappings;
+using Algebra.Mappings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

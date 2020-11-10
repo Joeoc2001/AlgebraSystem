@@ -4,18 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Algebra.mappings
+namespace Algebra.Mappings
 {
     public abstract class ValueMapping<T> : TraversalMapping<T>
     {
-        public delegate T Functionmapping(IList<T> argumentExpressions);
+        public delegate T FunctionMapping(IList<T> argumentExpressions);
 
-        private readonly Dictionary<FunctionIdentity, Functionmapping> _functionmappings;
+        private readonly Dictionary<FunctionIdentity, FunctionMapping> _functionmappings;
         private readonly VariableInputSet<T> _variableInputs;
 
-        public ValueMapping(VariableInputSet<T> variableInputs, IDictionary<FunctionIdentity, Functionmapping> functionmappings)
+        public ValueMapping(VariableInputSet<T> variableInputs, IDictionary<FunctionIdentity, FunctionMapping> functionmappings)
         {
-            this._functionmappings = new Dictionary<FunctionIdentity, Functionmapping>(functionmappings ?? throw new ArgumentNullException(nameof(functionmappings)));
+            this._functionmappings = new Dictionary<FunctionIdentity, FunctionMapping>(functionmappings ?? throw new ArgumentNullException(nameof(functionmappings)));
             this._variableInputs = variableInputs;
         }
 
@@ -41,14 +41,14 @@ namespace Algebra.mappings
             return Map(PowOf(baseValue, powerValue));
         }
 
-        protected abstract TraversalMapping<T> Construct(IDictionary<FunctionIdentity, Functionmapping> functionmappings, VariableInputSet<T> variableInputs);
+        protected abstract TraversalMapping<T> Construct(IDictionary<FunctionIdentity, FunctionMapping> functionmappings, VariableInputSet<T> variableInputs);
 
         protected override sealed T EvaluateFunction(Function function, IList<T> evaluated)
         {
             FunctionIdentity identity = function.GetIdentity();
 
             // Check for a faster method
-            if (_functionmappings.TryGetValue(identity, out Functionmapping mapping))
+            if (_functionmappings.TryGetValue(identity, out FunctionMapping mapping))
             {
                 return Map(mapping(evaluated));
             }

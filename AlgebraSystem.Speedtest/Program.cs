@@ -11,34 +11,34 @@ namespace AlgebraSystem.Speedtest
     {
         static void Main(string[] args)
         {
-            int lengths = 400;
+            int lengths = 100;
 
-            Expression expression = "tanh(max(x + y, x * y)) + arctan(min(x + y, x * y))";
+            Expression expression = "tanh(max(cos(x) + y, x * sin(y))) / arctan(min(x + cos(y), sin(x) * y))";
             double time, sum;
 
-            /*(time, sum) = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
+            (time, sum) = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
             Console.WriteLine($"Execute Once Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");*/
-
+            Console.WriteLine($"Value: {sum}");
+            
             var stackCompiled = expression.Compile(new List<string>(){ "x", "y" }, Expression.CompilationMethod.Stack, 3);
             var heapCompiled = expression.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.Heap, 3);
             var lambdaHeapCompiled = expression.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.LambdaHeap, 3);
 
-            /*(time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return stackCompiled.Evaluate(variableInputs); });
+            (time, sum) = Time(lengths, (x, y, z) => stackCompiled.Evaluate(x, y));
             Console.WriteLine($"Compiled stack Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");*/
+            Console.WriteLine($"Value: {sum}");
 
-            /*(time, sum) = Time(lengths, (x, y, z) => { xInput.Value = x; yInput.Value = y; return heapCompiled.Evaluate(variableInputs); });
+            (time, sum) = Time(lengths, (x, y, z) => heapCompiled.Evaluate(x, y));
             Console.WriteLine($"Compiled heap Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");*/
+            Console.WriteLine($"Value: {sum}");
 
             (time, sum) = Time(lengths, (x, y, z) => lambdaHeapCompiled.Evaluate(x, y) );
             Console.WriteLine($"Compiled lambda heap Avg Time: {time} ns");
             Console.WriteLine($"Value: {sum}");
 
-            /*(time, sum) = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));
-            Console.WriteLine($"Native Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");*/
+            //(time, sum) = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));
+            //Console.WriteLine($"Native Time: {time} ns");
+            //Console.WriteLine($"Value: {sum}");
         }
 
         private static (double, double) Time(int range, Func<int, int, int, double> func)

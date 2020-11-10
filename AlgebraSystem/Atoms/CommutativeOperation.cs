@@ -1,4 +1,4 @@
-﻿using Algebra.mappings;
+﻿using Algebra.Mappings;
 using Rationals;
 using System;
 using System.Collections.Generic;
