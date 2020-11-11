@@ -24,7 +24,7 @@ namespace Algebra.Compilation
         {
             if (parameterOrdering == null)
             {
-                return foundVariables;
+                return foundVariables.OrderBy(s => s);
             }
 
             if (foundVariables.Count() > parameterOrdering.Count()

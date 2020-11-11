@@ -1,4 +1,5 @@
 ﻿using Algebra;
+using Libs;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -28,17 +29,18 @@ namespace AlgebraSystem.Test.EvaluatorsTests
             { "tanh(max(cos(x) + y, x * sin(y))) - arctan(min(x + cos(y), sin(x) * y))", (x, y) => Math.Tanh(Math.Max(Math.Cos(x) + y, x * Math.Sin(y))) + Math.Atan(Math.Min(x + Math.Cos(y), Math.Sin(x) * y)) },
         };
 
-        public enum EvaluationMethod
+        private static readonly double[] inputs =
         {
-            DoubleEvaluator,
-            CompiledStack,
-            CompiledHeap,
-            CompiledHeapLambda
-        }
+            -1,
+            0,
+            1,
+            double.MaxValue / 2,
+            double.MinValue / 2
+        };
 
         public static IEnumerable<object[]> GenTestCases()
         {
-            foreach (EvaluationMethod method in Enum.GetValues(typeof(EvaluationMethod)))
+            foreach (Expression.CompilationMethod method in Enum.GetValues(typeof(Expression.CompilationMethod)))
             {
                 foreach (var item in expecteds)
                 {
@@ -46,7 +48,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests
                     {
                         for (int y = -1; y <= 1; y++)
                         {
-                            yield return new object[] { method, item.Key, item.Value, x, y };
+                            yield return new object[] { method, item.Key, x, y, item.Value };
                         }
                     }
                 }
@@ -55,30 +57,57 @@ namespace AlgebraSystem.Test.EvaluatorsTests
 
         [Test]
         [TestCaseSource(nameof(GenTestCases))]
-        public static void TestThat_Method_Returns_SameAsNative(EvaluationMethod method, Expression expr, Func<int, int, double> func, int x, int y)
+        public static void TestThat_Method_Returns_SameAsNative(Expression.CompilationMethod method, Expression expr, int x, int y, Func<int, int, double> func)
         {
             // Arrange
             double expected = func(x, y);
 
             // Act
-            double got = 0;
-            switch (method)
-            {
-                case EvaluationMethod.DoubleEvaluator:
-                    got = expr.EvaluateOnce(x, y);
-                    break;
-                case EvaluationMethod.CompiledStack:
-                    got = expr.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.Stack).Evaluate(x, y);
-                    break;
-                case EvaluationMethod.CompiledHeap:
-                    got = expr.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.Heap).Evaluate(x, y);
-                    break;
-                case EvaluationMethod.CompiledHeapLambda:
-                    got = expr.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.LambdaHeap).Evaluate(x, y);
-                    break;
-            }
+            double got = expr.Compile(new List<string>() { "x", "y" }, method).Evaluate(x, y);
 
             // Assert
+            Assert.AreEqual(expected, got);
+        }
+
+        [Test]
+        public void TestThat_Method_ProducesSameResultAsEvaluateOnce_For([Values] Expression.CompilationMethod method, [Values] MonadBuilder.Monad monad, [ValueSource(nameof(inputs))] double input)
+        {
+            // ARRANGE
+            Expression expression = MonadBuilder.Build(Expression.VarX, monad);
+
+            // ACT
+            double expected = expression.EvaluateOnce(input);
+            double got = expression.Compile(new List<string>() { "x" }, method).Evaluate(input);
+
+            // ASSERT
+            Assert.AreEqual(expected, got);
+        }
+
+        [Test]
+        public void TestThat_Method_ProducesSameResultAsEvaluateOnce_For([Values] Expression.CompilationMethod method, [Values] DyadBuilder.Dyad dyad, [ValueSource(nameof(inputs))] double input1, [ValueSource(nameof(inputs))] double input2)
+        {
+            // ARRANGE
+            Expression expression = DyadBuilder.Build(Expression.VarX, Expression.VarY, dyad);
+
+            // ACT
+            double expected = expression.EvaluateOnce(input1, input2);
+            double got = expression.Compile(new List<string>() { "x", "y" }, method).Evaluate(input1, input2);
+
+            // ASSERT
+            Assert.AreEqual(expected, got);
+        }
+
+        [Test]
+        public void TestThat_Method_ProducesSameResultAsEvaluateOnce_For([Values] Expression.CompilationMethod method, [Values] TryadBuilder.Tryad tryad, [ValueSource(nameof(inputs))] double input1, [ValueSource(nameof(inputs))] double input2, [ValueSource(nameof(inputs))] double input3)
+        {
+            // ARRANGE
+            Expression expression = TryadBuilder.Build(Expression.VarX, Expression.VarY, Expression.VarZ, tryad);
+
+            // ACT
+            double expected = expression.EvaluateOnce(input1, input2, input3);
+            double got = expression.Compile(new List<string>() { "x", "y", "z" }, method).Evaluate(input1, input2, input3);
+
+            // ASSERT
             Assert.AreEqual(expected, got);
         }
     }
