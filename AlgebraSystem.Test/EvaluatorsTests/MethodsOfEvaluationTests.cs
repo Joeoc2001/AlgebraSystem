@@ -34,6 +34,8 @@ namespace AlgebraSystem.Test.EvaluatorsTests
             -1,
             0,
             1,
+            2,
+            Math.PI,
             double.MaxValue / 2,
             double.MinValue / 2
         };
@@ -57,7 +59,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests
 
         [Test]
         [TestCaseSource(nameof(GenTestCases))]
-        public static void TestThat_Method_Returns_SameAsNative(Expression.CompilationMethod method, Expression expr, int x, int y, Func<int, int, double> func)
+        public static void TestThat_Method_Returns_SameAsNative_For(Expression.CompilationMethod method, Expression expr, int x, int y, Func<int, int, double> func)
         {
             // Arrange
             double expected = func(x, y);

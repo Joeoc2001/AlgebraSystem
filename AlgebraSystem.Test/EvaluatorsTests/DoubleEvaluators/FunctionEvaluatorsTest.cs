@@ -17,6 +17,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleMappings
             0,
             1,
             2,
+            Math.PI,
             double.MaxValue / 2,
             double.MinValue / 2
         };
@@ -36,7 +37,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleMappings
             return max * 0.00000000001f;
         }
 
-        [Test, Pairwise]
+        [Test]
         public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] MonadBuilder.Monad monad, [ValueSource(nameof(inputs))] double input)
         {
             // ARRANGE
@@ -53,7 +54,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleMappings
             Assert.AreEqual(output1, output2, CalculateTolerance(input));
         }
 
-        [Test, Pairwise]
+        [Test]
         public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] DyadBuilder.Dyad dyad, [ValueSource(nameof(inputs))] double input1, [ValueSource(nameof(inputs))] double input2)
         {
             // ARRANGE
@@ -70,7 +71,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests.DoubleMappings
             Assert.AreEqual(output1, output2, CalculateTolerance(input1, input2));
         }
 
-        [Test, Pairwise]
+        [Test]
         public void TestThat_FunctionEvaluator_ProducesSameResult_For([Values] TryadBuilder.Tryad tryad, [ValueSource(nameof(inputs))] double input1, [ValueSource(nameof(inputs))] double input2, [ValueSource(nameof(inputs))] double input3)
         {
             // ARRANGE
