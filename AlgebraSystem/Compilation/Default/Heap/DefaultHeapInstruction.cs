@@ -22,7 +22,6 @@ namespace Algebra.Compilation
             }
 
             public DefaultOpcode Opcode { get; }
-            public bool IsHoldingDouble { get; }
             public DataUnion Data { get; }
             public int Dest { get; }
 
@@ -34,7 +33,6 @@ namespace Algebra.Compilation
                     Arg_1 = arg_1,
                     Arg_2 = 0
                 };
-                IsHoldingDouble = false;
                 Dest = dest;
             }
 
@@ -46,7 +44,6 @@ namespace Algebra.Compilation
                     Arg_1 = arg_1,
                     Arg_2 = arg_2,
                 };
-                IsHoldingDouble = false;
                 Dest = dest;
             }
 
@@ -57,16 +54,19 @@ namespace Algebra.Compilation
                 {
                     Value = value
                 };
-                IsHoldingDouble = true;
                 Dest = dest;
             }
 
             public DefaultHeapInstruction IndirectByTable(int[] indirectionTable)
             {
                 int newDest = indirectionTable[Dest];
-                if (IsHoldingDouble)
+                if (Opcode == DefaultOpcode.CONSTANT)
                 {
                     return new DefaultHeapInstruction(Opcode, Data.Value, newDest);
+                }
+                if (Opcode == DefaultOpcode.VARIABLE)
+                {
+                    return new DefaultHeapInstruction(Opcode, Data.Arg_1, Data.Arg_2, newDest);
                 }
                 int arg_1 = indirectionTable[Data.Arg_1];
                 int arg_2 = indirectionTable[Data.Arg_2];
