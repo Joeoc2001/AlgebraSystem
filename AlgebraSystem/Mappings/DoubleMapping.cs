@@ -27,6 +27,9 @@ namespace Algebra.Mappings
                 { SqrtIdentity.Instance, d => Math.Sqrt(d[0]) },
                 { TanhIdentity.Instance, d => Math.Tanh(d[0]) },
                 { TanIdentity.Instance, d => Math.Tan(d[0]) },
+                { ArsinhIdentity.Instance, d => UtilityMethods.Arsinh(d[0]) },
+                { ArcoshIdentity.Instance, d => UtilityMethods.Arcosh(d[0]) },
+                { ArtanhIdentity.Instance, d => UtilityMethods.Artanh(d[0]) },
             });
 
         public DoubleMapping(VariableInputSet<double> variableInputs, IDictionary<FunctionIdentity, FunctionMapping> functionmappings = null)
