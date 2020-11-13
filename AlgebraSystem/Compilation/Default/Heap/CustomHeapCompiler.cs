@@ -38,14 +38,8 @@ namespace Algebra.Compilation
 
             protected abstract ICompiledFunction<double> CreateCompiled(DefaultHeapInstruction[] instructions, int cellCount, string[] variables);
 
-            protected override ICompiledFunction<double> CreateCompiled(Expression expression, DefaultHeapInstruction[] instructions, IEnumerable<string> variables, int[] indirectionTable, int cellCount)
+            protected override ICompiledFunction<double> CreateCompiled(Expression expression, DefaultHeapInstruction[] instructions, IEnumerable<string> variables, int cellCount)
             {
-                // Map instructions using indirection table
-                for (int i = 0; i < instructions.Length; i++)
-                {
-                    instructions[i] = instructions[i].IndirectByTable(indirectionTable); 
-                }
-
                 return CreateCompiled(instructions, cellCount, variables.ToArray());
             }
 
@@ -109,9 +103,9 @@ namespace Algebra.Compilation
                 return new DefaultHeapInstruction(DefaultOpcode.ADD, arg1, arg2, dest);
             }
 
-            protected override DefaultHeapInstruction EvaluateVariable(IVariable value, Dictionary<string, int> seenVariables, int dest)
+            protected override DefaultHeapInstruction EvaluateVariable(int index, int dest)
             {
-                return new DefaultHeapInstruction(DefaultOpcode.VARIABLE, seenVariables[value.GetName()], dest);
+                return new DefaultHeapInstruction(DefaultOpcode.VARIABLE, index, dest);
             }
         }
     }

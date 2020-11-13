@@ -7,7 +7,7 @@ namespace Algebra.Compilation
 {
     namespace Default.Heap
     {
-        internal struct DefaultHeapInstruction
+        internal struct DefaultHeapInstruction : IRedirectable<DefaultHeapInstruction>
         {
             // Very cheeky bit fiddling for performance
             [StructLayout(LayoutKind.Explicit)]
@@ -57,9 +57,9 @@ namespace Algebra.Compilation
                 Dest = dest;
             }
 
-            public DefaultHeapInstruction IndirectByTable(int[] indirectionTable)
+            public DefaultHeapInstruction RedirectMemory(int[] redirectionTable)
             {
-                int newDest = indirectionTable[Dest];
+                int newDest = redirectionTable[Dest];
                 if (Opcode == DefaultOpcode.CONSTANT)
                 {
                     return new DefaultHeapInstruction(Opcode, Data.Value, newDest);
@@ -68,9 +68,19 @@ namespace Algebra.Compilation
                 {
                     return new DefaultHeapInstruction(Opcode, Data.Arg_1, Data.Arg_2, newDest);
                 }
-                int arg_1 = indirectionTable[Data.Arg_1];
-                int arg_2 = indirectionTable[Data.Arg_2];
+                int arg_1 = redirectionTable[Data.Arg_1];
+                int arg_2 = redirectionTable[Data.Arg_2];
                 return new DefaultHeapInstruction(Opcode, arg_1, arg_2, newDest);
+            }
+
+            public DefaultHeapInstruction RedirectVariables(int[] redirectionTable)
+            {
+                if (Opcode == DefaultOpcode.VARIABLE)
+                {
+                    int arg_1 = redirectionTable[Data.Arg_1];
+                    return new DefaultHeapInstruction(Opcode, arg_1, Data.Arg_2, Dest);
+                }
+                return this;
             }
 
             public override bool Equals(object obj)

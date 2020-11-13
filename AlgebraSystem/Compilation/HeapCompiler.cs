@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Algebra.Compilation
 {
-    public abstract class HeapCompiler<ReturnType, Compiled> : Compiler<ReturnType>
+    public abstract class HeapCompiler<ReturnType, Compiled> : Compiler<ReturnType> where Compiled : IRedirectable<Compiled>
     {
         public class ExecutionOrderException : Exception
         {
@@ -110,14 +110,15 @@ namespace Algebra.Compilation
 
             public int EvaluateVariable(IVariable value)
             {
-                if (!_seenVariables.ContainsKey(value.GetName()))
+                if (!_seenVariables.TryGetValue(value.GetName(), out int variableIndex))
                 {
-                    _seenVariables.Add(value.GetName(), _seenVariables.Count);
+                    variableIndex = _seenVariables.Count;
+                    _seenVariables.Add(value.GetName(), variableIndex);
                 }
 
                 int resultLoc = _instructions.Count;
 
-                Compiled instr = _compiler.EvaluateVariable(value, _seenVariables, resultLoc);
+                Compiled instr = _compiler.EvaluateVariable(variableIndex, resultLoc);
                 _instructions.Add((instr, resultLoc));
 
                 return resultLoc;
@@ -209,7 +210,7 @@ namespace Algebra.Compilation
 
         }
 
-        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, IEnumerable<string> variables, int[] indirectionTable, int cellCount);
+        protected abstract ICompiledFunction<ReturnType> CreateCompiled(Expression expression, Compiled[] instructions, IEnumerable<string> parameterOrdering, int cellCount);
 
         public override ICompiledFunction<ReturnType> Compile(Expression expression, IEnumerable<string> parameterOrdering = null, int simplificationAggressiveness=3)
         {
@@ -222,17 +223,28 @@ namespace Algebra.Compilation
             IEnumerable<string> seenVariables = traverser.GetSeenVariables().OrderBy(kv => kv.Value).Select(kv => kv.Key).ToList();
             int[] lastUses = traverser.GetLastUses();
 
-            // Create indirection table
-            int[] indirectionTable = GenerateIndirectionTable(lastUses);
-            int cellCount = indirectionTable.Max() + 1;
+            // Create memory redirection table
+            int[] memoryRedirectionTable = GenerateMemoryRedirectionTable(lastUses);
+            int cellCount = memoryRedirectionTable.Max() + 1;
 
             // Calculate variables
-            IEnumerable<string> variables = CompareVariables(parameterOrdering, seenVariables);
+            parameterOrdering = CompareVariables(parameterOrdering, seenVariables);
 
-            return CreateCompiled(expression, instructions, variables, indirectionTable, cellCount);
+            // Create variable redirection table
+            Dictionary<string, int> variableDests = parameterOrdering.Select((name, i) => (name, i)).ToDictionary(v => v.name, v => v.i);
+            int[] variableRedirectionTable = seenVariables.Select(name => variableDests[name]).ToArray();
+
+            // Redirect memory and variables
+            for (int i = 0; i < instructions.Length; i++)
+            {
+                instructions[i] = instructions[i].RedirectMemory(memoryRedirectionTable);
+                instructions[i] = instructions[i].RedirectVariables(variableRedirectionTable);
+            }
+
+            return CreateCompiled(expression, instructions, parameterOrdering, cellCount);
         }
 
-        private static int[] GenerateIndirectionTable(int[] lastUses)
+        private static int[] GenerateMemoryRedirectionTable(int[] lastUses)
         {
             HashSet<int> free = new HashSet<int>();
             int next = 0;
@@ -287,7 +299,7 @@ namespace Algebra.Compilation
         protected abstract Compiled EvaluateSin(int arg, int dest);
         protected abstract Compiled EvaluateProduct(int arg1, int arg2, int dest);
         protected abstract Compiled EvaluateSum(int arg1, int arg2, int dest);
-        protected abstract Compiled EvaluateVariable(IVariable value, Dictionary<string, int> seenVariables, int dest);
+        protected abstract Compiled EvaluateVariable(int variableIndex, int dest);
         protected abstract Compiled EvaluateFunction(FunctionIdentity function, List<int> args, int dest);
     }
 }
