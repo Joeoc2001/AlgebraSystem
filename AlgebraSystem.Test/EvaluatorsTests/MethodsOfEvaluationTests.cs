@@ -26,7 +26,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests
             { "max(x + y, x * y)", (x, y) => Math.Max(x + y, x * y) },
             { "log(x + 2, x * y * -10)", (x, y) => Math.Log(x + 2, x * y * -10) },
             { "tanh(max(x + y, x * y)) + arctan(min(x + y, x * y))", (x, y) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)) },
-            { "tanh(max(cos(x) + y, x * sin(y))) - arctan(min(x + cos(y), sin(x) * y))", (x, y) => Math.Tanh(Math.Max(Math.Cos(x) + y, x * Math.Sin(y))) + Math.Atan(Math.Min(x + Math.Cos(y), Math.Sin(x) * y)) },
+            { "tanh(max(cos(x) + y, x * sin(y))) - arctan(min(x + cos(y), sin(x) * y))", (x, y) => Math.Tanh(Math.Max(Math.Cos(x) + y, x * Math.Sin(y))) - Math.Atan(Math.Min(x + Math.Cos(y), Math.Sin(x) * y)) },
         };
 
         private static readonly double[] inputs =
