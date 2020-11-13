@@ -87,7 +87,7 @@ namespace Algebra.Compilation
             private static readonly MethodInfo atanhMethod = typeof(UtilityMethods).GetMethod("Artanh", new[] { typeof(double) });
             private static readonly MethodInfo sqrtMethod = typeof(Math).GetMethod("Sqrt", new[] { typeof(double) });
             private static readonly MethodInfo lnMethod = typeof(Math).GetMethod("Log", new[] { typeof(double) });
-            private static readonly MethodInfo signMethod = typeof(Math).GetMethod("Sign", new[] { typeof(double) });
+            private static readonly MethodInfo signMethod = typeof(UtilityMethods).GetMethod("Sign", new[] { typeof(double) });
             private static readonly MethodInfo absMethod = typeof(Math).GetMethod("Abs", new[] { typeof(double) });
 
             private static readonly MethodInfo logMethod = typeof(Math).GetMethod("Log", new[] { typeof(double), typeof(double) });

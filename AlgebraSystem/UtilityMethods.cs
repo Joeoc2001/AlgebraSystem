@@ -54,5 +54,10 @@ namespace Algebra
         {
             return 0.5 * Math.Log((a + 1) / (a - 1));
         }
+
+        public static double Sign(double a)
+        {
+            return Math.Sign(a); // Used for implicit double cast for lambda compilation
+        }
     }
 }
