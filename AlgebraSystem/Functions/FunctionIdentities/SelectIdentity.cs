@@ -12,7 +12,8 @@ namespace Algebra
         /// </summary>
         internal static class SelectIdentity
         {
-            private static readonly Expression _atomicExpression = 0.5 * (Expression.VarA + Expression.VarB) + 0.5 * (Expression.VarB - Expression.VarA) * Expression.SignOf(Expression.VarC);
+            private static readonly Expression _indicator = 0.5 * (Expression.SignOf(Expression.VarC) + 1);
+            private static readonly Expression _atomicExpression = _indicator * Expression.VarB + (1 - _indicator) * Expression.VarA;
             private static readonly int _hashSeed = 739870216;
             private static readonly string _name = "select";
 
