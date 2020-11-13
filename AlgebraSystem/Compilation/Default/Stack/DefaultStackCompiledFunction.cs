@@ -104,58 +104,122 @@ namespace Algebra.Compilation
 
             private static double Evaluate(DefaultOpcode opcode, ref FastStack<double> stack)
             {
+                double arg0;
+                double arg1;
+                double arg2;
                 switch (opcode)
                 {
                     case DefaultOpcode.SIN:
-                        return Math.Sin(stack.Pop());
                     case DefaultOpcode.COS:
-                        return Math.Cos(stack.Pop());
                     case DefaultOpcode.TAN:
-                        return Math.Tan(stack.Pop());
                     case DefaultOpcode.ARCSIN:
-                        return Math.Asin(stack.Pop());
                     case DefaultOpcode.ARCCOS:
-                        return Math.Acos(stack.Pop());
                     case DefaultOpcode.ARCTAN:
-                        return Math.Atan(stack.Pop());
                     case DefaultOpcode.SINH:
-                        return Math.Sinh(stack.Pop());
                     case DefaultOpcode.COSH:
-                        return Math.Cosh(stack.Pop());
                     case DefaultOpcode.TANH:
-                        return Math.Tanh(stack.Pop());
                     case DefaultOpcode.ARSINH:
-                        return Arsinh(stack.Pop());
                     case DefaultOpcode.ARCOSH:
-                        return Arcosh(stack.Pop());
                     case DefaultOpcode.ARTANH:
-                        return Artanh(stack.Pop());
-                    case DefaultOpcode.EXPONENT:
-                        return Math.Pow(stack.Pop(), stack.Pop());
                     case DefaultOpcode.LN:
-                        return Math.Log(stack.Pop());
-                    case DefaultOpcode.LOG:
-                        return Math.Log(stack.Pop(), stack.Pop());
                     case DefaultOpcode.SQRT:
-                        return Math.Sqrt(stack.Pop());
-                    case DefaultOpcode.ADD:
-                        return stack.Pop() + stack.Pop();
-                    case DefaultOpcode.SUBTRACT:
-                        return stack.Pop() - stack.Pop();
-                    case DefaultOpcode.MULTIPLY:
-                        return stack.Pop() * stack.Pop();
-                    case DefaultOpcode.DIVIDE:
-                        return stack.Pop() / stack.Pop();
                     case DefaultOpcode.SIGN:
-                        return Math.Sign(stack.Pop());
                     case DefaultOpcode.ABS:
-                        return Math.Abs(stack.Pop());
+                        arg0 = stack.Pop();
+                        return EvaluateMonad(opcode, arg0);
+                    case DefaultOpcode.EXPONENT:
+                    case DefaultOpcode.LOG:
+                    case DefaultOpcode.ADD:
+                    case DefaultOpcode.SUBTRACT:
+                    case DefaultOpcode.MULTIPLY:
+                    case DefaultOpcode.DIVIDE:
                     case DefaultOpcode.MIN:
-                        return Math.Min(stack.Pop(), stack.Pop());
                     case DefaultOpcode.MAX:
-                        return Math.Max(stack.Pop(), stack.Pop());
+                        arg1 = stack.Pop();
+                        arg0 = stack.Pop();
+                        return EvaluateDyad(opcode, arg0, arg1);
                     case DefaultOpcode.SELECT:
-                        return UtilityMethods.Select(stack.Pop(), stack.Pop(), stack.Pop());
+                        arg2 = stack.Pop();
+                        arg1 = stack.Pop();
+                        arg0 = stack.Pop();
+                        return EvaluateTryad(opcode, arg0, arg1, arg2);
+                    default:
+                        throw new NotImplementedException($"Invalid opcode {opcode}");
+                }
+            }
+
+            private static double EvaluateMonad(DefaultOpcode opcode, double arg0)
+            {
+                switch (opcode)
+                {
+                    case DefaultOpcode.SIN:
+                        return Math.Sin(arg0);
+                    case DefaultOpcode.COS:
+                        return Math.Cos(arg0);
+                    case DefaultOpcode.TAN:
+                        return Math.Tan(arg0);
+                    case DefaultOpcode.ARCSIN:
+                        return Math.Asin(arg0);
+                    case DefaultOpcode.ARCCOS:
+                        return Math.Acos(arg0);
+                    case DefaultOpcode.ARCTAN:
+                        return Math.Atan(arg0);
+                    case DefaultOpcode.SINH:
+                        return Math.Sinh(arg0);
+                    case DefaultOpcode.COSH:
+                        return Math.Cosh(arg0);
+                    case DefaultOpcode.TANH:
+                        return Math.Tanh(arg0);
+                    case DefaultOpcode.ARSINH:
+                        return Arsinh(arg0);
+                    case DefaultOpcode.ARCOSH:
+                        return Arcosh(arg0);
+                    case DefaultOpcode.ARTANH:
+                        return Artanh(arg0);
+                    case DefaultOpcode.LN:
+                        return Math.Log(arg0);
+                    case DefaultOpcode.SQRT:
+                        return Math.Sqrt(arg0);
+                    case DefaultOpcode.SIGN:
+                        return Math.Sign(arg0);
+                    case DefaultOpcode.ABS:
+                        return Math.Abs(arg0);
+                    default:
+                        throw new NotImplementedException($"Invalid opcode {opcode}");
+                }
+            }
+
+            private static double EvaluateDyad(DefaultOpcode opcode, double arg0, double arg1)
+            {
+                switch (opcode)
+                {
+                    case DefaultOpcode.EXPONENT:
+                        return Math.Pow(arg0, arg1);
+                    case DefaultOpcode.LOG:
+                        return Math.Log(arg0, arg1);
+                    case DefaultOpcode.ADD:
+                        return arg0 + arg1;
+                    case DefaultOpcode.SUBTRACT:
+                        return arg0 - arg1;
+                    case DefaultOpcode.MULTIPLY:
+                        return arg0 * arg1;
+                    case DefaultOpcode.DIVIDE:
+                        return arg0 / arg1;
+                    case DefaultOpcode.MIN:
+                        return Math.Min(arg0, arg1);
+                    case DefaultOpcode.MAX:
+                        return Math.Max(arg0, arg1);
+                    default:
+                        throw new NotImplementedException($"Invalid opcode {opcode}");
+                }
+            }
+
+            private static double EvaluateTryad(DefaultOpcode opcode, double arg0, double arg1, double arg2)
+            {
+                switch (opcode)
+                {
+                    case DefaultOpcode.SELECT:
+                        return UtilityMethods.Select(arg0, arg1, arg2);
                     default:
                         throw new NotImplementedException($"Invalid opcode {opcode}");
                 }
