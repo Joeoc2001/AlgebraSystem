@@ -10,7 +10,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests
 {
     class MethodsOfEvaluationTests
     {
-        private static readonly Dictionary<Expression, Func<int, int, double>> expecteds = new Dictionary<Expression, Func<int, int, double>>()
+        private static readonly Dictionary<Expression, Func<double, double, double>> expecteds = new Dictionary<Expression, Func<double, double, double>>()
         {
             { "0", (x, y) => 0 },
             { "1", (x, y) => 1 },
@@ -59,7 +59,7 @@ namespace AlgebraSystem.Test.EvaluatorsTests
 
         [Test]
         [TestCaseSource(nameof(GenTestCases))]
-        public static void TestThat_Method_Returns_SameAsNative_For(Expression.CompilationMethod method, Expression expr, int x, int y, Func<int, int, double> func)
+        public static void TestThat_Method_Returns_SameAsNative_For(Expression.CompilationMethod method, Expression expr, int x, int y, Func<double, double, double> func)
         {
             // Arrange
             double expected = func(x, y);
