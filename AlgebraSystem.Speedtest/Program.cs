@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using Algebra.Parsing;
 using System.Xml.Schema;
+using MathNet.Symbolics;
+using Expr = MathNet.Symbolics.SymbolicExpression;
 
 namespace AlgebraSystem.Speedtest
 {
@@ -13,54 +15,41 @@ namespace AlgebraSystem.Speedtest
         {
             int lengths = 100;
 
-            Expression expression = "tanh(max(cos(x) + y, x * sin(y))) * arctan(min(x + cos(y), sin(x) * y))";
-            double time, sum;
+            Algebra.Expression expression = "tanh(cos(x) * y + x * sin(y)) * arctan(x * cos(y) + sin(x) * y)";
+            var symbolicsExpr = Expr.Parse("tanh(cos(x) * y + x * sin(y)) * atan(x * cos(y) + sin(x) * y)");
 
-            (time, sum) = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
-            Console.WriteLine($"Execute Once Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");
-            
-            var stackCompiled = expression.Compile(new List<string>(){ "x", "y" }, Expression.CompilationMethod.Stack, 3);
-            var heapCompiled = expression.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.Heap, 3);
-            var lambdaHeapCompiled = expression.Compile(new List<string>() { "x", "y" }, Expression.CompilationMethod.LambdaHeap, 3);
+            TimeEvaluator(lengths, (x, y, z) => symbolicsExpr.Evaluate(new Dictionary<string, FloatingPoint>() {{"x", x}, {"y", y}}).RealValue, "Symbolics Execute Once");
+            TimeEvaluator(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z), "Execute Once");
 
-            (time, sum) = Time(lengths, (x, y, z) => stackCompiled.Evaluate(x, y));
-            Console.WriteLine($"Compiled stack Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");
+            var lambdaHeapCompiled = expression.Compile("x", "y");
+            Func<double, double, double> symbolicsCompiled = symbolicsExpr.Compile("x", "y");
 
-            (time, sum) = Time(lengths, (x, y, z) => heapCompiled.Evaluate(x, y));
-            Console.WriteLine($"Compiled heap Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");
-
-            (time, sum) = Time(lengths, (x, y, z) => lambdaHeapCompiled.Evaluate(x, y) );
-            Console.WriteLine($"Compiled lambda heap Avg Time: {time} ns");
-            Console.WriteLine($"Value: {sum}");
-
-            //(time, sum) = Time(lengths, (x, y, z) => Math.Tanh(Math.Max(x + y, x * y)) + Math.Atan(Math.Min(x + y, x * y)));
-            //Console.WriteLine($"Native Time: {time} ns");
-            //Console.WriteLine($"Value: {sum}");
+            TimeEvaluator(lengths, (x, y, z) => symbolicsCompiled(x, y), "Symbolics Compiled");
+            //TimeEvaluator(lengths, (x, y, z) => stackCompiled.Evaluate(x, y), "Stack Compiled");
+            //TimeEvaluator(lengths, (x, y, z) => heapCompiled.Evaluate(x, y), "Heap Compiled");
+            TimeEvaluator(lengths, (x, y, z) => lambdaHeapCompiled.Evaluate(x, y), "Compiled");
+            TimeEvaluator(lengths, (x, y, z) => Math.Tanh((Math.Cos(x) * y) + (x * Math.Sin(y))) * Math.Atan((x * Math.Cos(y)) + (Math.Sin(x) * y)), "Native");
         }
 
-        private static (double, double) Time(int range, Func<int, int, int, double> func)
+        private static void TimeEvaluator(int range, Func<double, double, double, double> func, string name)
         {
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
-            int c = 0;
-            double sum = 0;
-            for (int x = 0; x < range; x++)
+            for (double x = 1; x <= range; x++)
             {
-                for (int y = 0; y < range; y++)
+                for (double y = 1; y <= range; y++)
                 {
-                    for (int z = 0; z < range; z++)
+                    for (double z = 1; z <= range; z++)
                     {
-                        sum += func(x, y, z);
-                        c += 1;
+                        func(x, y, z);
                     }
                 }
             }
             watch.Stop();
-            double time = (double)(watch.ElapsedMilliseconds * 1000000) / c;
-            return (time, sum);
+            double time = (double)(watch.ElapsedMilliseconds * 1000000) / (range * range * range);
+
+            Console.WriteLine($"{name} Avg Time: {time} ns");
+            //Console.WriteLine($"Value: {sum}");
         }
     }
 }

@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'mcr.microsoft.com/dotnet/core/sdk:3.1'
+      image 'mcr.microsoft.com/dotnet/sdk:3.1'
     }
   }
 
@@ -40,6 +40,7 @@ pipeline {
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
       cobertura coberturaReportFile: '**/coverage.cobertura.xml'
       archiveArtifacts artifacts: 'tmp/packages/*', fingerprint: true
+      archiveArtifacts artifacts: 'tmp/documentation.xml', fingerprint: true
     }
   }
 }

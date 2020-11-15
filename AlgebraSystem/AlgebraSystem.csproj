@@ -13,6 +13,7 @@
     <PackageId>SymbolicAlgebraSystem</PackageId>
     <Product>SymbolicAlgebraSystem</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<DocumentationFile>tmp\documentation.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

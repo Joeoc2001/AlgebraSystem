@@ -156,6 +156,11 @@ namespace Algebra
             LambdaHeap
         }
 
+        public ICompiledFunction<double> Compile(params string[] parameterOrdering)
+        {
+            return Compile(parameterOrdering, CompilationMethod.LambdaHeap);
+        }
+
         public ICompiledFunction<double> Compile(IEnumerable<string> parameterOrdering = null, CompilationMethod method = CompilationMethod.LambdaHeap, int simplificationAggressiveness = 3)
         {
             switch (method)
