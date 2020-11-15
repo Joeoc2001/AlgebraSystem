@@ -13,7 +13,7 @@ namespace AlgebraSystem.Speedtest
         {
             int lengths = 100;
 
-            Expression expression = "tanh(max(cos(x) + y, x * sin(y))) / arctan(min(x + cos(y), sin(x) * y))";
+            Expression expression = "tanh(max(cos(x) + y, x * sin(y))) * arctan(min(x + cos(y), sin(x) * y))";
             double time, sum;
 
             (time, sum) = Time(lengths, (x, y, z) => expression.EvaluateOnce(x, y, z));
