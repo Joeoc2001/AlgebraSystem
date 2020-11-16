@@ -40,7 +40,7 @@ pipeline {
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
       cobertura coberturaReportFile: '**/coverage.cobertura.xml'
       archiveArtifacts artifacts: 'tmp/packages/*', fingerprint: true
-      archiveArtifacts artifacts: 'tmp/documentation.xml', fingerprint: true
+      archiveArtifacts artifacts: 'AlgebraSystem/tmp/documentation.xml', fingerprint: true
     }
   }
 }
