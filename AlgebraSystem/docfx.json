@@ -3,10 +3,9 @@
     {
       "src": [
         {
-          "files": [
-            "**.csproj"
-          ],
-          "src": "C:\\Users\\joeoc\\Documents\\Projects\\AlgebraSystem\\AlgebraSystem"
+          "files": [ "*.csproj" ],
+          "exclude": [ "**/bin/**", "**/obj/**" ],
+          "src": "./"
         }
       ],
       "dest": "api",
