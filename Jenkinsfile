@@ -25,7 +25,7 @@ pipeline {
     stage('Document') {
       steps {
         sh 'dotnet add AlgebraSystem package docfx.console --version 2.56.5'
-		sh '/tmp/dotnet_cli/.nuget/packages/docfx.console/2.56.5/tools/docfx.exe AlgebraSystem/docfx.json'
+		sh 'dotnet run /tmp/dotnet_cli/.nuget/packages/docfx.console/2.56.5/tools/docfx.exe AlgebraSystem/docfx.json'
       }
     }
 
