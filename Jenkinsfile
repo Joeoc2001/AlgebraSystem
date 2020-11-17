@@ -37,6 +37,7 @@ pipeline {
   
   post {
     always {
+      sh "find / -iname '*log.txt'"
       archiveArtifacts artifacts: 'AlgebraSystem/log.txt', fingerprint: true
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: false, keepLongStdio: true])
       cobertura coberturaReportFile: '**/coverage.cobertura.xml'
