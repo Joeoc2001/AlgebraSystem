@@ -25,7 +25,7 @@ pipeline {
     stage('Document') {
       steps {
         sh 'pwd'
-        sh 'dotnet add package docfx.console'
+        sh 'dotnet add AlgebraSystem package docfx.console'
         sh 'pwd'
 		sh 'find / *docfx*'
       }
