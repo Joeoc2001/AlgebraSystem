@@ -22,6 +22,15 @@ pipeline {
       }
     }
 
+    stage('Document') {
+      steps {
+        sh 'pwd'
+        sh 'dotnet add package docfx.console'
+        sh 'pwd'
+		sh 'find / *docfx*'
+      }
+    }
+
     stage('Test') {
       steps {
         sh 'dotnet test --no-restore --no-build --logger "trx;LogFileName=UnitTests.trx" --collect:"XPlat Code Coverage"'
@@ -37,8 +46,6 @@ pipeline {
   
   post {
     always {
-      sh "find / -iname '*log.txt'"
-      archiveArtifacts artifacts: 'AlgebraSystem/log.txt', fingerprint: true
       step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: false, keepLongStdio: true])
       cobertura coberturaReportFile: '**/coverage.cobertura.xml'
       archiveArtifacts artifacts: 'tmp/packages/*', fingerprint: true
