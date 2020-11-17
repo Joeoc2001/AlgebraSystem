@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AlgebraSystem</name>
+    </assembly>
+    <members>
+        <member name="T:Algebra.EqualityLevel">
+            <summary>
+            Represents how much effort should be put in to calculating if two expressions are the same
+            </summary>
+        </member>
+        <member name="M:Algebra.Equivalence.EquivalenceClass.IsInClass(Algebra.Expression,System.UInt64,System.Collections.Generic.List{Algebra.Equivalence.EquivalencePath},Algebra.IExpressionMetric)">
+            <summary>
+            Checks if an equation is within this Equivalence Class using a BFS.
+            This method is VERY SLOW and should not be used unless proven equality is absolutely needed.
+            </summary>
+            <param name="queryExpression">The equation to check if present</param>
+            <param name="attempts">The number of alternate forms to check. Default is everything</param>
+            <param name="equivalencies">The equivalencies to use to generate equivalent forms of the anchor expression</param>
+            <param name="metric">The metric to use to evaluate how close an alternate form is to the query expression. Higher => closer. Default = shared subtrees</param>
+            <returns>True if it can be proven that these expressions are equal, false otherwise</returns>
+        </member>
+        <member name="M:Algebra.Equivalence.EquivalenceClass.Minimise(Algebra.IExpressionMetric,System.Int32,System.UInt64,System.Collections.Generic.List{Algebra.Equivalence.EquivalencePath})">
+            <summary>
+            Looks for an equivalent expression which minimises the given metric.
+            Does a repeated DFS with a given max depth until a local minimum is found.
+            </summary>
+            <param name="attempts">The number of times to find the local minimum before giving up</param>
+            <param name="depth">The depth to search for the local minimum each time</param>
+            <param name="equivalencies">The equivalencies to use to find the minimum</param>
+            <param name="metric">The metric to optimise over</param>
+        </member>
+        <member name="M:Algebra.Expression.IsAtomic">
+            <summary>
+            Checks if this expression is in atomic form, i.e. has no function calls. 
+            </summary>
+            <returns>True if this is atomic</returns>
+        </member>
+        <member name="M:Algebra.Expression.GetAtomicExpression">
+            <summary>
+            Replaces all non-atomic operations with their atomic counterparts.
+            The resulting expressions should not be executed as it will be far slower.
+            Instead, this form is used as an intermediate form for performing simplifications.
+            </summary>
+            <returns>An expression in atomic form</returns>
+        </member>
+        <member name="M:Algebra.Expression.GetEquivalenceClass">
+            <summary>
+            Creates a new Equivalence Class used for proving equivalence and for finding alternate forms of an equation.
+            </summary>
+            <returns>A queriable equivalence class for this expression</returns>
+        </member>
+        <member name="M:Algebra.Expression.Equals(Algebra.Expression,Algebra.EqualityLevel)">
+            <summary>
+            Checks if an expression is equal to this on a variable level.
+            Each <see cref="T:Algebra.EqualityLevel"/> gives a different level of effort to put in to calculate equality.
+            Note that the problem of expression equality is undecidable, so with the deepest setting it is not guaranteed that this method will terminate.
+            This method will however terminate on all other levels.
+            Also note that a return of false does not ever guarantee that two expressions are not equal, however a return of true guarantees that they are equal.
+            </summary>
+            <param name="e">The expression to check against this</param>
+            <param name="level">The level of effort to put in to calculate equality</param>
+            <returns>True if the equations are equal, false if equality could not be proven, or if e is null.</returns>
+        </member>
+        <member name="M:Algebra.Expression.Replace(Algebra.Expression,Algebra.Expression)">
+            <summary>
+            Returns a set of expressions where all instance of a pattern have been replaced with a replacement expression.
+            All of the variables in the replacement expression must be contained in the pattern expression.
+            For example, if 3 * (x + y) + 2 is evaluated with an instance of this with pattern a + b and replacement a * b,
+            the resulting expression set will be {6 * (x + y), 3 * x * y + 2}.
+            This is useful for equality axioms, e.g. x * (y + z) == x * y + x * z
+            </summary>
+            <param name="pattern">The pattern to search this expression for</param>
+            <param name="replacement">The expression to replace the found pattern with</param>
+            <returns>A set of expressions where all instance of the pattern have been replaced with the replacement expression</returns>
+        </member>
+        <member name="T:Algebra.Functions.AtomicFunctionGenerator">
+            <summary>
+            Used to generate an atomic function as is, without a function wrapper.
+            Used specifically for sin, sign and ln
+            </summary>
+        </member>
+        <member name="M:Algebra.Functions.Function.GetAtomicBodiedExpression">
+            <summary>
+            Returns this expression but with this function replaced with its atomic form.
+            E.g. tan(tan(x)) becomes sin(tan(x))/sin(tan(x))
+            </summary>
+            <returns>An expression with this function instead being atomic</returns>
+        </member>
+        <member name="M:Algebra.Functions.FunctionGenerator.CreateExpression(Algebra.Expression[])">
+            <summary>
+            Return a new function node from the given parameters.
+            This constructor matches the parameter positions with the parameter names internally
+            </summary>
+            <param name="nodes">The parameters to be given to the function</param>
+            <returns>The new function node</returns>
+        </member>
+        <member name="M:Algebra.Functions.FunctionGenerator.CreateExpression(System.Collections.Generic.IList{Algebra.Expression})">
+            <summary>
+            Return a new function node from the given parameters.
+            This constructor matches the parameter positions with the parameter names internally
+            </summary>
+            <param name="nodes">The parameters to be given to the function</param>
+            <returns>The new function node</returns>
+        </member>
+        <member name="M:Algebra.Functions.FunctionGenerator.CreateExpression(System.Collections.Generic.IDictionary{System.String,Algebra.Expression})">
+            <summary>
+            Return a new function node from the given parameters.
+            This constructor uses the given parameter names and ignores their positions
+            </summary>
+            <param name="nodes">The parameters to be given to the function</param>
+            <returns>The new function node</returns>
+        </member>
+        <member name="M:Algebra.Functions.FunctionGenerator.GetBodyAsFunctionExpression">
+            <summary>
+            Returns the function as a raw expression, for example the sin function generator will generate sin(a)
+            </summary>
+            <returns>An instance of the function with parameters as simple variables</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Algebra.Functions.FunctionIdentities.SelectIdentity" -->
+        <member name="T:Algebra.IVariableInputSet`1">
+            <summary>
+            A dictionary of variable input nodes as well as their names. 
+            Used at function compilation time to assign all of the variables
+            in an expression to a cell where the value can be inputted
+            </summary>
+        </member>
+        <member name="M:Algebra.IVariableInputSet`1.Add(System.String)">
+            <summary>
+            Adds a variable input with the given name and value default to the variable input set.
+            This method throws if the given string is already present
+            </summary>
+            <param name="name">The name of the variable to add</param>
+            <exception cref="T:System.ArgumentException">Thrown if a variable input with the given name is already present</exception>
+        </member>
+        <member name="M:Algebra.IVariableInputSet`1.IsEmpty">
+            <summary>
+            Checks if this variable input set has no variables in it
+            </summary>
+            <returns>True iff this is empty</returns>
+        </member>
+        <member name="M:Algebra.IVariableInputSet`1.Add(System.String,`0)">
+            <summary>
+            Adds a variable input with the given name and value to this variable input set.
+            This method throws if the given string is already present
+            </summary>
+            <param name="name">The name of the variable to add</param>
+            <param name="value">The value to set the variable to initially</param>
+            <exception cref="T:System.ArgumentException">Thrown if a variable input with the given name is already present</exception>
+        </member>
+        <member name="M:Algebra.IVariableInputSet`1.Set(System.String,`0)">
+            <summary>
+            Sets a variable input with the given name and value in this variable input set, or adds it if a variable is not already present with the given name
+            </summary>
+            <param name="name">The name of the variable to set</param>
+            <param name="value">The value to set the variable to</param>
+        </member>
+        <member name="M:Algebra.IVariableInputSet`1.Get(System.String)">
+            <summary>
+            Gets a variable input with the given name in this variable input set.
+            This method throws if the given string is not present
+            </summary>
+            <param name="name">The name of the variable to get</param>
+            <exception cref="T:System.ArgumentException">Thrown if a variable input with the given name is not present</exception>
+        </member>
+        <member name="M:Algebra.LazyFunctions.Partition``1(System.Collections.Generic.IList{``0},System.Int32)">
+            <summary>
+            Loops over all ways of splitting a set of elements into seperate disjoint sets
+            </summary>
+        </member>
+        <member name="M:Algebra.LazyFunctions.Permute``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            Loops over all orderings of a set of elements
+            </summary>
+        </member>
+        <member name="M:Algebra.LazyFunctions.TakeOne``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Loops over all pairs of [values and all other values] in a collection
+            </summary>
+        </member>
+        <member name="M:Algebra.LazyFunctions.DualPartition``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Loops over all ways of splitting a set of elements into 2 seperate disjoint sets
+            </summary>
+        </member>
+        <member name="M:Algebra.LazyFunctions.DualPartitionNonEmpty``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Loops over all ways of splitting a set of elements into 2 seperate disjoint sets which both have length >= 1
+            </summary>
+        </member>
+        <member name="M:Algebra.Mappings.ValueMapping`1.Map(`0)">
+            <summary>
+            Run at the end of each evaluation, useful for applying simplifications etc
+            </summary>
+        </member>
+        <member name="T:Algebra.PatternMatching.PatternMatchingDualMapping">
+            <summary>
+            Finds all matches between an expression (1st argument) and a pattern (2nd argument).
+            For example, x + y matches (2 * a) + b with both (x, y) = (2 * a, b) and (x, y) = (b, 2 * a).
+            x + y however does not match 2 * (a + b) as it only checks the root node.
+            Note from above that commutative operations match twice, for example x + y matches a + b with both (x, y) = (a, b) and (x, y) = (b, a).
+            </summary>
+        </member>
+        <member name="T:Algebra.PatternMatching.ReplaceMapping">
+            <summary>
+            Returns a set of expressions where all instance of a pattern have been replaced with a replacement expression.
+            All of the variables in the replacement expression must be contained in the pattern expression.
+            For example, if 3 * (x + y) + 2 is evaluated with an instance of this with pattern a + b and replacement a * b,
+            the resulting expression set will be {6 * (x + y), 3 * x * y + 2}.
+            This is useful for equality axioms, e.g. x * (y + z) == x * y + x * z
+            </summary>
+        </member>
+        <member name="M:Algebra.UtilityMethods.Deconstruct``2(System.Collections.Generic.KeyValuePair{``0,``1},``0@,``1@)">
+            <summary>
+            Used to patch the gap between .net versions so we can target lower
+            </summary>
+        </member>
+        <member name="T:Algebra.VariableInputSet`1">
+            <see cref="T:Algebra.IVariableInputSet`1"/>
+        </member>
+        <member name="M:Algebra.VariableInputSet`1.Contains(System.String)">
+            <see cref="M:Algebra.IVariableInputSet`1.Contains(System.String)"/>
+        </member>
+        <member name="M:Algebra.VariableInputSet`1.Add(System.String)">
+            <see cref="M:Algebra.IVariableInputSet`1.Add(System.String)"/>
+        </member>
+        <member name="M:Algebra.VariableInputSet`1.IsEmpty">
+            <see cref="M:Algebra.IVariableInputSet`1.IsEmpty"/>
+        </member>
+        <member name="M:Algebra.VariableInputSet`1.Add(System.String,`0)">
+            <see cref="M:Algebra.IVariableInputSet`1.Add(System.String,`0)"/>
+        </member>
+        <member name="M:Algebra.VariableInputSet`1.Set(System.String,`0)">
+            <see cref="M:Algebra.IVariableInputSet`1.Set(System.String,`0)"/>
+        </member>
+        <member name="M:Algebra.VariableInputSet`1.Get(System.String)">
+            <see cref="M:Algebra.IVariableInputSet`1.Get(System.String)"/>
+        </member>
+    </members>
+</doc>
