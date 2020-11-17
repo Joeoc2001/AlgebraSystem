@@ -37,7 +37,8 @@ pipeline {
   
   post {
     always {
-      step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: true, keepLongStdio: true])
+      archiveArtifacts artifacts: 'AlgebraSystem/log.txt', fingerprint: true
+      step ([$class: 'MSTestPublisher', testResultsFile:"**/TestResults/UnitTests.trx", failOnError: false, keepLongStdio: true])
       cobertura coberturaReportFile: '**/coverage.cobertura.xml'
       archiveArtifacts artifacts: 'tmp/packages/*', fingerprint: true
       archiveArtifacts artifacts: 'AlgebraSystem/tmp/documentation.xml', fingerprint: true
