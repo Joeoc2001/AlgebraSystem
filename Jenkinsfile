@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'mcr.microsoft.com/dotnet/sdk:3.1'
-    }
-  }
+  agent { dockerfile true }
 
   environment {
     DOTNET_CLI_HOME = "/tmp/dotnet_cli"
@@ -22,13 +18,6 @@ pipeline {
       }
     }
 
-    stage('Document') {
-      steps {
-        sh 'dotnet add AlgebraSystem package docfx.console --version 2.56.5'
-		sh 'dotnet run /tmp/dotnet_cli/.nuget/packages/docfx.console/2.56.5/tools/docfx.exe AlgebraSystem/docfx.json'
-      }
-    }
-
     stage('Test') {
       steps {
         sh 'dotnet test --no-restore --no-build --logger "trx;LogFileName=UnitTests.trx" --collect:"XPlat Code Coverage"'
@@ -38,6 +27,13 @@ pipeline {
     stage('Package') {
       steps {
         sh 'dotnet pack AlgebraSystem --no-restore --no-build --include-source --output "tmp/packages/"'
+      }
+    }
+
+    stage('Document') {
+      steps {
+        sh 'dotnet add AlgebraSystem package docfx.console --version 2.56.5'
+		sh 'mono /tmp/dotnet_cli/.nuget/packages/docfx.console/2.56.5/tools/docfx.exe AlgebraSystem/docfx.json'
       }
     }
   }
